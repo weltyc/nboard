@@ -1,0 +1,16 @@
+package com.welty.nboard;
+
+/**
+ * <PRE>
+ * User: Chris
+ * Date: Jul 13, 2009
+ * Time: 9:34:29 PM
+ * </PRE>
+ */
+public interface EngineTalker {
+    void MayLearn();
+
+    void TellEngineToLearn();
+
+    String getEngineName();
+}

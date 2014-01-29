@@ -1,0 +1,9 @@
+Click anywhere on the board to pass
+Use the arrow keys to review a game
+Select multiple database files by holding down Shift or Ctrl when selecting
+Click on a move in the game history to go to that position
+Right-click on the board to undo the last move
+Turn off Tip Of The Day in the View menu
+<Table><TR><TH>D2B</TH><TD>means draws are scored as black wins.</TD></TR><TR><TH>D2W</TH><TD> means draws are scored as white wins.</TD><TR><TH>D=0</TH><TD> means draws are scored as 0.</TD></TR></TABLE>
+'Value >=4 moves' sometimes gives you more than 4 values if the engine knows more than 4
+In the Database window, click between the column header and the first player to filter by player name
