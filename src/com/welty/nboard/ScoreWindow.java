@@ -77,7 +77,8 @@ class ScoreWindow extends JPanel {
 
             score.setText(scoreText);
             setPlainFont(score);
-            score.setPreferredSize(new Dimension(15, height));
+            score.getPreferredSize();
+            score.setPreferredSize(new Dimension(20, height));
             score.setHorizontalAlignment(SwingConstants.TRAILING);
             score.setVerticalAlignment(SwingConstants.TOP);
             add(score);
