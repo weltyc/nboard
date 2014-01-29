@@ -2,7 +2,7 @@ package com.welty.nboard.thor;
 
 import com.orbanova.common.misc.Require;
 import com.welty.othello.c.CBinaryReader;
-import com.welty.othello.gdk.COsBoard;
+import com.welty.othello.gdk.OsBoard;
 import com.welty.othello.core.CBitBoard;
 import com.welty.othello.core.CMove;
 import com.welty.othello.core.CMoves;
@@ -258,7 +258,7 @@ public class Thor {
      * @param posMatch position to match
      * @return vector of indices of matching games, and vector of reflection indices that make the games match
      */
-    static MatchingPositions ThorFindMatchingPositions(final ArrayList<ThorGameInternal> games, final COsBoard posMatch) {
+    static MatchingPositions ThorFindMatchingPositions(final ArrayList<ThorGameInternal> games, final OsBoard posMatch) {
         CBitBoard reflections[] = GetReflections(new CQPosition(posMatch).BitBoard());
         final MatchingPositions result = new MatchingPositions();
 
@@ -303,7 +303,7 @@ public class Thor {
     /**
      * @return summary data for the various moves from a position
      */
-    static TThorSummary ThorSummarize(final ArrayList<ThorGameInternal> games, final COsBoard pos, final TIntArrayList index, final TIntArrayList iReflections) {
+    static TThorSummary ThorSummarize(final ArrayList<ThorGameInternal> games, final OsBoard pos, final TIntArrayList index, final TIntArrayList iReflections) {
         TThorSummary summary = new TThorSummary();
 
         final boolean fMustPass = !pos.HasLegalMove() && !pos.GameOver();

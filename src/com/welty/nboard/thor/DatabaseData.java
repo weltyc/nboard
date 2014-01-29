@@ -202,7 +202,7 @@ public class DatabaseData extends GridTableModel {
     /**
      * Look up a position in the database, filter, set summary, and signal that this has been done.
      */
-    public void LookUpPosition(final COsBoard pos) {
+    public void LookUpPosition(final OsBoard pos) {
         if (pos.NEmpty() > 3) {
             // look up position
             final MatchingPositions matchingPositions = ThorFindMatchingPositions(m_tgis, pos);
@@ -235,7 +235,7 @@ public class DatabaseData extends GridTableModel {
      * <p/>
      * \pre field<6
      */
-    void SetFilter(String text, int field, final COsBoard pos) {
+    void SetFilter(String text, int field, final OsBoard pos) {
         assert (field < 6);
         if (field < 6) {
             m_filters[field] = text;

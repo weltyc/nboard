@@ -1,6 +1,6 @@
 package com.welty.nboard;
 
-import com.welty.othello.gdk.COsBoard;
+import com.welty.othello.gdk.OsBoard;
 import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.PieceCounts;
 import static com.welty.nboard.GraphicsUtils.setPlainFont;
@@ -39,7 +39,7 @@ class ScoreWindow extends JPanel {
         setMinimumSize(size);
         m_pd.AddListener(new SignalListener<COsMoveListItem>() {
             public void handleSignal(COsMoveListItem data) {
-                COsBoard board = m_pd.DisplayedPosition().board;
+                OsBoard board = m_pd.DisplayedPosition().board;
                 final PieceCounts pieceCounts = board.getPieceCounts();
                 blackPanel.player.setText(m_pd.Game().pis[1].sName);
                 blackPanel.score.setText(Integer.toString(pieceCounts.nBlack));

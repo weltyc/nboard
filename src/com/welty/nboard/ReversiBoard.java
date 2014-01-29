@@ -1,6 +1,6 @@
 package com.welty.nboard;
 
-import com.welty.othello.gdk.COsBoard;
+import com.welty.othello.gdk.OsBoard;
 import com.welty.othello.gdk.COsMove;
 import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsPosition;
@@ -107,7 +107,7 @@ class ReversiBoard extends JPanel {
      */
     private static char PieceToPaint(int ix, int iy, COsPosition pos, char pcBackground) {
         char piece = pos.board.Piece(iy, ix);
-        if (piece == COsBoard.EMPTY && pcBackground != 0)
+        if (piece == OsBoard.EMPTY && pcBackground != 0)
             piece = pcBackground;
         return piece;
     }
@@ -122,7 +122,7 @@ class ReversiBoard extends JPanel {
     /**
      * @return highlight char if the given move should be highlighted, else return 0
      */
-    char Highlight(CMove mv, int iHighlight, final COsBoard board, COsMove mvNext) {
+    char Highlight(CMove mv, int iHighlight, final OsBoard board, COsMove mvNext) {
         switch (iHighlight) {
             case 0:
                 return 0;
@@ -360,11 +360,11 @@ class ReversiBoard extends JPanel {
             } else {
                 GraphicsUtils.fillRect(gd, rect, boardColor);
             }
-            if (pc == COsBoard.BLACK || pc == COsBoard.WHITE) {
+            if (pc == OsBoard.BLACK || pc == OsBoard.WHITE) {
                 rect = GraphicsUtils.FractionalInflate(rect, -.2);
                 rect.x -= 1;
                 rect.y -= 1;
-                GraphicsUtils.fillEllipse(gd, rect, pc == COsBoard.BLACK ? Color.black : Color.white);
+                GraphicsUtils.fillEllipse(gd, rect, pc == OsBoard.BLACK ? Color.black : Color.white);
                 GraphicsUtils.outlineEllipse(gd, rect, Color.BLACK);
             }
         }
@@ -374,13 +374,13 @@ class ReversiBoard extends JPanel {
             // draw pieces
             final ImageIcon imageIcon;
             switch (pc) {
-                case COsBoard.EMPTY:
+                case OsBoard.EMPTY:
                     imageIcon = hbmEmpty;
                     break;
-                case COsBoard.BLACK:
+                case OsBoard.BLACK:
                     imageIcon = hbmBlack;
                     break;
-                case COsBoard.WHITE:
+                case OsBoard.WHITE:
                     imageIcon = hbmWhite;
                     break;
                 case 'L':

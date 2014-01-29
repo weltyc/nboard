@@ -1,7 +1,7 @@
 package com.welty.nboard.thor;
 
 import com.welty.othello.c.CReader;
-import com.welty.othello.gdk.COsBoard;
+import com.welty.othello.gdk.OsBoard;
 import com.welty.othello.core.CBitBoard;
 import com.welty.othello.core.CMove;
 import com.welty.othello.core.CMoves;
@@ -230,7 +230,7 @@ public class ThorOpeningMap {
 
         final byte[] moves = moveBytesFromGgf(sGgfGame);
 
-        final COsBoard board = new COsBoard(new CReader(boText));
+        final OsBoard board = new OsBoard(new CReader(boText));
         return OpeningCode(new CQPosition(board), moves);
     }
 

@@ -171,7 +171,7 @@ public class ReversiData implements BoardSource {
      */
     void ReflectGame(int iReflection) {
         // reflect start pos
-        COsBoard newStart = new COsBoard(m_game.posStart.board);
+        OsBoard newStart = new OsBoard(m_game.posStart.board);
         for (int col = 0; col < n; col++) {
             for (int row = 0; row < n; row++) {
                 int oldSquare = Square(row, col);
