@@ -20,13 +20,11 @@ import java.util.Map;
 class MoveGridTableModel extends GridTableModel {
     private final TIntArrayList m_moves = new TIntArrayList();
     private final DatabaseData pdd;
-    private final OptionSource optionSource;
     private final Hints m_hints;
 
-    public MoveGridTableModel(DatabaseData pdd, OptionSource optionSource, Hints m_hints) {
+    public MoveGridTableModel(DatabaseData pdd, Hints m_hints) {
         super(MoveGrid.columns);
         this.pdd = pdd;
-        this.optionSource = optionSource;
         this.m_hints = m_hints;
     }
 
@@ -34,13 +32,6 @@ class MoveGridTableModel extends GridTableModel {
      * The hints structure has been updated. Determine whether to show evals and update the move grid accordingly
      */
     void UpdateHints() {
-        UpdateHints(optionSource.ShowEvals());
-    }
-
-    /**
-     * The hints structure has been updated. Update the movegrid accordingly.
-     */
-    void UpdateHints(boolean fShowEvals) {
         m_moves.clear();
         for (Map.Entry<Byte, Hint> it : m_hints.Map().entrySet()) {
             m_moves.add(it.getKey());
@@ -49,11 +40,7 @@ class MoveGridTableModel extends GridTableModel {
             if (m_hints.Map().get((byte) key) == null)
                 m_moves.add(key);
         }
-        // todo do we need this?
-        // Sort();
-        if (fShowEvals) {
-            this.fireTableDataChanged();
-        }
+        this.fireTableDataChanged();
     }
 
     public int getRowCount() {

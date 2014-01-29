@@ -137,7 +137,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         m_hints = new Hints();
 
         // and show the move grid
-        m_pmg = new MoveGrid(m_pd, PD(), this, m_hints);
+        m_pmg = new MoveGrid(m_pd, PD(), m_hints);
 
         Grid m_pml = new MoveList(m_pd);
         JPanel leftPanel = new JPanel();
@@ -1167,7 +1167,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
      */
     void ThorLookUpPosition() {
         dd.LookUpPosition();
-        m_pmg.UpdateHints(true);
+        m_pmg.UpdateHints();
     }
 
 //* On any menu commands for a ReversiWindow.

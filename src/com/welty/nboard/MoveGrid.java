@@ -35,8 +35,8 @@ public class MoveGrid extends Grid {
 
     };
 
-    MoveGrid(ReversiData m_pd, DatabaseData m_pdd, OptionSource optionSource, Hints hints) {
-        super(new MoveGridTableModel(m_pdd, optionSource, hints));
+    MoveGrid(ReversiData m_pd, DatabaseData m_pdd, Hints hints) {
+        super(new MoveGridTableModel(m_pdd, hints));
         this.m_pd = m_pd;
         final JTable table = getTable();
 
@@ -89,8 +89,8 @@ public class MoveGrid extends Grid {
         m_pd.Update(new COsMoveListItem(mv, 0, 0), true);
     }
 
-    public void UpdateHints(boolean b) {
-        getModel().UpdateHints(b);
+    public void UpdateHints() {
+        getModel().UpdateHints();
     }
 
 
