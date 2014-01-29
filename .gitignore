@@ -1,0 +1,27 @@
+# Project
+/coefficients/
+log.txt
+/Othello.*.bz2
+captured.pv
+captured2.me
+
+# Intellij
+.idea
+*.iml
+*.iws
+
+# Maven
+log/
+target/
+
+# Mac files
+.DS_Store
+
+# OpenOffice temp files
+.~*
+
+# Gradle
+build/
+.gradle/
+*.jar
+
