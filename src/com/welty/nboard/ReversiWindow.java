@@ -331,8 +331,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
                         game.posStart.board.In(is);
                         game.CalcCurrentPos();
                         m_pd.Update(game, true);
-                    }
-                    catch (IllegalArgumentException ex) {
+                    } catch (IllegalArgumentException ex) {
                         final String msg = (s.length() < 200 ? s + " is not a legal board" : "Not a legal board");
                         JOptionPane.showMessageDialog(ReversiWindow.this, msg, "Paste Board error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -720,16 +719,20 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         else if (m_engine.IsReady()) {
             switch (sCommand) {
                 case "===":
+                    SetStatus("");
                     // Need to check whether it's the computer's move. This is because the user may have
                     // switched modes while the computer was thinking.
                     if (!UsersMove()) {
                         // now update the move list
                         COsMoveListItem mli = new COsMoveListItem();
                         mli.In(is);
-                        m_pd.Update(mli, false);
+                        try {
+                            m_pd.Update(mli, false);
+                        } catch (IllegalArgumentException e) {
+                            JOptionPane.showMessageDialog(this, "Illegal move from engine: " + mli, "Engine Error", JOptionPane.WARNING_MESSAGE);
+                        }
 
                     }
-                    SetStatus("");
                     break;
                 // computer giving hints
                 case "book": {
