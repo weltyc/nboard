@@ -134,7 +134,7 @@ class Hints extends HashMap<Byte, Hint> implements SignalListener<COsMoveListIte
     void Add(CReader is, boolean fBlackMove, boolean fInBook) {
         // read in the pv. The first two characters will be the move.
         String pv = is.readString();
-        CMove move = new CMove(pv);
+        CMove move = new CMove(pv.substring(0, 2));
 
         Hint h = new Hint();
         h.In(is, fBlackMove, fInBook);

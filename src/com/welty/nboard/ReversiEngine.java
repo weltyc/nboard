@@ -1,11 +1,9 @@
 package com.welty.nboard;
 
-import com.welty.othello.c.CWriter;
-import com.welty.othello.lp.LinePrinter;
+import com.welty.othello.core.ProcessLogger;
 
 import javax.swing.*;
 import java.io.*;
-import java.nio.file.Paths;
 
 /**
  * Class that controls communication with an engine.
@@ -29,35 +27,31 @@ public class ReversiEngine {
     private int m_pong;
     private String name = "ntest";
     private volatile boolean shutdown = false;
-    private PrintWriter out;
-    private BufferedReader in;
+    private final ProcessLogger processLogger;
 
     public ReversiEngine(ReversiWindow reversiWindow) throws IOException {
         this.reversiWindow = reversiWindow;
-        StartupNtest();
-    }
-
-    private void StartupNtest() throws IOException {
         final String[] command = "./mEdax -nboard".split("\\s+");
         final File wd = new File("/Applications/edax/4.3.2/bin");
         final Process process = new ProcessBuilder(command).directory(wd).redirectErrorStream(true).start();
-        out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(process.getOutputStream())), true);
-        in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        processLogger = new ProcessLogger(process, true);
+
 
         new Thread("NBoard Feeder") {
             @Override public void run() {
                 while (!shutdown) {
                     try {
-                        final String line = in.readLine();
+                        final String line = processLogger.readLine();
+
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
-                                reversiWindow.OnMessageFromEngine(line);
+                                ReversiEngine.this.reversiWindow.OnMessageFromEngine(line);
                             }
                         });
                     } catch (IOException e) {
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
-                                reversiWindow.OnMessageFromEngine("status Engine Terminated");
+                                ReversiEngine.this.reversiWindow.OnMessageFromEngine("status Engine Terminated");
                             }
                         });
                     }
@@ -65,12 +59,6 @@ public class ReversiEngine {
             }
         }.start();
     }
-
-
-    /**
-     * All messages to and from the engine are written to this file for debugging
-     */
-    static final CWriter g_debugLog = new CWriter("debugLog.txt", false);
 
 
     /**
@@ -86,8 +74,7 @@ public class ReversiEngine {
         if (fPingFirst)
             Ping();
 
-        g_debugLog.println(sCommand);
-        out.println(sCommand);
+        processLogger.println(sCommand);
     }
 
     /**

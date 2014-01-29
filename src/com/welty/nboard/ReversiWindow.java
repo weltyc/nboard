@@ -690,9 +690,6 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
      * On a move message posted to the window (e.g. from an engine).
      */
     void OnMessageFromEngine(String string) {
-
-        ReversiEngine.g_debugLog.println("<" + string);
-
         final CReader is = new CReader(string);
         String sCommand = is.readString();
         is.ignoreWhitespace();
