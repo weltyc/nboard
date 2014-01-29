@@ -1,11 +1,11 @@
 package com.welty.nboard;
 
-import com.welty.ntestj.CComputerDefaults;
-import com.welty.ntestj.CGameX;
 import com.welty.othello.c.CWriter;
 import com.welty.othello.lp.LinePrinter;
 
 import javax.swing.*;
+import java.io.*;
+import java.nio.file.Paths;
 
 /**
  * Class that controls communication with an engine.
@@ -29,33 +29,37 @@ public class ReversiEngine {
     private int m_pong;
     private String name = "ntest";
     private volatile boolean shutdown = false;
+    private PrintWriter out;
+    private BufferedReader in;
 
-    public ReversiEngine(ReversiWindow reversiWindow) {
+    public ReversiEngine(ReversiWindow reversiWindow) throws IOException {
         this.reversiWindow = reversiWindow;
         StartupNtest();
     }
 
-    private void StartupNtest() {
-        final LinePrinter nboardPrinter = new NBoardLinePrinter();
-
-        new Thread("NTest") {
-            @Override public void run() {
-                new CGameX(new CComputerDefaults(), false, nboardPrinter);
-            }
-        }.start();
+    private void StartupNtest() throws IOException {
+        final String[] command = "./mEdax -nboard".split("\\s+");
+        final File wd = new File("/Applications/edax/4.3.2/bin");
+        final Process process = new ProcessBuilder(command).directory(wd).redirectErrorStream(true).start();
+        out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(process.getOutputStream())), true);
+        in = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
         new Thread("NBoard Feeder") {
             @Override public void run() {
                 while (!shutdown) {
                     try {
-                        final String line = CGameX.toNBoard.take();
+                        final String line = in.readLine();
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
                                 reversiWindow.OnMessageFromEngine(line);
                             }
                         });
-                    } catch (InterruptedException e) {
-                        throw new IllegalStateException(e);
+                    } catch (IOException e) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                reversiWindow.OnMessageFromEngine("status Engine Terminated");
+                            }
+                        });
                     }
                 }
             }
@@ -83,11 +87,7 @@ public class ReversiEngine {
             Ping();
 
         g_debugLog.println(sCommand);
-        try {
-            CGameX.toNTest.put(sCommand);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
+        out.println(sCommand);
     }
 
     /**

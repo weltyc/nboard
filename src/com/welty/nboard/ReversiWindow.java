@@ -1,16 +1,16 @@
 package com.welty.nboard;
 
 import com.orbanova.common.misc.Require;
-import com.welty.othello.c.CReader;
-import com.welty.othello.c.CWriter;
-import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsMoveListItem;
-import com.welty.othello.gdk.COsPosition;
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.RadioGroup;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.thor.DatabaseData;
 import com.welty.nboard.thor.ThorWindow;
+import com.welty.othello.c.CReader;
+import com.welty.othello.c.CWriter;
+import com.welty.othello.gdk.COsGame;
+import com.welty.othello.gdk.COsMoveListItem;
+import com.welty.othello.gdk.COsPosition;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -93,7 +93,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
 
     ReversiWindow() {
         super("NBoard");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override public void windowClosing(WindowEvent e) {
                 setVisible(false);
@@ -107,7 +107,11 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         setIconImage(icon.getImage());
 
         m_pd = new ReversiData(this, this);
-        m_engine = new ReversiEngine(this);
+        try {
+            m_engine = new ReversiEngine(this);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Unable to start engine: " + e, "External Engine Error", JOptionPane.ERROR_MESSAGE);
+        }
         chooser = new GgfFileChooser(this);
         setResizable(false);
         m_pgsw = new GameSelectionWindow(this);
@@ -176,8 +180,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         menuBar.add(createMenuItem("&Edit", createEditMenu()));
         menuBar.add(createMenuItem("&View", createViewMenu()));
 
-        JMenu m_engineMenu;
-        menuBar.add(createMenuItem("E&ngine", m_engineMenu = createEngineMenu()));
+        menuBar.add(createMenuItem("E&ngine", createEngineMenu()));
 
         // set up the Thor menu
         JMenu m_thorMenu = new JMenu();
@@ -427,9 +430,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
             if (t != null && t.isDataFlavorSupported(DataFlavor.stringFlavor)) {
                 return (String) t.getTransferData(DataFlavor.stringFlavor);
             }
-        } catch (UnsupportedFlavorException e) {
-            // just return null
-        } catch (IOException e) {
+        } catch (UnsupportedFlavorException | IOException e) {
             // just return null
         }
         return null;
@@ -591,7 +592,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
             final String acc = parts[1];
             if (acc.startsWith("Ctrl+")) {
                 final char accChar = Character.toUpperCase(acc.charAt(5));
-                menuItem.setAccelerator(KeyStroke.getKeyStroke(accChar, ActionEvent.CTRL_MASK));
+                menuItem.setAccelerator(KeyStroke.getKeyStroke(accChar, InputEvent.CTRL_MASK));
             } else if (acc.equals("up arrow")) {
                 menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
                 menuItem.setIcon(getImage("first.GIF"));
@@ -697,7 +698,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         is.ignoreWhitespace();
 
         if (sCommand.equals("pong")) {
-            int n = 0;
+            int n;
             try {
                 n = is.readInt();
             } catch (EOFException e) {
@@ -720,29 +721,35 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         }
         // These commands are only used if the computer is up-to-date
         else if (m_engine.IsReady()) {
-            if (sCommand.equals("===")) {
-                // Need to check whether it's the computer's move. This is because the user may have
-                // switched modes while the computer was thinking.
-                if (!UsersMove()) {
-                    // now update the move list
-                    COsMoveListItem mli = new COsMoveListItem();
-                    mli.In(is);
-                    m_pd.Update(mli, false);
+            switch (sCommand) {
+                case "===":
+                    // Need to check whether it's the computer's move. This is because the user may have
+                    // switched modes while the computer was thinking.
+                    if (!UsersMove()) {
+                        // now update the move list
+                        COsMoveListItem mli = new COsMoveListItem();
+                        mli.In(is);
+                        m_pd.Update(mli, false);
 
+                    }
+                    SetStatus("");
+                    break;
+                // computer giving hints
+                case "book": {
+                    // if the engine is going to move from book, then don't display the book moves
+                    // as it just makes the screen flicker.
+                    boolean fBlackMove = m_pd.Game().pos.board.fBlackMove;
+                    m_hints.Add(is, fBlackMove, true);
+                    break;
                 }
-                SetStatus("");
-            }
-            // computer giving hints
-            else if (sCommand.equals("book")) {
-                // if the engine is going to move from book, then don't display the book moves
-                // as it just makes the screen flicker.
-                boolean fBlackMove = m_pd.Game().pos.board.fBlackMove;
-                m_hints.Add(is, fBlackMove, true);
-            } else if (sCommand.equals("search")) {
-                boolean fBlackMove = m_pd.Game().pos.board.fBlackMove;
-                m_hints.Add(is, fBlackMove, false);
-            } else if (sCommand.equals("learn")) {
-                SetStatus("");
+                case "search": {
+                    boolean fBlackMove = m_pd.Game().pos.board.fBlackMove;
+                    m_hints.Add(is, fBlackMove, false);
+                    break;
+                }
+                case "learn":
+                    SetStatus("");
+                    break;
             }
         }
     }
@@ -859,7 +866,6 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         // If we're reviewing we want the engine to learn the complete game,
         // not just the game up to the point where we're reviewing.
         // We alter iMove and restore it afterwards.
-        int iMove = m_pd.IMove();
         boolean fReviewing = m_pd.Reviewing();
         if (fReviewing) {
             SendSetGame(m_pd.Game().ml.size());
