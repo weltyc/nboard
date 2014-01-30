@@ -9,18 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: HP_Administrator
- * Date: Jun 23, 2009
- * Time: 8:14:57 PM
- * To change this template use File | Settings | File Templates.
+ * User choices for engine max search depth
  */
 public class DepthRadioGroup extends RadioGroup {
     // Depths for depth menu
     private static final int depths[] = {2, 3, 4, 6, 8, 12, 16, 20, 22, 26, 30};
     private int m_userDefinedDepth;
     private static final String userDepthKey = "Engine/UserDefinedDepth";
-    private final ReversiWindow window;
 
     public DepthRadioGroup(ReversiWindow window, JMenu menu, List<Runnable> shutdownHooks) {
         this(window, menu, shutdownHooks, createMenuItems());
@@ -28,7 +23,6 @@ public class DepthRadioGroup extends RadioGroup {
 
     private DepthRadioGroup(final ReversiWindow window, JMenu menu, List<Runnable> shutdownHooks, JRadioButtonMenuItem[] items) {
         super(menu, "Engine/Depth", 2, shutdownHooks, items);
-        this.window = window;
         m_userDefinedDepth = NBoard.RegistryReadU4(userDepthKey, 5);
         for (int i = 0; i < items.length; i++) {
             ActionListener engineArbitraryDepthSetter = new ActionListener() {

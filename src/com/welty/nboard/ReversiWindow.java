@@ -52,6 +52,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker 
     private GameSelectionWindow m_pgsw;    //< Used in File/Open... dialog when there are multiple games in a file
     private Hints m_hints;
     private DatabaseData dd;
+    private DepthRadioGroup m_depthRadioGroup;
 
     DatabaseData PD() {
         return m_pwThor.PD();
@@ -131,9 +132,6 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         );
 
 
-        // engine initialization
-        SendCommand("nboard 1", false);
-
         m_hints = new Hints();
 
         // and show the move grid
@@ -154,12 +152,18 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         add(mainPanel);
 
         ConstructMenus();
-        m_statusBar.SetStatus("Loading Engine");
 
         m_pd.AddListener(m_hints);
 
         pack();
         setVisible(true);
+
+
+        // engine initialization - do this after we've constructed the windows for
+        // the responses to be displayed in
+        m_statusBar.SetStatus("Loading Engine");
+        SendCommand("nboard 1", false);
+        SendCommand("set depth " + m_depthRadioGroup.getDepth(), true);
     }
 
     public static ImageIcon getImage(String path) {
@@ -514,8 +518,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
     private void createDepthMenu() {
         // set up the depth menu
         m_depthMenu = new JMenu();
-        DepthRadioGroup depth = new DepthRadioGroup(this, m_depthMenu, shutdownHooks);
-        SendCommand("set depth " + depth.getDepth(), false);
+        m_depthRadioGroup = new DepthRadioGroup(this, m_depthMenu, shutdownHooks);
     }
 
     private JMenu createFlipMenu() {
