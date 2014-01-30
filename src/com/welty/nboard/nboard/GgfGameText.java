@@ -216,7 +216,7 @@ public class GgfGameText {
                     result.add(gt);
                 }
             }
-            catch (IllegalStateException e) {
+            catch (IllegalStateException | IllegalArgumentException e) {
                 nInvalid++;
             }
         }

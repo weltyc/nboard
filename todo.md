@@ -6,6 +6,8 @@ H4   X   Clear hint window when the hints are out of date
 H5   X   Passes are counted twice when white passes in self-play games (edax:4, (;GM[Othello]PC[NBoard]DT[2014-01-29 23:05:30 GMT]PB[null]PW[null]RE[?]TI[0//0]TY[8]BO[8 ---------------------------O*------*O--------------------------- *]B[F5]W[F4]B[E3]W[F6]B[E6]W[C5]B[G5]W[D3]B[D6]W[F7]B[G6]W[E7]B[C6]W[D7]B[F3]W[C4]B[F8]W[H6]B[B5]W[E8]B[C7]W[G8]B[D8]W[C8]B[C2]W[A6]B[C3]W[H5]B[B4]W[A3]B[B6]W[G3]B[G4]W[H4]B[A5]W[A4]B[B7]W[C1]B[B3]W[D2]B[F2]W[E2]B[B8]W[A8]B[A7]W[G7]B[E1]W[D1]B[B1]W[G2]B[H1]W[B2]B[H3]W[G1]B[H2]W[PA];))
 H6   X   User menu choices should be stored in Preferences.
 H7   X   Display Edax eval in move list
+H8   X   Can't load ggs games file
+H9       Database "look up position" doesn't, unless "Look up all" is already checked.
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key
