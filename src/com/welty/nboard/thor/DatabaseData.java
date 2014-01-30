@@ -20,7 +20,11 @@ import gnu.trove.list.array.TIntArrayList;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -83,17 +87,17 @@ public class DatabaseData extends GridTableModel {
 
     private String m_fnThorTournaments;    //*< Currently loaded Thor tournaments file
     private String m_fnThorPlayers;        //*< Currently loaded Thor players file
-    private final HashSet<String> m_fnThorGames = new HashSet<String>();        //*< Currently loaded Thor games files
+    private final HashSet<String> m_fnThorGames = new HashSet<>();        //*< Currently loaded Thor games files
 
     private TIntArrayList m_index = new TIntArrayList();            //*< List of games that match the displayed position.
     private final static int nFields = 6;
     private final String[] m_filters = new String[nFields];                //*< Text that must match the given field in order to display the position
 
     private int m_nThorGames;                    //*< Number of games loaded from WTB files
-    private final ArrayList<GgfGameText> m_ggfGames = new ArrayList<GgfGameText>();    //*< GGF text of games loaded from GGF files
-    private ArrayList<ThorGameInternal> m_tgis = new ArrayList<ThorGameInternal>();    //*< WTB games followed by converted GGF games
-    private ArrayList<String> m_players = new ArrayList<String>();
-    private ArrayList<String> m_tournaments = new ArrayList<String>();
+    private final ArrayList<GgfGameText> m_ggfGames = new ArrayList<>();    //*< GGF text of games loaded from GGF files
+    private ArrayList<ThorGameInternal> m_tgis = new ArrayList<>();    //*< WTB games followed by converted GGF games
+    private ArrayList<String> m_players = new ArrayList<>();
+    private ArrayList<String> m_tournaments = new ArrayList<>();
 
 
     /**
@@ -178,7 +182,7 @@ public class DatabaseData extends GridTableModel {
                 CReader config = new CReader(sConfig);
                 LoadPlayers(config.readLine());
                 LoadTournaments(config.readLine());
-                ArrayList<String> fns = new ArrayList<String>();
+                ArrayList<String> fns = new ArrayList<>();
                 String fn;
                 while (null != (fn = config.readLine())) {
                     fns.add(fn);
@@ -274,7 +278,7 @@ public class DatabaseData extends GridTableModel {
      * @return the text (e.g. "Welty Chris") given the game (item) and field (e.g. 0=black player name)
      */
     public String GameItemText(int item, int field) {
-        int n = 0;
+        int n;
 
         final ThorGameInternal game = m_tgis.get(item);
 
@@ -353,7 +357,7 @@ public class DatabaseData extends GridTableModel {
             if (files.length != 0) {
                 NBoard.RegistryWriteString("Thor/GamesFiles", files[0].getAbsolutePath());
             }
-            final ArrayList<String> filenames = new ArrayList<String>();
+            final ArrayList<String> filenames = new ArrayList<>();
             for (File file : files) {
                 filenames.add(file.getAbsolutePath());
             }
@@ -388,7 +392,7 @@ public class DatabaseData extends GridTableModel {
     void LoadGames(final List<String> fns) {
         if (!fns.isEmpty()) {
             UnloadGames();
-            ArrayList<ThorGameInternal> games = new ArrayList<ThorGameInternal>();
+            ArrayList<ThorGameInternal> games = new ArrayList<>();
             for (String it : fns) {
                 try {
                     if (IsWtbFilename(it)) {
@@ -506,6 +510,11 @@ public class DatabaseData extends GridTableModel {
                     final double freq = counts[openingCode] / nGames;
                     os.append(String.format("%5.2f", freq * 100)).append("%\t").append(OpeningName(openingCode)).append("\n");
                 }
+            }
+            try (final BufferedWriter out = Files.newBufferedWriter(file.toPath(), Charset.defaultCharset())) {
+                out.write(os.toString());
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Can't write to file " + file + ": " + e, "Error writing to file", JOptionPane.ERROR_MESSAGE);
             }
         }
         return file != null;
