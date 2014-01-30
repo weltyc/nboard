@@ -11,6 +11,7 @@ L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key
 L3   X   Accelerator for quit/exit menu item on Mac
 L4   X   Move list window too narrow on Mac
+L5   NB  Display engine status [As per spec, engine status is cleared after the engine moves]
 
 F1       External engine window
 F2       Alternate start positions
