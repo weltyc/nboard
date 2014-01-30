@@ -1,0 +1,90 @@
+
+F5d6                                     Perpendicular
+F5d6C3d3C4                               Tiger
+F5d6C3d3C4b3                             Aubrey, Tanaka
+F5d6C3d3C4f4C5b3C2                       Rose-Bill
+F5d6C3d3C4f4C5b3C2e3                     Nicolet
+F5d6C3d3C4f4C5b3C2b4                     Central Rose-Bill
+F5d6C3d3C4f4C5b3C2e6                     Tamenori
+F5d6C3d3C4f4C5b4B5c6F3e6E3               Ishii
+F5d6C3d3C4f4C5b4B5c6F3e6E3g6F6g5D7g3     Mainline Tiger
+F5d6C3d3C4f4E3                           Brightwell
+F5d6C3d3C4f4E6                           Leader's Tiger
+F5d6C3d3C4f4F6                           Stephenson
+F5d6C3d3C4f4F6b4                         Kung
+F5d6C3d3C4f4F6f3                         Comp'Oth
+F5d6C3d3C4f4F6g5                         No-Kung
+F5d6C3d3C4f4F6g5E3f3G4h3G3f2             No-Kung (Continuation)
+F5d6C3g5                                 Ganglion
+F5d6C4d3C5                               Cat
+F5d6C4d3C5f4E3f3C2b4B3                   Berner
+F5d6C4d3C5f4E3f3C2c6                     Sakaguchi
+F5d6C4d3E6                               Italian
+F5d6C4g5                                 No-Cat
+F5d6C4g5C6                               Swallow
+F5d6C4g5C6c5D7d3B4c3E3f3                 No-Cat (Continuation)
+F5d6C5f4D3                               Horse
+F5d6C5f4E3c6D3f3                         Ralle
+F5d6C5f4E3c6D3f6E6d7                     Rose
+F5d6C5f4E3c6D3f6E6d7E7                   Greenberg, Dawg
+F5d6C5f4E3c6D3f6E6d7G3c4                 Rose-Birth
+F5d6C5f4E3c6D3f6E6d7G3c4B4               Rose-birdie, Rose-Tamenori
+F5d6C5f4E3c6D3f6E6d7G3c4B4c3             Rose-Tamenori-Kling
+F5d6C5f4E3c6D3f6E6d7G3c4G5c3B4e2         Brightstein
+F5d6C5f4E3c6D3f6E6d7G4                   Flat
+F5d6C5f4E3c6D3f6E6d7G4c4                 Rotating Flat
+F5d6C5f4E3c6D3f6E6d7G4c4G5c3F7d2E7f2     Rotating Flat (Kling Continuation)
+F5d6C5f4E3c6D3f6E6d7G4c4G6               Murakami Variation
+F5d6C5f4E3c6D7                           Bhagat
+F5d6C5f4E3c6E6                           Inoue
+F5d6C5f4E3c6E6f6                         Iago
+F5d6C5f4E3c6F3                           Shaman, Danish
+F5d6C5f4E3d3                             Mimura
+F5f4                                     Parallel
+F5f6                                     Diagonal
+F5f6C4f4                                 Semi-Wing Variation
+F5f6D3f4                                 Wing Variation
+F5f6E6d6C3                               Buffalo, Kenichi Variation
+F5f6E6d6C3d3                             Hokuriku Buffalo 
+F5f6E6d6C3f4C6d3E3d2                     Tanida Buffalo
+F5f6E6d6C3g4C6                           Maruoka Buffalo
+F5f6E6d6C5                               Cow
+F5f6E6d6C5e3D3                           Rose-v-Toth
+F5f6E6d6C5e3D3c4C3                       Landau
+F5f6E6d6C5e3D3c4C6b5                     Maruoka
+F5f6E6d6C5e3D3g5                         Tanida
+F5f6E6d6C5e3D3g5D7                       Aircraft, Feldborg
+F5f6E6d6C5e3D3g5E2b5                     Sailboat
+F5f6E6d6C5e3E7                           Bat, Cow Bat, Cambridge
+F5f6E6d6C5e3E7c6D7f7C7f4G6e8D8c8G5       Bat (Kling Continuation)
+F5f6E6d6C5e3E7c7D7c6D3                   Melnikov, Bat (Piau Continuation 1)
+F5f6E6d6C5e3E7c7D7c6F7                   Bat (Piau Continuation 2)
+F5f6E6d6C5e3E7f4F7                       Bat (Kling Alternative)
+F5f6E6d6C5f4                             Chimney
+F5f6E6d6C7c6D7                           Hamilton
+F5f6E6d6C7f4                             Lollipop
+F5f6E6d6D7                               Raccoon Dog
+F5f6E6d6E7                               Heath, Tobidashi, Jumping Out
+F5f6E6d6E7f4                             Heath-Chimney, Mass-Turning
+F5f6E6d6E7g5C5                           Heath-Bat
+F5f6E6d6E7g5G4                           Iwasaki variation
+F5f6E6d6E7g5G6e3C5c6D3c4B3               Mimura variation II
+F5f6E6d6F7                               Snake, Peasant
+F5f6E6d6F7e3D7e7C6c5D3                   Checkerboarding Peasant, Pyramid
+F5f6E6d6G7                               X-square Opening
+//
+// some that I've added
+//
+F5d6C5                                   Fishhook
+F5d6C3d3C4f4C5b4                         Grand Central
+F5d6C3d3C4f4F6f3E6e7                     Scorpion
+F5d6C3d3C4f4F6f3E6e7F7                   Scorpion (Classic)
+F5d6C3d3C4f4F6f3E6e7D7                   Scorpion (New)
+F5d6C3d3C4f4F6f3E3                       Lightning Bolt
+F5d6C3d3C4f4C5b3C2b4E3e6C6f6A5a4B5a6D7c7 20-move opening
+F5f6E6f4G5e7F7                           Classic Heath
+F5d6C3d3C4f4F6f3E6e7D7g6F8f7G5           Low-FAT
+F5d6C3d3C4f4F6f3E6e7D7g6F8f7G5h6H4g4H3h5H7c5B4  F.A.T.
+F5d6C3d3C4f4F6f3E6e7D7g6F8f7G5h6H4g4H3g3 No-FAT
+F5d6C5f4E3c6D3g5                         8-Shot
+F5d6C3d3C4f4C6                           Spencer
