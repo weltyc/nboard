@@ -470,7 +470,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         ) {
             @Override public int readIndex() {
                 // it's really annoying to have engine/engine matches on startup. Switch to user/user in this case
-                final int mode = Math.max(0, Math.min(super.getIndex(), 2));
+                final int mode = Math.max(0, Math.min(super.readIndex(), 2));
                 SetMode(mode, false);
                 return mode;
             }
@@ -553,6 +553,15 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         return menuItem;
     }
 
+    /**
+     * Create a checkbox menu item whose value is stored in Preferences.
+     *
+     * @param textAndAccelerator Text of the menu item, with the accelerator choice preceded by an '&'
+     * @param key                Preferences key where the checked/unchecked state will be stored on shutdown
+     * @param defaultChecked     if no Preferences currently exist, should this menu item be checked?
+     * @param listeners          ActionListeners that will be added to this menu item
+     * @return the menu item
+     */
     private JMenuItem createCheckBoxMenuItem(String textAndAccelerator, final String key, boolean defaultChecked, ActionListener... listeners) {
         final JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem();
         final boolean isChecked = NBoard.RegistryReadU4(key, defaultChecked ? 1 : 0) != 0;

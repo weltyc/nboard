@@ -79,7 +79,6 @@ class TipOfTheDayTlw extends JFrame implements ActionListener {
             }
         } catch (IOException e) {
             // ignore, shouldn't bother user about this.
-            System.out.println("debug breakpoint");
         }
         return tips;
     }

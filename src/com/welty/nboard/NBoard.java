@@ -41,7 +41,8 @@ public class NBoard {
 
     public static int RegistryReadU4(String key, int def) {
         Preferences p = Preferences.userRoot();
-        return p.getInt(sRegKey + key, def);
+        final int prefValue = p.getInt(sRegKey + key, def);
+        return prefValue;
     }
 
     public static String RegistryReadString(String key, String def) {
