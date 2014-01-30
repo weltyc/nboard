@@ -8,6 +8,7 @@ import com.welty.nboard.thor.DatabaseData;
 import com.welty.nboard.thor.ThorWindow;
 import com.welty.othello.c.CReader;
 import com.welty.othello.c.CWriter;
+import com.welty.othello.core.OperatingSystem;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsPosition;
@@ -403,7 +404,8 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
             }
         }));
         m_fileMenu.addSeparator();
-        m_fileMenu.add(menuItem("E&xit").build(new ActionListener() {
+        final String text = OperatingSystem.os.isMacintosh() ? "&Quit\tCtrl+Q" : "E&xit";
+        m_fileMenu.add(menuItem(text).build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 getToolkit().getSystemEventQueue().postEvent(new WindowEvent(ReversiWindow.this, WindowEvent.WINDOW_CLOSING));
             }
