@@ -33,7 +33,7 @@ public class ReversiData implements BoardSource {
      * Event data = COsMoveListItem* if the change is an update of the position by 1 move, or NULL otherwise
      * don't raise this directly, raise via BoardChanged()
      */
-    private final SignalEvent<COsMoveListItem> m_seBoardChanged = new SignalEvent<COsMoveListItem>();
+    private final SignalEvent<COsMoveListItem> m_seBoardChanged = new SignalEvent<>();
 
 
     /**
@@ -106,7 +106,7 @@ public class ReversiData implements BoardSource {
     }
 
     /**
-     * Move foreward one move, unless at the end of the game
+     * Move forward one move, unless at the end of the game
      * <p/>
      * If the new position is at the end of the game the program will leave review mode. The game is left unchanged.
      * <p/>

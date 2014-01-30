@@ -676,8 +676,12 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
                     // switched modes while the computer was thinking.
                     if (!UsersMove()) {
                         // now update the move list
-                        COsMoveListItem mli = new COsMoveListItem();
-                        mli.In(is);
+
+                        // Edax produces the mli with spaces between components rather than slashes.
+                        // Translate to normal form if there are spaces.
+                        final String mliText = is.readLine().trim().replaceAll("\\s+", "/");
+                        final COsMoveListItem mli = new COsMoveListItem(mliText);
+
                         try {
                             m_pd.Update(mli, false);
                         } catch (IllegalArgumentException e) {
