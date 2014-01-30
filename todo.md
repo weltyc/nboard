@@ -7,7 +7,7 @@ H5   X   Passes are counted twice when white passes in self-play games (edax:4, 
 H6   X   User menu choices should be stored in Preferences.
 H7   X   Display Edax eval in move list
 H8   X   Can't load ggs games file
-H9       Database "look up position" doesn't, unless "Look up all" is already checked.
+H9   X   Database "look up position" doesn't, unless "Look up all" is already checked.
 H10      Click on database game should use real player names in review window
 
 L1   X   Display hints on the initial board position when in startup mode

@@ -8,6 +8,8 @@ import com.welty.nboard.thor.ThorSummaryData;
 import com.welty.othello.core.CMove;
 import gnu.trove.list.array.TIntArrayList;
 
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import java.util.Map;
 
 /**
@@ -17,7 +19,7 @@ import java.util.Map;
  * Time: 7:10:25 PM
  * </PRE>
  */
-class MoveGridTableModel extends GridTableModel {
+class MoveGridTableModel extends GridTableModel implements TableModelListener {
     private final TIntArrayList m_moves = new TIntArrayList();
     private final DatabaseData pdd;
     private final Hints m_hints;
@@ -25,6 +27,7 @@ class MoveGridTableModel extends GridTableModel {
     public MoveGridTableModel(DatabaseData pdd, Hints m_hints) {
         super(MoveGrid.columns);
         this.pdd = pdd;
+        pdd.addTableModelListener(this);
         this.m_hints = m_hints;
     }
 
@@ -119,4 +122,7 @@ class MoveGridTableModel extends GridTableModel {
         }
     }
 
+    @Override public void tableChanged(TableModelEvent e) {
+        UpdateHints();
+    }
 }
