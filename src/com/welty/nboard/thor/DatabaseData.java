@@ -10,6 +10,7 @@ import com.welty.nboard.gui.Align;
 import com.welty.nboard.gui.GridColumn;
 import com.welty.nboard.gui.GridTableModel;
 import com.welty.nboard.gui.SignalListener;
+
 import static com.welty.nboard.thor.Thor.*;
 import static com.welty.nboard.thor.ThorOpeningMap.NOpenings;
 import static com.welty.nboard.thor.ThorOpeningMap.OpeningName;
@@ -89,13 +90,26 @@ public class DatabaseData extends GridTableModel {
     private String m_fnThorPlayers;        //*< Currently loaded Thor players file
     private final HashSet<String> m_fnThorGames = new HashSet<>();        //*< Currently loaded Thor games files
 
-    private TIntArrayList m_index = new TIntArrayList();            //*< List of games that match the displayed position.
+    /**
+     * List of games that match the displayed position.
+     * <p/>
+     * The int is an index into m_tgis.
+     */
+    private TIntArrayList m_index = new TIntArrayList();
     private final static int nFields = 6;
     private final String[] m_filters = new String[nFields];                //*< Text that must match the given field in order to display the position
 
     private int m_nThorGames;                    //*< Number of games loaded from WTB files
-    private final ArrayList<GgfGameText> m_ggfGames = new ArrayList<>();    //*< GGF text of games loaded from GGF files
-    private ArrayList<ThorGameInternal> m_tgis = new ArrayList<>();    //*< WTB games followed by converted GGF games
+
+    /**
+     * GGF text of games loaded from GGF files
+     */
+    private final ArrayList<GgfGameText> m_ggfGames = new ArrayList<>();
+
+    /**
+     * WTB games followed by converted GGF games
+     */
+    private ArrayList<ThorGameInternal> m_tgis = new ArrayList<>();
     private ArrayList<String> m_players = new ArrayList<>();
     private ArrayList<String> m_tournaments = new ArrayList<>();
 
@@ -115,9 +129,10 @@ public class DatabaseData extends GridTableModel {
     }
 
     /**
+     * @param iGame model row, i.e. index into the list of displayed games
      * @return a game in GGS/os format.
      */
-    public COsGame GetOsGame(int iGame) {
+    public COsGame GameFromFilteredRow(int iGame) {
         COsGame game = new COsGame();
 
         if (iGame < m_nThorGames) {
@@ -189,8 +204,7 @@ public class DatabaseData extends GridTableModel {
                 }
                 LoadGames(fns);
                 return true;
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 // probably an EOF exception.
                 // todo should we stop translating EOF exceptions?
             }
@@ -312,7 +326,7 @@ public class DatabaseData extends GridTableModel {
                 case 1:
                     return text.PW();
                 case 2:
-                    n = m_tgis.get(item).year;
+                    n = game.year;
                     break;
                 case 3:
                     return text.PC();
@@ -387,51 +401,68 @@ public class DatabaseData extends GridTableModel {
     }
 
     /**
-     * Load a set of Thor games files
+     * Unload existing games files and load a new set
+     *
+     * Does nothing if fns is empty.
      */
     void LoadGames(final List<String> fns) {
         if (!fns.isEmpty()) {
+            ArrayList<ThorGameInternal> games = loadGames(fns);
+            setGames(games);
+        }
+    }
+
+    private void setGames(ArrayList<ThorGameInternal> games) {
+        m_index.clear();
+        for (int i = 0; i < NGames(); i++)
+            m_index.add(i);
+
+        // copy database data for games into m_ggfTgis for faster searching
+        m_tgis = games;
+        m_nThorGames = games.size();
+        for (final GgfGameText game : m_ggfGames) {
+            final int nBlackSquares = (new CReader(game.RE()).readInt(0) / 2) + 32;
+            final String dt = game.DT();
+            int year = new CReader(dt).readInt(0);
+            if (year > 100000) {
+                // early GGF games have a bug where the DT field is given in seconds since 1970-01-01 instead of
+                // the standard format. In this case, translate
+                final GregorianCalendar cal = new GregorianCalendar();
+                cal.setTimeInMillis((long) year * 1000);
+                year = cal.get(Calendar.YEAR);
+            }
+            ThorGameInternal tgi = new ThorGameInternal(nBlackSquares, game.Moves(), game.m_openingCode, year);
+            m_tgis.add(tgi);
+        }
+
+        LookUpPosition();
+        fireTableDataChanged();
+    }
+
+    /**
+     * Unload existing games and load new ones from the file
+     * @param fns
+     * @return
+     */
+    private ArrayList<ThorGameInternal> loadGames(List<String> fns) {
+        ArrayList<ThorGameInternal> games = new ArrayList<>();
+        try (final IndeterminateProgressMonitor monitor = new IndeterminateProgressMonitor(" games loaded")) {
             UnloadGames();
-            ArrayList<ThorGameInternal> games = new ArrayList<>();
             for (String it : fns) {
                 try {
                     if (IsWtbFilename(it)) {
-                        games.addAll(Thor.ThorLoadGames(it, games.size()));
+                        games.addAll(Thor.ThorLoadGames(it, monitor));
                     } else {
-                        m_ggfGames.addAll(GgfGameText.Load(new File(it)));
+                        final ArrayList<GgfGameText> ggfGameTexts = GgfGameText.Load(new File(it), monitor);
+                        m_ggfGames.addAll(ggfGameTexts);
                     }
                     m_fnThorGames.add(it);
-                }
-                catch (IllegalArgumentException e) {
+                } catch (IllegalArgumentException e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Error loading games file", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            ThorHideProgressWindow();
-            m_index.clear();
-            for (int i = 0; i < NGames(); i++)
-                m_index.add(i);
-
-            // copy database data for games into m_ggfTgis for faster searching
-            m_tgis = games;
-            m_nThorGames = games.size();
-            for (final GgfGameText game : m_ggfGames) {
-                final int nBlackSquares = (new CReader(game.RE()).readInt(0) / 2) + 32;
-                final String dt = game.DT();
-                int year = new CReader(dt).readInt(0);
-                if (year > 100000) {
-                    // early GGF games have a bug where the DT field is given in seconds since 1970-01-01 instead of
-                    // the standard format. In this case, translate
-                    final GregorianCalendar cal = new GregorianCalendar();
-                    cal.setTimeInMillis((long) year * 1000);
-                    year = cal.get(Calendar.YEAR);
-                }
-                ThorGameInternal tgi = new ThorGameInternal(nBlackSquares, game.Moves(), game.m_openingCode, year);
-                m_tgis.add(tgi);
-            }
-
-            LookUpPosition();
-            fireTableDataChanged();
         }
+        return games;
     }
 
     /**
@@ -455,8 +486,7 @@ public class DatabaseData extends GridTableModel {
             m_players = ThorLoadPlayers(fn);
             m_fnThorPlayers = fn;
             fireTableDataChanged();
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error loading players file", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -482,8 +512,7 @@ public class DatabaseData extends GridTableModel {
             m_fnThorTournaments = fn;
             NBoard.RegistryWriteString("Thor/TournamentsFile", fn);
             fireTableDataChanged();
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error loading tournament file", JOptionPane.ERROR_MESSAGE);
         }
     }

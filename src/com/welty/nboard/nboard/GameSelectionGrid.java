@@ -3,17 +3,15 @@ package com.welty.nboard.nboard;
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.GridColumn;
 import com.welty.nboard.gui.GridTableModel;
+import com.welty.nboard.thor.IndeterminateProgressMonitor;
+import com.welty.nboard.thor.IndeterminateProgressTracker;
 
 import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by IntelliJ IDEA.
- * User: HP_Administrator
- * Date: Jun 25, 2009
- * Time: 8:44:13 PM
- * To change this template use File | Settings | File Templates.
+ * Allows the user to select a game from a file.
  */
 class GameSelectionGrid extends Grid {
     private static final GridColumn[] gridColumns = {
@@ -44,7 +42,7 @@ class GameSelectionGrid extends Grid {
     }
 
     void Load(final File file) {
-        getTableModel().Load(file);
+        getTableModel().Load(file, new IndeterminateProgressMonitor(" games loaded"));
     }
 
     private static final int[] gameTextFieldFromColumn = {0, 1, 2, 4, 6};
@@ -87,8 +85,8 @@ class GameSelectionGrid extends Grid {
          * <p/>
          * \post Pops up a message box if some games appear invalid.
          */
-        void Load(final File fn) {
-            m_gts = GgfGameText.Load(fn);
+        void Load(final File fn, IndeterminateProgressTracker tracker) {
+            m_gts = GgfGameText.Load(fn, tracker);
             fireTableDataChanged();
             m_pwTarget.repaint();
         }

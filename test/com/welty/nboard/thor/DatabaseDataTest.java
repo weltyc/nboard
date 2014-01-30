@@ -9,6 +9,7 @@ import com.welty.othello.gdk.COsPosition;
 import com.welty.nboard.nboard.BoardSource;
 import com.welty.nboard.nboard.OptionSource;
 import org.easymock.EasyMock;
+import org.mockito.Mockito;
 
 import java.io.*;
 import java.util.Arrays;
@@ -149,21 +150,6 @@ public class DatabaseDataTest extends ArrayTestCase {
         assertEquals(new int[0], dd.FilteredIndex().toArray());
     }
 
-    public void testFoo() {
-        final Foo foo = EasyMock.createNiceMock(Foo.class);
-        EasyMock.expect(foo.bar()).andReturn(1);
-        EasyMock.replay(foo);
-        assertEquals(1, foo.bar());
-        EasyMock.reset(foo);
-        EasyMock.expect(foo.bar()).andReturn(2);
-        EasyMock.replay(foo);
-        assertEquals(2, foo.bar());
-    }
-
-    private static interface Foo {
-        int bar();
-    }
-
     /**
      * Create a temp file on disk
      *
@@ -184,5 +170,12 @@ public class DatabaseDataTest extends ArrayTestCase {
         out.close();
         file.deleteOnExit();
         return file.getAbsolutePath();
+    }
+
+    public void testGameFromFilteredRow() {
+        final OptionSource optionSource = Mockito.mock(OptionSource.class);
+        final BoardSource boardSource = Mockito.mock(BoardSource.class);
+
+        final DatabaseData dd = new DatabaseData(optionSource, boardSource);
     }
 }

@@ -46,7 +46,7 @@ class ThorTable extends Grid {
      */
     public void MouseDataClick(int modelRow, int modelCol) {
         if (modelRow < PD().NGames()) {
-            m_pd.Update(dd.GetOsGame(modelRow), false);
+            m_pd.Update(dd.GameFromFilteredRow(modelRow), false);
             m_pwTarget.BringToTop();
         }
     }

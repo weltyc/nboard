@@ -7,10 +7,12 @@ import com.welty.othello.core.CBitBoard;
 import com.welty.othello.core.CMove;
 import com.welty.othello.core.CMoves;
 import com.welty.othello.core.CQPosition;
+
 import static com.welty.othello.core.Utils.*;
 
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.procedure.TObjectProcedure;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -53,32 +55,17 @@ public class Thor {
 
 
     /**
-     * The thor progress window
-     */
-    private static ProgressWindow pwProgress = new ProgressWindow();
-
-    /**
-     * Hide the thor game loading progress window
-     */
-    static void ThorHideProgressWindow() {
-        pwProgress.setVisible(false);
-    }
-
-
-    /**
      * Load a thor 8x8 games database
      *
-     * @param fn     Filename
-     * @param nSoFar number of games loaded so far (for progress window)
+     * @param fn      Filename
+     * @param tracker tracks progress in loading the database
      * @return list of games from the file
      * @throws IllegalArgumentException if file doesn't exist
      */
-    static ArrayList<ThorGameInternal> ThorLoadGames(final String fn, int nSoFar) {
-        long t0 = System.currentTimeMillis();
-
+    static ArrayList<ThorGameInternal> ThorLoadGames(final String fn, @NotNull IndeterminateProgressTracker tracker) {
         final CBinaryReader is = new CBinaryReader(fn);
 
-        final ArrayList<ThorGameInternal> tgs = new ArrayList<ThorGameInternal>();
+        final ArrayList<ThorGameInternal> tgs = new ArrayList<>();
         // read header section
         final ThorHeader header = new ThorHeader(is);
 
@@ -92,15 +79,7 @@ public class Thor {
         while (is.available() != 0) {
             ThorGameInternal tg = new ThorGameInternal(is, header.year);
             tgs.add(tg);
-            int nGamesTotal = tgs.size() + nSoFar;
-
-            // display the progress window if it's been more than 1 second
-            if ((nGamesTotal & 1023) == 0 && System.currentTimeMillis() - t0 > 1000) {
-                t0 = System.currentTimeMillis();
-                pwProgress.SetText((nGamesTotal >> 10) + "k games loaded");
-                pwProgress.setVisible(true);
-                pwProgress.repaint();
-            }
+            tracker.increment();
         }
 
         // check number of games vs header
@@ -133,7 +112,7 @@ public class Thor {
             throw new IllegalArgumentException("This is not a thor file : " + fn);
 
         // read players
-        final ArrayList<String> ss = new ArrayList<String>();
+        final ArrayList<String> ss = new ArrayList<>();
         while (is.available() != 0) {
             final StringBuilder sb = new StringBuilder();
             for (int i = 0; i < nStringSize; i++) {
@@ -174,9 +153,9 @@ public class Thor {
     }
 
     /**
+     * @param bb          [in] Bitboard of the position
+     * @param reflections [in] all 8 reflections of the position we may want to match
      * @return if a position matches, index of the matching reflection. Otherwise -1.
-     * @param[in] bb Bitboard of the position
-     * @param[in] reflections all 8 reflections of the position we may want to match
      */
     private static int MatchesReflections(final CBitBoard bb, final CBitBoard reflections[]) {
         for (int reflection = 0; reflection < 8; reflection++) {
@@ -296,6 +275,7 @@ public class Thor {
         if ((iReflection & 2) != 0)
             move ^= 7;
         if ((iReflection & 1) != 0)
+            //noinspection OctalInteger
             move ^= 070;
         return move;
     }

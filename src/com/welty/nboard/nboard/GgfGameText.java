@@ -1,7 +1,9 @@
 package com.welty.nboard.nboard;
 
-import com.welty.othello.c.CReader;
+import com.orbanova.common.misc.Logger;
+import com.welty.nboard.thor.IndeterminateProgressTracker;
 import com.welty.nboard.thor.ThorOpeningMap;
+import com.welty.othello.c.CReader;
 
 import javax.swing.*;
 import java.io.EOFException;
@@ -19,6 +21,8 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class GgfGameText {
+    private static final Logger log = Logger.logger(GgfGameText.class);
+
     private static final String[] fields = {
             "PB[", "PW[", "DT[", "TY[", "RE[", "PC["
     };
@@ -101,9 +105,7 @@ public class GgfGameText {
             final CReader in = new CReader(m_text.substring(m_starts[4]));
             m_nResult = in.readInt();
         }
-        catch (IllegalArgumentException e) {
-            m_nResult = 0;
-        } catch (EOFException e) {
+        catch (IllegalArgumentException | EOFException e) {
             m_nResult = 0;
         }
         m_f8x8Standard = TY().equals("8");
@@ -189,22 +191,22 @@ public class GgfGameText {
      *
      * @return GgfGameTexts
      */
-    public static ArrayList<GgfGameText> Load(final File fn) {
-        CReader is;
+    public static ArrayList<GgfGameText> Load(final File fn, IndeterminateProgressTracker tracker) {
         try {
-            is = new CReader(fn);
+            return Load(new CReader(fn), tracker);
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, "Can't find file : " + fn, "Error loading games file", JOptionPane.ERROR_MESSAGE);
-            return new ArrayList<GgfGameText>();
+            return new ArrayList<>();
         }
-        return Load(is);
     }
 
-    static ArrayList<GgfGameText> Load(CReader is) {
-        ArrayList<GgfGameText> result = new ArrayList<GgfGameText>();
+    static ArrayList<GgfGameText> Load(CReader is, IndeterminateProgressTracker tracker) {
+        ArrayList<GgfGameText> result = new ArrayList<>();
 
+        log.info("Starting load");
         int nInvalid = 0;
         String data = is.readLine('\0');
+        log.info("Read data");
         StringLoc stringLoc = new StringLoc(data);
 
         // now we need to find the beginning of each game.
@@ -215,11 +217,13 @@ public class GgfGameText {
                 if (gt.Is8x8Standard()) {
                     result.add(gt);
                 }
+                tracker.increment();
             }
             catch (IllegalStateException | IllegalArgumentException e) {
                 nInvalid++;
             }
         }
+        log.info("parsed file");
 
         if (nInvalid != 0) {
             JOptionPane.showMessageDialog(null, "This file has " + nInvalid + " corrupt games", "Corrupt File alert", JOptionPane.WARNING_MESSAGE);
