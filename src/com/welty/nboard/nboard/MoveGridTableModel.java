@@ -1,4 +1,4 @@
-package com.welty.nboard;
+package com.welty.nboard.nboard;
 
 import com.orbanova.common.misc.Require;
 import com.welty.othello.gdk.COsMove;

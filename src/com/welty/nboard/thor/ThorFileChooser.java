@@ -1,6 +1,6 @@
 package com.welty.nboard.thor;
 
-import com.welty.nboard.NBoard;
+import com.welty.nboard.nboard.NBoard;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

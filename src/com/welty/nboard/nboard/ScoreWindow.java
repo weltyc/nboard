@@ -1,9 +1,9 @@
-package com.welty.nboard;
+package com.welty.nboard.nboard;
 
 import com.welty.othello.gdk.OsBoard;
 import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.PieceCounts;
-import static com.welty.nboard.GraphicsUtils.setPlainFont;
+import static com.welty.nboard.nboard.GraphicsUtils.setPlainFont;
 import com.welty.nboard.gui.SignalListener;
 
 import javax.swing.*;
@@ -66,7 +66,7 @@ class ScoreWindow extends JPanel {
         final JLabel player;
 
         PlayerPanel(int height, String scoreText, String iconName) {
-            ImageIcon icon = ReversiWindow.getImage(iconName);
+            ImageIcon icon = NBoard.getImage(iconName);
             if (iconName.equals("smallEmpty.PNG")) {
                 player = new JLabel(icon, SwingConstants.LEFT);
                 player.setPreferredSize(new Dimension(20, height));

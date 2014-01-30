@@ -1,7 +1,7 @@
 package com.welty.nboard.thor;
 
-import static com.welty.nboard.GraphicsUtils.drawString;
-import static com.welty.nboard.GraphicsUtils.fillRect;
+import static com.welty.nboard.nboard.GraphicsUtils.drawString;
+import static com.welty.nboard.nboard.GraphicsUtils.fillRect;
 
 import javax.swing.*;
 import java.awt.*;

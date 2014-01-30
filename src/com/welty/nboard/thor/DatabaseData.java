@@ -2,10 +2,10 @@ package com.welty.nboard.thor;
 
 import com.welty.othello.c.CReader;
 import com.welty.othello.gdk.*;
-import com.welty.nboard.BoardSource;
-import com.welty.nboard.GgfGameText;
-import com.welty.nboard.NBoard;
-import com.welty.nboard.OptionSource;
+import com.welty.nboard.nboard.BoardSource;
+import com.welty.nboard.nboard.GgfGameText;
+import com.welty.nboard.nboard.NBoard;
+import com.welty.nboard.nboard.OptionSource;
 import com.welty.nboard.gui.Align;
 import com.welty.nboard.gui.GridColumn;
 import com.welty.nboard.gui.GridTableModel;

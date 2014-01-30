@@ -1,4 +1,4 @@
-package com.welty.nboard;
+package com.welty.nboard.nboard;
 
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.GridColumn;

@@ -6,8 +6,8 @@ import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMove;
 import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsPosition;
-import com.welty.nboard.BoardSource;
-import com.welty.nboard.OptionSource;
+import com.welty.nboard.nboard.BoardSource;
+import com.welty.nboard.nboard.OptionSource;
 import org.easymock.EasyMock;
 
 import java.io.*;

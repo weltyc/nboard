@@ -1,4 +1,4 @@
-package com.welty.nboard;
+package com.welty.nboard.nboard;
 
 import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.Grid;
@@ -25,6 +25,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static com.welty.nboard.gui.MenuItemBuilder.menuItem;
 
 /**
  * Main window class for the Reversi app. Controls interaction with the user, the engine, and the menu.
@@ -104,7 +106,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
             }
         });
         final String path = "small.PNG";
-        final ImageIcon icon = getImage(path);
+        final ImageIcon icon = NBoard.getImage(path);
         setIconImage(icon.getImage());
 
         m_pd = new ReversiData(this, this);
@@ -166,14 +168,6 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         SendCommand("set depth " + m_depthRadioGroup.getDepth(), true);
     }
 
-    public static ImageIcon getImage(String path) {
-        java.net.URL imgURL = NBoard.class.getResource("images/" + path);
-        Require.notNull(imgURL, "image url for " + path);
-        final ImageIcon icon = new ImageIcon(imgURL);
-        Require.notNull(icon, "icon");
-        return icon;
-    }
-
     /**
      * Construct the menus and display them in the window
      */
@@ -188,39 +182,39 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
 
         // set up the Thor menu
         JMenu m_thorMenu = new JMenu();
-        m_thorMenu.add(createMenuItem("Load &games", new ActionListener() {
+        m_thorMenu.add(menuItem("Load &games").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().LoadGames();
             }
         }));
-        m_thorMenu.add(createMenuItem("&Unload games", new ActionListener() {
+        m_thorMenu.add(menuItem("&Unload games").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().UnloadGames();
             }
         }));
-        m_thorMenu.add(createMenuItem("Load &players", new ActionListener() {
+        m_thorMenu.add(menuItem("Load &players").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().LoadPlayers();
             }
         }));
-        m_thorMenu.add(createMenuItem("Load &tournaments", new ActionListener() {
+        m_thorMenu.add(menuItem("Load &tournaments").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().LoadTournaments();
             }
         }));
         m_thorMenu.addSeparator();
-        m_thorMenu.add(createMenuItem("Load &config", new ActionListener() {
+        m_thorMenu.add(menuItem("Load &config").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().LoadConfig();
             }
         }));
-        m_thorMenu.add(createMenuItem("&Save config", new ActionListener() {
+        m_thorMenu.add(menuItem("&Save config").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().SaveConfig();
             }
         }));
         m_thorMenu.addSeparator();
-        m_thorMenu.add(createMenuItem("&Look up position", new ActionListener() {
+        m_thorMenu.add(menuItem("&Look up position").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().LookUpPosition();
             }
@@ -228,7 +222,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         thorLookUpAll = createCheckBoxMenuItem("Look up &all", "Thor/LookUpAll", true);
         m_thorMenu.add(thorLookUpAll);
         m_thorMenu.addSeparator();
-        m_thorMenu.add(createMenuItem("Save Opening &Frequencies", new ActionListener() {
+        m_thorMenu.add(menuItem("Save Opening &Frequencies").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().SaveOpeningFrequencies();
             }
@@ -255,9 +249,9 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         m_viewMenu.add(createCheckBoxMenuItem("&Tip of the Day", "View/Totd", true, repaintBoard));
 
         m_viewMenu.addSeparator();
-        JRadioButtonMenuItem viewHighlightNone = createRadioButtonMenuItem("No highlighting", repaintBoard);
-        viewHighlightLegal = createRadioButtonMenuItem("Highlight &Legal moves", repaintBoard);
-        viewHighlightBest = createRadioButtonMenuItem("Highlight &Best move", repaintBoard);
+        JRadioButtonMenuItem viewHighlightNone = menuItem("No highlighting").buildRadioButton(repaintBoard);
+        viewHighlightLegal = menuItem("Highlight &Legal moves").buildRadioButton(repaintBoard);
+        viewHighlightBest = menuItem("Highlight &Best move").buildRadioButton(repaintBoard);
         new RadioGroup(m_viewMenu, "View/Highlight", 1, shutdownHooks, viewHighlightNone, viewHighlightLegal, viewHighlightBest);
         return m_viewMenu;
     }
@@ -266,25 +260,25 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         JMenu m_flipMenu = createFlipMenu();
         // set up the Edit menu
         JMenu m_editMenu = new JMenu();
-        m_editMenu.add(createMenuItem("&Undo\tCtrl+Z", new ActionListener() {
+        m_editMenu.add(menuItem("&Undo\tCtrl+Z").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 m_pd.Undo();
             }
         }));
         m_editMenu.addSeparator();
-        m_editMenu.add(createMenuItem("&Copy Game\tCtrl+C", new ActionListener() {
+        m_editMenu.add(menuItem("&Copy Game\tCtrl+C").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 SetClipboardText(m_pd.Game().toString());
             }
         }));
 
-        m_editMenu.add(createMenuItem("Copy &Move List", new ActionListener() {
+        m_editMenu.add(menuItem("Copy &Move List").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 SetClipboardText(m_pd.Game().GetMoveList().toMoveListString());
             }
         }));
 
-        m_editMenu.add(createMenuItem("Copy &Board", new ActionListener() {
+        m_editMenu.add(menuItem("Copy &Board").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 StringBuilder os = new StringBuilder();
                 COsPosition displayedPosition = m_pd.DisplayedPosition();
@@ -299,7 +293,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
 
             }
         }));
-        m_editMenu.add(createMenuItem("&Paste Game\tCtrl+V", new ActionListener() {
+        m_editMenu.add(menuItem("&Paste Game\tCtrl+V").build(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 String s = GetClipboardText();
@@ -309,7 +303,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
             }
         }));
 
-        m_editMenu.add(createMenuItem("Paste Move &List", new ActionListener() {
+        m_editMenu.add(menuItem("Paste Move &List").build(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 String s = GetClipboardText();
@@ -322,7 +316,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
             }
         }));
 
-        m_editMenu.add(createMenuItem("Paste Board", new ActionListener() {
+        m_editMenu.add(menuItem("Paste Board").build(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 String s = GetClipboardText();
@@ -351,22 +345,22 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
 
     private JMenuItem createMoveMenu() {
         final JMenu menu = new JMenu("Move");
-        menu.add(createMenuItem("First\tup arrow", new ActionListener() {
+        menu.add(menuItem("First\tup arrow").icon("first.gif").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 m_pd.First();
             }
         }));
-        menu.add(createMenuItem("Last\tdown arrow", new ActionListener() {
+        menu.add(menuItem("Last\tdown arrow").icon("last.GIF").build( new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 m_pd.Last();
             }
         }));
-        menu.add(createMenuItem("Back\tleft arrow", new ActionListener() {
+        menu.add(menuItem("Back\tleft arrow").icon("undo.GIF").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 m_pd.Back();
             }
         }));
-        menu.add(createMenuItem("Fore\tright arrow", new ActionListener() {
+        menu.add(menuItem("Fore\tright arrow").icon("redo.GIF").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 m_pd.Fore();
             }
@@ -378,7 +372,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         // set up the File menu
         JMenu m_fileMenu = new JMenu();
         m_fileMenu.setMnemonic(KeyEvent.VK_F);
-        m_fileMenu.add(createMenuItem("&New\tCtrl+N", new ActionListener() {
+        m_fileMenu.add(menuItem("&New\tCtrl+N").build(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 m_pd.StartNewGame();
@@ -389,7 +383,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
                 }
             }
         }));
-        m_fileMenu.add(createMenuItem("&Open\tCtrl+O", new ActionListener() {
+        m_fileMenu.add(menuItem("&Open\tCtrl+O").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // note: We continue to receive windows messages in the GetOpenFilename() function.
                 final File file = chooser.open();
@@ -398,18 +392,18 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
                 }
             }
         }));
-        m_fileMenu.add(createMenuItem("&Save\tCtrl+S", new ActionListener() {
+        m_fileMenu.add(menuItem("&Save\tCtrl+S").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Save(false);
             }
         }));
-        m_fileMenu.add(createMenuItem("&Append\tCtrl+A", new ActionListener() {
+        m_fileMenu.add(menuItem("&Append\tCtrl+A").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Save(true);
             }
         }));
         m_fileMenu.addSeparator();
-        m_fileMenu.add(createMenuItem("E&xit", new ActionListener() {
+        m_fileMenu.add(menuItem("E&xit").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 getToolkit().getSystemEventQueue().postEvent(new WindowEvent(ReversiWindow.this, WindowEvent.WINDOW_CLOSING));
             }
@@ -463,10 +457,10 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         };
 
         mode = new RadioGroup(menu, "Engine/Mode", 1, shutdownHooks,
-                createRadioButtonMenuItem("&User plays both", modeSetter),
-                createRadioButtonMenuItem("User plays &Black", modeSetter),
-                createRadioButtonMenuItem("User plays &White", modeSetter),
-                createRadioButtonMenuItem("&Engine plays both", modeSetter)
+                menuItem("&User plays both").buildRadioButton(modeSetter),
+                menuItem("User plays &Black").buildRadioButton(modeSetter),
+                menuItem("User plays &White").buildRadioButton(modeSetter),
+                menuItem("&Engine plays both").buildRadioButton(modeSetter)
         ) {
             @Override public int readIndex() {
                 // it's really annoying to have engine/engine matches on startup. Switch to user/user in this case
@@ -479,7 +473,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         menu.addSeparator();
 
         menu.add(engineLearnAll = createCheckBoxMenuItem("Learn &all completed games", "Engine/LearnAll", false));
-        menu.add(createMenuItem("Learn &this game", new ActionListener() {
+        menu.add(menuItem("Learn &this game").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 TellEngineToLearn();
             }
@@ -492,19 +486,19 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
             }
         };
         drawsTo = new RadioGroup(menu, "Engine/DrawsTo", 1, shutdownHooks,
-                createRadioButtonMenuItem("Draws to Black", contemptSetter),
-                createRadioButtonMenuItem("Draws = 0", contemptSetter),
-                createRadioButtonMenuItem("Draws to White", contemptSetter)
+                menuItem("Draws to Black").buildRadioButton(contemptSetter),
+                menuItem("Draws = 0").buildRadioButton(contemptSetter),
+                menuItem("Draws to White").buildRadioButton(contemptSetter)
         );
 
         // top n list
         menu.addSeparator();
 
         engineTop = new RadioGroup(menu, "Engine/Top", 2, shutdownHooks,
-                createRadioButtonMenuItem("Value >=1 move", engineUpdater),
-                createRadioButtonMenuItem("Value >=2 moves", engineUpdater),
-                createRadioButtonMenuItem("Value >=4 moves", engineUpdater),
-                createRadioButtonMenuItem("Value all moves", engineUpdater)
+                menuItem("Value >=1 move").buildRadioButton(engineUpdater),
+                menuItem("Value >=2 moves").buildRadioButton(engineUpdater),
+                menuItem("Value >=4 moves").buildRadioButton(engineUpdater),
+                menuItem("Value all moves").buildRadioButton(engineUpdater)
         );
 
         createDepthMenu();
@@ -535,22 +529,15 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         }
         // set up the Flip menu
         JMenu m_flipMenu = new JMenu();
-        m_flipMenu.add(createMenuItem("F5/C4 Turn 180�", new BoardFlipper(3)));
-        m_flipMenu.add(createMenuItem("F5/E6 Flop", new BoardFlipper(4)));
-        m_flipMenu.add(createMenuItem("F5/D3 Flop", new BoardFlipper(7)));
+        m_flipMenu.add(menuItem("F5/C4 Turn 180�").build(new BoardFlipper(3)));
+        m_flipMenu.add(menuItem("F5/E6 Flop").build(new BoardFlipper(4)));
+        m_flipMenu.add(menuItem("F5/D3 Flop").build(new BoardFlipper(7)));
         m_flipMenu.addSeparator();
-        m_flipMenu.add(createMenuItem("Flip Horizontally", new BoardFlipper(2)));
-        m_flipMenu.add(createMenuItem("Flip Vertically", new BoardFlipper(1)));
-        m_flipMenu.add(createMenuItem("Turn 90� Right", new BoardFlipper(6)));
-        m_flipMenu.add(createMenuItem("Turn 90� Left", new BoardFlipper(5)));
+        m_flipMenu.add(menuItem("Flip Horizontally").build(new BoardFlipper(2)));
+        m_flipMenu.add(menuItem("Flip Vertically").build(new BoardFlipper(1)));
+        m_flipMenu.add(menuItem("Turn 90� Right").build(new BoardFlipper(6)));
+        m_flipMenu.add(menuItem("Turn 90� Left").build(new BoardFlipper(5)));
         return m_flipMenu;
-    }
-
-    static JRadioButtonMenuItem createRadioButtonMenuItem(String textAndAccelerator, ActionListener... listeners) {
-        final JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem();
-        updateMenuItem(textAndAccelerator, menuItem);
-        addActionListeners(menuItem, listeners);
-        return menuItem;
     }
 
     /**
@@ -563,63 +550,14 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
      * @return the menu item
      */
     private JMenuItem createCheckBoxMenuItem(String textAndAccelerator, final String key, boolean defaultChecked, ActionListener... listeners) {
-        final JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem();
+        final JCheckBoxMenuItem menuItem = menuItem(textAndAccelerator).buildCheckBox(listeners);
         final boolean isChecked = NBoard.RegistryReadU4(key, defaultChecked ? 1 : 0) != 0;
         menuItem.setSelected(isChecked);
-        addActionListeners(menuItem, listeners);
         shutdownHooks.add(new Runnable() {
             public void run() {
                 NBoard.RegistryWriteU4(key, menuItem.isSelected() ? 1 : 0);
             }
         });
-
-        return updateMenuItem(textAndAccelerator, menuItem);
-    }
-
-    private static void addActionListeners(JMenuItem menuItem, ActionListener... listeners) {
-        for (ActionListener listener : listeners) {
-            menuItem.addActionListener(listener);
-        }
-    }
-
-    private JMenuItem createMenuItem(String textAndAccelerator, ActionListener... listeners) {
-        final JMenuItem menuItem = new JMenuItem();
-        for (ActionListener listener : listeners) {
-            menuItem.addActionListener(listener);
-        }
-        return updateMenuItem(textAndAccelerator, menuItem);
-    }
-
-    private static JMenuItem updateMenuItem(String textAndAccelerator, JMenuItem menuItem) {
-        String[] parts = textAndAccelerator.split("\t");
-        int iMnemonic = parts[0].indexOf('&');
-        final String name = parts[0].replace("&", "");
-        menuItem.setText(name);
-        if (iMnemonic >= 0) {
-            final char mnemonic = Character.toUpperCase(name.charAt(iMnemonic));
-            menuItem.setMnemonic(mnemonic);
-        }
-        if (parts.length > 1) {
-            final String acc = parts[1];
-            if (acc.startsWith("Ctrl+")) {
-                final char accChar = Character.toUpperCase(acc.charAt(5));
-                menuItem.setAccelerator(KeyStroke.getKeyStroke(accChar, InputEvent.CTRL_MASK));
-            } else if (acc.equals("up arrow")) {
-                menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
-                menuItem.setIcon(getImage("first.GIF"));
-            } else if (acc.equals("down arrow")) {
-                menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
-                menuItem.setIcon(getImage("last.GIF"));
-            } else if (acc.equals("left arrow")) {
-                menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0));
-                menuItem.setIcon(getImage("undo.GIF"));
-            } else if (acc.equals("right arrow")) {
-                menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0));
-                menuItem.setIcon(getImage("redo.GIF"));
-            } else {
-                throw new IllegalArgumentException("bad accelerator : " + acc);
-            }
-        }
         return menuItem;
     }
 

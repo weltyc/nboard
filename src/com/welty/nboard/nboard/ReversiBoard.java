@@ -1,4 +1,4 @@
-package com.welty.nboard;
+package com.welty.nboard.nboard;
 
 import com.welty.othello.gdk.OsBoard;
 import com.welty.othello.gdk.COsMove;
@@ -113,11 +113,11 @@ class ReversiBoard extends JPanel {
     }
 
     // Bitmaps
-    private static final ImageIcon hbmBlack = ReversiWindow.getImage("black.PNG");
-    private static final ImageIcon hbmWhite = ReversiWindow.getImage("white.PNG");
-    private static final ImageIcon hbmEmpty = ReversiWindow.getImage("empty.PNG");
-    private static final ImageIcon hbmLegal = ReversiWindow.getImage("legal.PNG");
-    private static final ImageIcon hbmBadMove = ReversiWindow.getImage("badmove.PNG");
+    private static final ImageIcon hbmBlack = NBoard.getImage("black.PNG");
+    private static final ImageIcon hbmWhite = NBoard.getImage("white.PNG");
+    private static final ImageIcon hbmEmpty = NBoard.getImage("empty.PNG");
+    private static final ImageIcon hbmLegal = NBoard.getImage("legal.PNG");
+    private static final ImageIcon hbmBadMove = NBoard.getImage("badmove.PNG");
 
     /**
      * @return highlight char if the given move should be highlighted, else return 0
@@ -250,7 +250,7 @@ class ReversiBoard extends JPanel {
     /**
      * The right button down undoes a move.
      *
-     * @see com.welty.nboard.ReversiData#Undo
+     * @see ReversiData#Undo
      */
     void OnRightButtonDown(Point loc, int flags) {
         m_pd.Undo();

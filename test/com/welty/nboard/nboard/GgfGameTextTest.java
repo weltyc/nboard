@@ -1,5 +1,6 @@
-package com.welty.nboard;
+package com.welty.nboard.nboard;
 
+import com.welty.nboard.nboard.GgfGameText;
 import com.welty.othello.c.CReader;
 import com.welty.nboard.thor.ThorOpeningMap;
 import junit.framework.TestCase;

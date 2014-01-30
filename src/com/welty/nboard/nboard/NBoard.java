@@ -1,4 +1,6 @@
-package com.welty.nboard;
+package com.welty.nboard.nboard;
+
+import com.orbanova.common.misc.Require;
 
 import javax.swing.*;
 import java.io.File;
@@ -58,5 +60,13 @@ public class NBoard {
     public static void RegistryWriteString(String key, String s) {
         Preferences p = Preferences.userRoot();
         p.put(sRegKey + key, s);
+    }
+
+    public static ImageIcon getImage(String path) {
+        java.net.URL imgURL = NBoard.class.getResource("images/" + path);
+        Require.notNull(imgURL, "image url for " + path);
+        final ImageIcon icon = new ImageIcon(imgURL);
+        Require.notNull(icon, "icon");
+        return icon;
     }
 }

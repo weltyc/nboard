@@ -1,4 +1,4 @@
-package com.welty.nboard;
+package com.welty.nboard.nboard;
 
 import com.welty.nboard.gui.Align;
 import com.welty.nboard.gui.VAlign;

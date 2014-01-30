@@ -1,7 +1,7 @@
 package com.welty.nboard.thor;
 
-import com.welty.nboard.ReversiData;
-import com.welty.nboard.ReversiWindow;
+import com.welty.nboard.nboard.ReversiData;
+import com.welty.nboard.nboard.ReversiWindow;
 import com.welty.nboard.gui.Grid;
 
 import javax.swing.*;

@@ -1,4 +1,4 @@
-package com.welty.nboard;
+package com.welty.nboard.nboard;
 
 import com.welty.nboard.gui.RadioGroup;
 
@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.welty.nboard.gui.MenuItemBuilder.menuItem;
 
 /**
  * User choices for engine max search depth
@@ -66,9 +68,9 @@ public class DepthRadioGroup extends RadioGroup {
     private static JRadioButtonMenuItem[] createMenuItems() {
         final ArrayList<JRadioButtonMenuItem> depthMenuItems = new ArrayList<JRadioButtonMenuItem>();
         for (final int depth : depths) {
-            depthMenuItems.add(ReversiWindow.createRadioButtonMenuItem("" + depth));
+            depthMenuItems.add(menuItem("" + depth).buildRadioButton());
         }
-        depthMenuItems.add(ReversiWindow.createRadioButtonMenuItem("Other..."));
+        depthMenuItems.add(menuItem("Other...").buildRadioButton());
         return depthMenuItems.toArray(new JRadioButtonMenuItem[depthMenuItems.size()]);
     }
 }

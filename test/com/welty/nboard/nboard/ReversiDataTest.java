@@ -1,5 +1,8 @@
-package com.welty.nboard;
+package com.welty.nboard.nboard;
 
+import com.welty.nboard.nboard.EngineTalker;
+import com.welty.nboard.nboard.OptionSource;
+import com.welty.nboard.nboard.ReversiData;
 import com.welty.othello.gdk.COsGame;
 import com.welty.nboard.thor.ThorTest;
 import junit.framework.TestCase;

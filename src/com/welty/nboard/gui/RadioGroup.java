@@ -1,6 +1,6 @@
 package com.welty.nboard.gui;
 
-import com.welty.nboard.NBoard;
+import com.welty.nboard.nboard.NBoard;
 
 import javax.swing.*;
 import java.util.List;

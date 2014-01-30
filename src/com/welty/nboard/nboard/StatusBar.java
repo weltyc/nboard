@@ -1,7 +1,7 @@
-package com.welty.nboard;
+package com.welty.nboard.nboard;
 
 import com.welty.othello.gdk.COsMoveListItem;
-import static com.welty.nboard.GraphicsUtils.setPlainFont;
+import static com.welty.nboard.nboard.GraphicsUtils.setPlainFont;
 import com.welty.nboard.gui.SignalListener;
 import static com.welty.nboard.thor.ThorOpeningMap.OpeningCodeFromGgf;
 import static com.welty.nboard.thor.ThorOpeningMap.OpeningName;
@@ -89,7 +89,7 @@ class StatusBar extends JPanel {
     }
 
     private void addButton(JPanel buttonPanel, String iconName, int mnemonic, ActionListener listener) {
-        final ImageIcon icon = ReversiWindow.getImage(iconName + ".GIF");
+        final ImageIcon icon = NBoard.getImage(iconName + ".GIF");
         final JButton button = new JButton(icon);
         button.setMnemonic(mnemonic);
         button.addActionListener(listener);
