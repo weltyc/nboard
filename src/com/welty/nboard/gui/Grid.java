@@ -64,7 +64,7 @@ public abstract class Grid extends JScrollPane {
 
         table.setShowGrid(false);
 
-        int gridWidth = 0;
+        int gridWidth = 5; // looks better with a little space to the right
 
         for (int i = 0; i < tableModel.getColumnCount(); i++) {
             final int width = tableModel.getColumnWidth(i);

@@ -24,9 +24,9 @@ public class MoveList extends Grid {
     private static final GridColumn[] columns = {
             new GridColumn(30, "#"),
             new GridColumn(35, "Bk"),
-            new GridColumn(45, "Eval"),
+            new GridColumn(50, "Eval"),
             new GridColumn(35, "Wt"),
-            new GridColumn(45, "Eval")
+            new GridColumn(50, "Eval")
     };
 
     MoveList(ReversiData pd) {
