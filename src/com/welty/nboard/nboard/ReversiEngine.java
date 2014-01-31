@@ -1,6 +1,7 @@
 package com.welty.nboard.nboard;
 
 import com.welty.othello.core.ProcessLogger;
+import com.welty.othello.gui.OpponentSelector;
 
 import javax.swing.*;
 import java.io.File;
@@ -15,27 +16,24 @@ import java.io.IOException;
  * - The function IsReady() returns true if all pings have been accepted by the engine.
  * - If IsReady() returns true then messages from the engine relate to the current board state.
  * - If IsReady() returns false then messages from the engine relate to a previous board state and can be ignored.
- * <p/>
- * Created by IntelliJ IDEA.
- * User: HP_Administrator
- * Date: Jun 19, 2009
- * Time: 10:41:21 PM
- * To change this template use File | Settings | File Templates.
  */
-class ReversiEngine {
+class ReversiEngine implements OpponentSelector.Listener {
     private final ReversiWindow reversiWindow;
+    private final OpponentSelector opponentSelector;
     private int m_ping;
     private int m_pong;
     private String name = "ntest";
     private volatile boolean shutdown = false;
     private final ProcessLogger processLogger;
 
-    public ReversiEngine(ReversiWindow reversiWindow) throws IOException {
+    public ReversiEngine(ReversiWindow reversiWindow, OpponentSelector opponentSelector) throws IOException {
         this.reversiWindow = reversiWindow;
+        this.opponentSelector = opponentSelector;
         final String[] command = "./mEdax -nboard".split("\\s+");
         final File wd = new File("/Applications/edax/4.3.2/bin");
         final Process process = new ProcessBuilder(command).directory(wd).redirectErrorStream(true).start();
         processLogger = new ProcessLogger(process, true);
+        opponentSelector.addListener(this);
 
 
         new Thread("NBoard Feeder") {
@@ -117,4 +115,8 @@ class ReversiEngine {
         this.name = name;
     }
 
+    @Override public void opponentChanged() {
+        final int newLevel = opponentSelector.getOpponent().getLevel();
+        SendCommand("set depth " + newLevel, true);
+    }
 }

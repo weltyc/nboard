@@ -12,6 +12,7 @@ import com.welty.othello.core.OperatingSystem;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsPosition;
+import com.welty.othello.gui.selector.GuiOpponentSelector;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -51,11 +52,9 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker 
     private final MoveGrid m_pmg;
     private final ReversiBoard m_prb;
 
-    private JMenu m_depthMenu;
     private final GameSelectionWindow m_pgsw;    //< Used in File/Open... dialog when there are multiple games in a file
     private final Hints m_hints;
     private final DatabaseData dd;
-    private DepthRadioGroup m_depthRadioGroup;
 
     DatabaseData PD() {
         return m_pwThor.PD();
@@ -112,7 +111,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
 
         m_pd = new ReversiData(this, this);
         try {
-            m_engine = new ReversiEngine(this);
+            m_engine = new ReversiEngine(this, GuiOpponentSelector.getInstance());
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Unable to start engine: " + e, "External Engine Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -166,7 +165,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         // the responses to be displayed in
         m_statusBar.SetStatus("Loading Engine");
         SendCommand("nboard 1", false);
-        SendCommand("set depth " + m_depthRadioGroup.getDepth(), true);
+        SendCommand("set depth " + 4, true);
     }
 
     /**
@@ -503,18 +502,14 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
                 menuItem("Value all moves").buildRadioButton(engineUpdater)
         );
 
-        createDepthMenu();
-
         menu.addSeparator();
-        menu.add(createMenuItem("&Depth", m_depthMenu));
+        menu.add(menuItem("&Select Opponent...").build(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                GuiOpponentSelector.getInstance().show();
+            }
+        }));
 
         return menu;
-    }
-
-    private void createDepthMenu() {
-        // set up the depth menu
-        m_depthMenu = new JMenu();
-        m_depthRadioGroup = new DepthRadioGroup(this, m_depthMenu, shutdownHooks);
     }
 
     private JMenu createFlipMenu() {
@@ -987,8 +982,8 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
 //		newDepth=m_userDefinedDepth;
 //	}
 //	if (newDepth!=m_depth) {
-//		m_depthMenu.ItemFromCommand(DepthMenuCommand(m_depth)).SetChecked(false);
-//		m_depthMenu.ItemFromCommand(DepthMenuCommand(newDepth)).SetChecked(true);
+//		m_selectOpponentMenu.ItemFromCommand(DepthMenuCommand(m_depth)).SetChecked(false);
+//		m_selectOpponentMenu.ItemFromCommand(DepthMenuCommand(newDepth)).SetChecked(true);
 //		std::ostringstream os;
 //	}
 //}
