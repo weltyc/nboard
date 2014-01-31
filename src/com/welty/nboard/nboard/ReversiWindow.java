@@ -22,7 +22,6 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.*;
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,13 +34,8 @@ import static com.welty.nboard.gui.MenuItemBuilder.menuItem;
  * The ReversiData class processes this data.
  * <p/>
  * See the ReversiEngine class for a description of synchronization issues.
- * Created by IntelliJ IDEA.
- * User: HP_Administrator
- * Date: Jun 17, 2009
- * Time: 1:21:51 AM
- * To change this template use File | Settings | File Templates.
  */
-public class ReversiWindow extends JFrame implements OptionSource, EngineTalker {
+public class ReversiWindow extends JFrame implements OptionSource, EngineTalker, ReversiEngine.Listener {
     private ReversiEngine m_engine;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData m_pd;
@@ -81,17 +75,6 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker 
     private RadioGroup drawsTo;
     private RadioGroup engineTop;
     private final GgfFileChooser chooser;
-/*
-// Screen output locations and colors
-final int scoreWidth=120;
-
-final int top1=53;
-final int bottom1=top1+boardSize;
-
-final int top2=bottom1+5;
-final int bottom2=top2+99;
-Rectangle moveGridArea(5, top2, right0, bottom2);
-*/
 
 
     ReversiWindow() {
@@ -111,10 +94,11 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
 
         m_pd = new ReversiData(this, this);
         try {
-            m_engine = new ReversiEngine(this, GuiOpponentSelector.getInstance());
+            m_engine = new ReversiEngine(GuiOpponentSelector.getInstance());
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Unable to start engine: " + e, "External Engine Error", JOptionPane.ERROR_MESSAGE);
         }
+        m_engine.addListener(this);
         chooser = new GgfFileChooser(this);
         setResizable(false);
         m_pgsw = new GameSelectionWindow(this);
@@ -632,79 +616,6 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         return IsStudying() || AlwaysShowEvals();
     }
 
-    /**
-     * On a move message posted to the window (e.g. from an engine).
-     */
-    void OnMessageFromEngine(String string) {
-        final CReader is = new CReader(string);
-        String sCommand = is.readString();
-        is.ignoreWhitespace();
-
-        if (sCommand.equals("pong")) {
-            int n;
-            try {
-                n = is.readInt();
-            } catch (EOFException e) {
-                throw new IllegalStateException("Engine response is garbage : " + string);
-            }
-            m_engine.SetPong(n);
-            if (m_engine.IsReady()) {
-                SetStatus("");
-                TellEngineWhatToDo();
-            }
-        } else if (sCommand.equals("status")) {
-            // the engine is busy and is telling the user why
-            SetStatus(is.readLine());
-        } else if (sCommand.equals("set")) {
-            String variable = is.readString();
-            if (variable.equals("myname")) {
-                String sName = is.readString();
-                m_engine.SetName(sName);
-            }
-        }
-        // These commands are only used if the computer is up-to-date
-        else if (m_engine.IsReady()) {
-            switch (sCommand) {
-                case "===":
-                    SetStatus("");
-                    // Need to check whether it's the computer's move. This is because the user may have
-                    // switched modes while the computer was thinking.
-                    if (!UsersMove()) {
-                        // now update the move list
-
-                        // Edax produces the mli with spaces between components rather than slashes.
-                        // Translate to normal form if there are spaces.
-                        final String mliText = is.readLine().trim().replaceAll("\\s+", "/");
-                        final COsMoveListItem mli = new COsMoveListItem(mliText);
-
-                        try {
-                            m_pd.Update(mli, false);
-                        } catch (IllegalArgumentException e) {
-                            JOptionPane.showMessageDialog(this, "Illegal move from engine: " + mli, "Engine Error", JOptionPane.WARNING_MESSAGE);
-                        }
-
-                    }
-                    break;
-                // computer giving hints
-                case "book": {
-                    // if the engine is going to move from book, then don't display the book moves
-                    // as it just makes the screen flicker.
-                    boolean fBlackMove = m_pd.Game().pos.board.fBlackMove;
-                    m_hints.Add(is, fBlackMove, true);
-                    break;
-                }
-                case "search": {
-                    boolean fBlackMove = m_pd.Game().pos.board.fBlackMove;
-                    m_hints.Add(is, fBlackMove, false);
-                    break;
-                }
-                case "learn":
-                    SetStatus("");
-                    break;
-            }
-        }
-    }
-
 
     /**
      * @return true if the user is playing the given color
@@ -720,24 +631,6 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         return UserPlays(m_pd.DisplayedPosition().board.fBlackMove);
     }
 
-//* Message Dispatcher. This is for all messages that don't have their own OnXxx() handler.
-//boolean OnUnknownMessage(int msg, void* wParam, void* lParam) {
-//	if (msg==ReversiEngine::s_msgFromEngine) {
-//		OnMessageFromEngine(wParam);
-//		return true;
-//	}
-//	else if (msg==MoveGrid::s_commandMove) {
-//		if (UsersMove()) {
-//			COsMove mv=*(COsMove*)wParam;
-//			m_pd.Update(mv, true);
-//		}
-//		return true;
-//	}
-//	else
-//		return false;
-//}
-
-    //
 
     /**
      * Ping the engine. Send the current displayed position to the engine.
@@ -777,26 +670,6 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
     private String getPlayerName(boolean enginePlays) {
         return enginePlays ? m_engine.GetName() : System.getProperty("user.name");
     }
-
-    void SetEngineDepth(int newDepth) {
-        m_engine.SendCommand("set depth " + newDepth, false);
-        m_hints.Clear();
-
-        // engine has changed so we might want a hint
-        TellEngineWhatToDo();
-    }
-//* Set the engine's contempt factor and update menu items.
-//void SetDrawTo(final int drawsTo) {
-//	if (m_drawsTo!=drawsTo) {
-//		// put a radio button by the new drawsTo, and remove the one by the old drawsTo
-//		m_engineMenu.ItemFromCommand(commandEngineDrawToBlack+m_drawsTo).SetChecked(false);
-//		m_engineMenu.ItemFromCommand(commandEngineDrawToBlack+drawsTo).SetChecked(true);
-//
-//		// set m_drawsTo
-//		m_drawsTo=drawsTo;
-//		SendSetContempt();
-//	}
-//}
 
     /**
      * Set the engine's contempt factor so it can avoid or seek draws
@@ -884,235 +757,6 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
             TellEngineWhatToDo();
     }
 
-//* Handler for File menu commands
-//void OnFileCommand(char command) {
-//	static String fn;	// filename for open and save commands
-//
-//	switch(command) {
-//		case commandFileAppend:
-//			// note: We continue to receive windows messages in the GetSaveFilename() function.
-//			if (Z::GetSaveFilename(fn, "ggf", OFN_PATHMUSTEXIST)) {
-//				std::ofstream os(fn.c_str(), std::ios::app | std::ios::out);
-//				os << m_pd.Game() << "\n";
-//			}
-//			break;
-//		case commandFileExit:
-//			SendMessage(WM_CLOSE);
-//			break;
-//	}
-//}
-//
-//* Handler for Edit menu commands, and moving through the game
-//void OnEditCommand(char command) {
-//	switch(command) {
-//		case commandEditUndo:
-//			Undo();
-//			break;
-//		case commandEditFirst:
-//			m_pd.First();
-//			break;
-//		case commandEditBack:
-//			m_pd.Back();
-//			break;
-//		case commandEditFore:
-//			m_pd.Fore();
-//			break;
-//		case commandEditLast:
-//			m_pd.Last();
-//			break;
-//		case commandEditReflect1:
-//		case commandEditReflect2:
-//		case commandEditReflect3:
-//		case commandEditReflect4:
-//		case commandEditReflect5:
-//		case commandEditReflect6:
-//		case commandEditReflect7:
-//			m_pd.ReflectGame(command-commandEditReflect0);
-//			break;
-//	}
-//}
-//
-//* Handler for Engine menu commands
-//void OnEngineCommand(char command) {
-//	switch(command) {
-//		case commandEngineMode0:
-//		case commandEngineMode1:
-//		case commandEngineMode2:
-//		case commandEngineMode3:
-//			SetMode(command-commandEngineMode0);
-//
-//			// mode change can affect whether we display evals
-//			m_prb.Invalidate();
-//
-//			break;
-//		case commandEngineDrawToBlack:
-//		case commandEngineDrawNeutral:
-//		case commandEngineDrawToWhite:
-//			SetDrawTo(command-commandEngineDrawToBlack);
-//			break;
-//		default:
-//			OnEngineTopCommand(command);
-//			break;
-//	}
-//}
-//
-//* Handler for Depth menu commands.
-//* command==commandDepth is user defined level, otherwise set depth=command-commandDepth
-//void OnDepthCommand(char command) {
-//	int newDepth=command-commandDepth;
-//	if (newDepth==0) {
-//		// get depth from a message box
-//		std::ostringstream os;
-//		os << m_userDefinedDepth;
-//		String s=os.str();
-//		if (!Z::InputMessageBox(this, "Midgame search depth (2-60):", "Depth", s, MB_OKCANCEL))
-//			// user clicked cancel
-//			return;
-//
-//		std::istringstream is(s);
-//		int userDefinedDepth;
-//		is >> userDefinedDepth;
-//		if (userDefinedDepth<2 || userDefinedDepth>60) {
-//			// depth out of range
-//			Z::MessageBox(IDS_BAD_DEPTH, IDS_WARNING, MB_OK | MB_ICONINFORMATION);
-//			return;
-//		}
-//
-//		m_userDefinedDepth=userDefinedDepth;
-//		newDepth=m_userDefinedDepth;
-//	}
-//	if (newDepth!=m_depth) {
-//		m_selectOpponentMenu.ItemFromCommand(DepthMenuCommand(m_depth)).SetChecked(false);
-//		m_selectOpponentMenu.ItemFromCommand(DepthMenuCommand(newDepth)).SetChecked(true);
-//		std::ostringstream os;
-//	}
-//}
-//
-//* Handler for Depth menu commands
-//void OnEngineTopCommand(char command) {
-//	int newEngineTop=command-commandEngineTop;
-//	if (newEngineTop!=m_depth) {
-//		m_engineMenu.ItemFromCommand(commandEngineTop+m_engineTop).SetChecked(false);
-//		m_engineMenu.ItemFromCommand(commandEngineTop+newEngineTop).SetChecked(true);
-//		m_engineTop=newEngineTop;
-//		m_pd.m_hints.Clear();
-//
-//		// engine has changed so we might want a hint
-//		TellEngineWhatToDo();
-//	}
-//}
-//
-//* Handler for view menu commands
-//void OnViewCommand(char command) {
-//	switch(command) {
-//		case commandViewPhotoStyle:
-//			m_viewMenu.ItemFromCommand(commandViewPhotoStyle).ToggleChecked();
-//			m_prb.Invalidate();
-//			break;
-//		case commandViewAlwaysShowEvals:
-//			m_viewMenu.ItemFromCommand(commandViewAlwaysShowEvals).ToggleChecked();
-//			m_prb.Invalidate();
-//			break;
-//		case commandViewD2:
-//			m_viewMenu.ItemFromCommand(commandViewD2).ToggleChecked();
-//			m_prb.Invalidate();
-//			break;
-//		case commandViewCoordinates:
-//			m_viewMenu.ItemFromCommand(commandViewCoordinates).ToggleChecked();
-//			m_prb.Invalidate();
-//			break;
-//		case commandViewTotd:
-//			m_viewMenu.ItemFromCommand(commandViewTotd).ToggleChecked();
-//			break;
-//		case commandViewHighlightNone:
-//			m_viewMenu.ItemFromCommand(commandViewHighlightNone).SetChecked(true);
-//			m_viewMenu.ItemFromCommand(commandViewHighlightLegal).SetChecked(false);
-//			m_viewMenu.ItemFromCommand(commandViewHighlightBest).SetChecked(false);
-//			m_prb.Invalidate();
-//			break;
-//		case commandViewHighlightLegal:
-//			m_viewMenu.ItemFromCommand(commandViewHighlightNone).SetChecked(false);
-//			m_viewMenu.ItemFromCommand(commandViewHighlightLegal).SetChecked(true);
-//			m_viewMenu.ItemFromCommand(commandViewHighlightBest).SetChecked(false);
-//			m_prb.Invalidate();
-//			break;
-//		case commandViewHighlightBest:
-//			m_viewMenu.ItemFromCommand(commandViewHighlightNone).SetChecked(false);
-//			m_viewMenu.ItemFromCommand(commandViewHighlightLegal).SetChecked(false);
-//			m_viewMenu.ItemFromCommand(commandViewHighlightBest).SetChecked(true);
-//			m_prb.Invalidate();
-//			break;
-//		default:
-//			break;
-//	}
-//}
-//
-//* Handler for Thor menu commands
-//void OnThorCommand(char command) {
-//	String fn;
-//
-//	switch(command) {
-//		case commandThorLoadGames:
-//			if (PD().LoadGames()) {
-//				m_thorMenu.ItemFromCommand(commandThorLoadGames).SetChecked(PD().NGames()!=0);
-//				ThorLookUpPosition();
-//				m_pwThor.ShowIfReady();
-//			}
-//			break;
-//		case commandThorLoadPlayers:
-//			if (PD().LoadPlayers()) {
-//				m_thorMenu.ItemFromCommand(commandThorLoadPlayers).SetChecked(PD().NPlayers()!=0);
-//				m_pwThor.ShowIfReady();
-//			}
-//			break;
-//		case commandThorLoadTournaments:
-//			if (PD().LoadTournaments()) {
-//				m_thorMenu.ItemFromCommand(commandThorLoadTournaments).SetChecked(PD().NTournaments()!=0);
-//				m_pwThor.ShowIfReady();
-//			}
-//			break;
-//		case commandThorUnloadGames:
-//			PD().UnloadGames();
-//			m_thorMenu.ItemFromCommand(commandThorLoadGames).SetChecked(PD().NGames()!=0);
-//			ThorLookUpPosition();
-//			m_pwThor.Show(false);
-//			break;
-//		case commandThorSaveConfig:
-//			if (PD().IsReady()) {
-//				PD().SaveConfig();
-//			}
-//			else {
-//				Z::MessageBox(IDS_BAD_STORE_CONFIG, IDS_STORE_CONFIG, MB_OK);
-//			}
-//			break;
-//		case commandThorLoadConfig:
-//			if (PD().LoadConfig()) {
-//				ThorLookUpPosition();
-//				m_pwThor.ShowIfReady();
-//				m_thorMenu.ItemFromCommand(commandThorLoadGames).SetChecked(PD().NGames()!=0);
-//				m_thorMenu.ItemFromCommand(commandThorLoadPlayers).SetChecked(PD().NPlayers()!=0);
-//				m_thorMenu.ItemFromCommand(commandThorLoadTournaments).SetChecked(PD().NTournaments()!=0);
-//			}
-//			else {
-//				Z::MessageBox(IDS_BAD_LOAD_CONFIG, IDS_LOAD_CONFIG, MB_OK);
-//			}
-//			break;
-//		case commandThorLookUpPosition:
-//			ThorLookUpPosition();
-//			break;
-//		case commandThorLookUpAll:
-//			{
-//				Z::MenuItem mi=m_thorMenu.ItemFromCommand(commandThorLookUpAll);
-//				if (mi.ToggleChecked()) {
-//					ThorLookUpPosition();
-//				}
-//			}
-//			break;
-//		case commandThorSaveOpeningFrequencies:
-//			PD().SaveOpeningFrequencies();
-//			break;
-//	}
-//}
 
     //
 
@@ -1124,63 +768,6 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
         m_pmg.UpdateHints();
     }
 
-//* On any menu commands for a ReversiWindow.
-//boolean OnCommand(char command) {
-//	switch(command>>8) {
-//		case 1: OnFileCommand(command); break;
-//		case 2: OnEditCommand(command); break;
-//		case 3: OnEngineCommand(command); break;
-//		case 4: OnDepthCommand(command); break;
-//		case 5: OnViewCommand(command); break;
-//		case 6: OnThorCommand(command); break;
-//	}
-//
-//	return false;
-//}
-//
-//* Terminate the engine and then close the window normally.
-//* Saves options to the registry
-//* This needs to happen here.
-//* the menus won't exist if ~ReversiWindow is called after OnNcDestroy.
-//* In fact, they don't seem to exist even in OnNcDestroy on Win98 (although they do in WinXP)
-//boolean OnClose() {
-//	m_engine.Terminate();
-//
-//	boolean fEngineLearnAll=m_engineMenu.ItemFromCommand(commandEngineLearnAll).GetChecked();
-//	Z::RegistryWriteU4(HKEY_CURRENT_USER, sRegKey+"Engine", "LearnAll", fEngineLearnAll);
-//	Z::RegistryWriteU4(HKEY_CURRENT_USER, sRegKey+"View", "PhotoStyle", ViewPhotoStyle());
-//	Z::RegistryWriteU4(HKEY_CURRENT_USER, sRegKey+"View", "AlwaysShowEvals", AlwaysShowEvals());
-//	Z::RegistryWriteU4(HKEY_CURRENT_USER, sRegKey+"View", "D2", ViewD2());
-//	Z::RegistryWriteU4(HKEY_CURRENT_USER, sRegKey+"View", "Highlight", IHighlight());
-//	Z::RegistryWriteU4(HKEY_CURRENT_USER, sRegKey+"View", "Coordinates", ViewCoordinates());
-//	Z::RegistryWriteU4(HKEY_CURRENT_USER, sRegKey+"View", "Totd", ViewTotd());
-//	Z::RegistryWriteU4(HKEY_CURRENT_USER, sRegKey+"Engine", "Mode", m_mode);
-//	Z::RegistryWriteU4(HKEY_CURRENT_USER, sRegKey+"Engine", "DrawsTo", m_drawsTo);
-//	Z::RegistryWriteU4(HKEY_CURRENT_USER, sRegKey+"Engine", "Depth", m_depth);
-//	Z::RegistryWriteU4(HKEY_CURRENT_USER, sRegKey+"Engine", "UserDefinedDepth", m_userDefinedDepth);
-//	Z::RegistryWriteU4(HKEY_CURRENT_USER, sRegKey+"Engine", "Top", m_engineTop);
-//	Z::RegistryWriteU4(HKEY_CURRENT_USER, sRegKey+"Thor", "LookUpAll", ThorLookUpAll());
-//
-//	return Tlw::OnClose();
-//}
-//
-//* Handle arrow keys
-//boolean OnKeyDown(int vk, int code) {
-//	char command=0;
-//
-//	switch(vk) {
-//		case VK_LEFT:	command=commandEditBack;	break;
-//		case VK_RIGHT:	command=commandEditFore;	break;
-//		case VK_UP:		command=commandEditFirst;	break;
-//		case VK_DOWN:	command=commandEditLast;	break;
-//	}
-//
-//	if (command) {
-//		SendMessage(WM_COMMAND, command, NULL);
-//	}
-//	return command!=0;
-//}
-//
 
     /**
      * @return true if we should use photo-style pieces
@@ -1256,5 +843,34 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
 
     public String getEngineName() {
         return m_engine.GetName();
+    }
+
+    ///////////////////////////////////
+    // Engine listener
+    //////////////////////////////////
+
+    @Override public void status(String status) {
+        SetStatus(status);
+    }
+
+    @Override public void engineMove(COsMoveListItem mli) {
+        // Need to check whether it's the computer's move. This is because the user may have
+        // switched modes while the computer was thinking.
+        if (!UsersMove()) {
+            try {
+                m_pd.Update(mli, false);
+            } catch (IllegalArgumentException e) {
+                JOptionPane.showMessageDialog(this, "Illegal move from engine: " + mli, "Engine Error", JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }
+
+    @Override public void engineReady() {
+        TellEngineWhatToDo();
+    }
+
+    @Override public void hint(boolean fromBook, String pv, CReader rest) {
+        boolean fBlackMove = m_pd.Game().pos.board.fBlackMove;
+        m_hints.Add(pv, rest, fBlackMove, fromBook);
     }
 }
