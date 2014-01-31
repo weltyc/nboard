@@ -112,8 +112,20 @@ public class DatabaseDataTest extends ArrayTestCase {
         assertEquals(0, dd.NTournaments());
         assertEquals(0, dd.NGames());
 
-        dd.LoadGames(fns);
+        reloadGames(dd, fns);
         return dd;
+    }
+
+    /**
+     * Call dd.reloadGames() with mock progress tracker and error displayer
+     *
+     * @param dd database data to do the loading
+     * @param fns files to load
+     */
+    private static void reloadGames(DatabaseData dd, List<String> fns) {
+        final IndeterminateProgressTracker tracker = Mockito.mock(IndeterminateProgressTracker.class);
+        final ErrorDisplayer errorDisplayer = Mockito.mock(ErrorDisplayer.class);
+        dd.reloadGames(fns, errorDisplayer, tracker);
     }
 
     public void testInitialLookup() throws IOException {
@@ -128,7 +140,7 @@ public class DatabaseDataTest extends ArrayTestCase {
 
         DatabaseData dd = new DatabaseData(optionSource, boardSource);
 
-        dd.LoadGames(Arrays.asList(createTempFile(".ggf", "test.ggf")));
+        reloadGames(dd, Arrays.asList(createTempFile(".ggf", "test.ggf")));
 
         // we should have exactly one game, the game at index 0
         assertEquals(new int[]{0}, dd.FilteredIndex().toArray());
@@ -170,12 +182,5 @@ public class DatabaseDataTest extends ArrayTestCase {
         out.close();
         file.deleteOnExit();
         return file.getAbsolutePath();
-    }
-
-    public void testGameFromFilteredRow() {
-        final OptionSource optionSource = Mockito.mock(OptionSource.class);
-        final BoardSource boardSource = Mockito.mock(BoardSource.class);
-
-        final DatabaseData dd = new DatabaseData(optionSource, boardSource);
     }
 }

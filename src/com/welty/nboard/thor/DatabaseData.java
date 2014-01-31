@@ -284,13 +284,47 @@ public class DatabaseData extends GridTableModel {
     }
 
     /**
-     * Unload existing games files and load a new set
-     *
+     * Unload existing games files and load a new set, creating and updating a GUI to do so.
+     * <p/>
+     * Since this creates and updates a GUI, it must run on the EDT.
+     * <p/>
      * Does nothing if fns is empty.
      */
     void LoadGames(final List<String> fns) {
+        Require.isTrue(SwingUtilities.isEventDispatchThread(), "must run on EDT");
+        final ErrorDisplayer errorDisplayer = new DialogErrorDisplayer();
+        try (final IndeterminateProgressMonitor monitor = new IndeterminateProgressMonitor(" games loaded")) {
+            reloadGames(fns, errorDisplayer, monitor);
+        }
+    }
+
+    /**
+     * Reloads games while updating the errorDisplayer and the tracker
+     *
+     * If the list of files is empty, this does nothing (on the assumption that this was called in error).
+     * Otherwise it unloads all existing games files and loads all games from the file.
+     *
+     * @param fns            list of files to load
+     * @param errorDisplayer location to display error messages
+     * @param tracker        location to display progress tracking
+     */
+    void reloadGames(List<String> fns, ErrorDisplayer errorDisplayer, IndeterminateProgressTracker tracker) {
         if (!fns.isEmpty()) {
-            ArrayList<ThorGameInternal> games = loadGames(fns);
+            ArrayList<ThorGameInternal> games = new ArrayList<>();
+            UnloadGames();
+            for (String it : fns) {
+                try {
+                    if (IsWtbFilename(it)) {
+                        games.addAll(Thor.ThorLoadGames(it, tracker));
+                    } else {
+                        final ArrayList<GgfGameText> ggfGameTexts = GgfGameText.Load(new File(it), tracker);
+                        ddm.addGgfGames(ggfGameTexts);
+                    }
+                    m_fnThorGames.add(it);
+                } catch (IllegalArgumentException e) {
+                    errorDisplayer.notify("loading games file", e.getMessage());
+                }
+            }
             setGames(games);
         }
     }
@@ -304,36 +338,6 @@ public class DatabaseData extends GridTableModel {
 
         LookUpPosition();
         fireTableDataChanged();
-    }
-
-    /**
-     * Unload existing games and load new ones from the file
-     *
-     * This function creates and displays a progress bar, thus it must run on the EDT. It will block the EDT while running.
-     *
-     * @param fns filenames to load
-     * @return list of games.
-     */
-    private ArrayList<ThorGameInternal> loadGames(List<String> fns) {
-        Require.isTrue(SwingUtilities.isEventDispatchThread(), "must run on EDT");
-        ArrayList<ThorGameInternal> games = new ArrayList<>();
-        try (final IndeterminateProgressMonitor monitor = new IndeterminateProgressMonitor(" games loaded")) {
-            UnloadGames();
-            for (String it : fns) {
-                try {
-                    if (IsWtbFilename(it)) {
-                        games.addAll(Thor.ThorLoadGames(it, monitor));
-                    } else {
-                        final ArrayList<GgfGameText> ggfGameTexts = GgfGameText.Load(new File(it), monitor);
-                        ddm.addGgfGames(ggfGameTexts);
-                    }
-                    m_fnThorGames.add(it);
-                } catch (IllegalArgumentException e) {
-                    JOptionPane.showMessageDialog(null, e.getMessage(), "Error loading games file", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
-        return games;
     }
 
     /**
