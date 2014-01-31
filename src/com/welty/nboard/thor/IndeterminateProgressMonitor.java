@@ -54,7 +54,7 @@ public class IndeterminateProgressMonitor implements IndeterminateProgressTracke
     @Override public void update() {
         nextUpdate = System.currentTimeMillis() + UPDATE_MILLIS;
         dialog.validate();
-        label.setText(Engineering.engineeringLong(progress) + suffix);
+        label.setText(Engineering.formatLong(progress) + suffix);
         label.paintImmediately(0, 0, 1000, 1000);
     }
 

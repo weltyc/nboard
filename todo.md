@@ -18,7 +18,7 @@ L3   X   Accelerator for quit/exit menu item on Mac
 L4   X   Move list window too narrow on Mac
 L5   NB  Display engine status [As per spec, engine status is cleared after the engine moves]
 L6   X   GGF Load progress window should finish with complete number of games
-L7       GGF Load progress window should display only 3 sig figs in engineering notation (12.3k not 12,345)
+L7   X   GGF Load progress window should display only 3 sig figs in engineering notation (12.3k not 12,345)
 
 F1       External engine window
 F2       Alternate start positions
