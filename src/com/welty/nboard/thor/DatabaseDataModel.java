@@ -16,7 +16,7 @@ import static com.welty.othello.core.Utils.Col;
 import static com.welty.othello.core.Utils.Row;
 
 /**
- * Data model for DatabaseData.
+ * Database game storage.
  */
 class DatabaseDataModel {
     /**
@@ -60,7 +60,7 @@ class DatabaseDataModel {
     /**
      * @return the text (e.g. "Welty Chris") given the game (item) and field (e.g. 0=black player name)
      */
-    public String GameItemText(int item, int field) {
+    String GameItemText(int item, int field) {
         int n;
 
         final ThorGameInternal game = m_tgis.get(item);
@@ -70,14 +70,14 @@ class DatabaseDataModel {
 
             switch (field) {
                 case 0:
-                    return PlayerName(game.iBlackPlayer);
+                    return playerFromPlayerNumber(game.iBlackPlayer);
                 case 1:
-                    return PlayerName(game.iWhitePlayer);
+                    return playerFromPlayerNumber(game.iWhitePlayer);
                 case 2:
                     n = game.year;
                     break;
                 case 3:
-                    return TournamentName(game.iTournament);
+                    return tournamentFromTournamentNumber(game.iTournament);
                 case 4:
                     n = game.nBlackDiscs * 2 - 64;
                     break;
@@ -145,10 +145,10 @@ class DatabaseDataModel {
             final ThorGameInternal tg = m_tgis.get(iGame);
 
             game.SetDefaultStartPos();
-            game.pis[0].sName = PlayerName(tg.iWhitePlayer);
-            game.pis[1].sName = PlayerName(tg.iBlackPlayer);
+            game.pis[0].sName = playerFromPlayerNumber(tg.iWhitePlayer);
+            game.pis[1].sName = playerFromPlayerNumber(tg.iBlackPlayer);
             game.pis[0].dRating = game.pis[1].dRating = 0;
-            game.sPlace = TournamentName(tg.iTournament);
+            game.sPlace = tournamentFromTournamentNumber(tg.iTournament);
             for (int i = 0; i < 60 && tg.moves[i] >= 0; i++) {
                 final int sq = tg.moves[i];
                 COsMoveListItem mli = new COsMoveListItem(new COsMove(Row(sq), Col(sq)), 0, 0);
@@ -184,14 +184,14 @@ class DatabaseDataModel {
         return ThorSummarize(m_tgis, pos, fi, fir);
     }
 
-    String PlayerName(char iPlayer) {
+    String playerFromPlayerNumber(char iPlayer) {
         if (iPlayer >= NPlayers())
             return "???";
         else
             return m_players.get(iPlayer);
     }
 
-    String TournamentName(char iTournament) {
+    String tournamentFromTournamentNumber(char iTournament) {
         if (iTournament >= NTournaments())
             return "???";
         else

@@ -299,7 +299,7 @@ public class DatabaseData extends GridTableModel {
     }
 
     /**
-     * Reloads games while updating the errorDisplayer and the tracker
+     * Reloads the database games (but not players or tournaments) while updating the errorDisplayer and the tracker
      * <p/>
      * If the list of files is empty, this does nothing (on the assumption that this was called in error).
      * Otherwise it unloads all existing games files and loads all games from the file.
@@ -325,19 +325,16 @@ public class DatabaseData extends GridTableModel {
                     errorDisplayer.notify("loading games file", e.getMessage());
                 }
             }
-            setGames(games);
+            ddm.setGames(games);
+
+            m_index.clear();
+            for (int i = 0; i < NGames(); i++)
+                m_index.add(i);
+
+
+            LookUpPosition();
+            fireTableDataChanged();
         }
-    }
-
-    private void setGames(ArrayList<ThorGameInternal> games) {
-        m_index.clear();
-        for (int i = 0; i < NGames(); i++)
-            m_index.add(i);
-
-        ddm.setGames(games);
-
-        LookUpPosition();
-        fireTableDataChanged();
     }
 
     /**
@@ -393,7 +390,9 @@ public class DatabaseData extends GridTableModel {
     }
 
     /**
-     * Save opening frequencies to a file
+     * Save opening frequencies to a file.
+     * <p/>
+     * The user chooses a filename and then the DatabaseDataModel's opening frequencies are stored to that file.
      */
     public boolean SaveOpeningFrequencies() {
         final File file = textFileChooser.save();
@@ -401,9 +400,9 @@ public class DatabaseData extends GridTableModel {
             // count opening frequencies
             final int nOpenings = NOpenings();
             final int[] counts = ddm.getOpeningCounts(nOpenings);
+            double nGames = ddm.NGames();
 
             // write to file
-            double nGames = ddm.NGames();
             StringBuilder os = new StringBuilder();
             os.append("freq.\tOpening Name\n");
             for (char openingCode = 0; openingCode < nOpenings; openingCode++) {
