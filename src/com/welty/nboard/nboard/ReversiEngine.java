@@ -166,7 +166,7 @@ class ReversiEngine extends ListenerManager<ReversiEngine.Listener> implements O
                     final String mliText = is.readLine().trim().replaceAll("\\s+", "/");
                     final COsMoveListItem mli = new COsMoveListItem(mliText);
 
-                    engineMove(mli);
+                    fireEngineMove(mli);
                     break;
                 // computer giving hints
                 case "book":
@@ -202,7 +202,7 @@ class ReversiEngine extends ListenerManager<ReversiEngine.Listener> implements O
      *
      * @param mli move
      */
-    private void engineMove(COsMoveListItem mli) {
+    private void fireEngineMove(COsMoveListItem mli) {
         for (Listener l : getListeners()) {
             l.engineMove(mli);
         }
@@ -231,18 +231,24 @@ class ReversiEngine extends ListenerManager<ReversiEngine.Listener> implements O
 
         /**
          * The engine moved.
+         * <p/>
+         * The engine only sends this message if it relates to the current board position (ping = pong).
+         * Otherwise it discards the message.
          *
          * @param mli engine move
          */
         void engineMove(COsMoveListItem mli);
 
         /**
-         * The engine is ready to accept commands
+         * The engine is ready to accept commands (ping=pong).
          */
         void engineReady();
 
         /**
-         * The engine's evaluation of a move
+         * The engine's evaluation of a move.
+         * <p/>
+         * The engine only sends this message if it relates to the current board position (ping = pong).
+         * Otherwise it discards the message.
          *
          * @param fromBook if true, this value is from the engine's book; otherwise it is from a search.
          * @param pv       principal variation - the first two characters are the evaluated move.
