@@ -8,9 +8,9 @@ H6   X   User menu choices should be stored in Preferences.
 H7   X   Display Edax eval in move list
 H8   X   Can't load ggs games file
 H9   X   Database "look up position" doesn't, unless "Look up all" is already checked.
-H10      Click on database game should use real player names in review window
-H11      Click on database game should use the correct game
-H12      Display progress window when loading games database
+H10  X   Click on database game should use real player names in review window
+H11  X   Click on database game should use the correct game
+H12  X   Display progress window when loading games database
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key

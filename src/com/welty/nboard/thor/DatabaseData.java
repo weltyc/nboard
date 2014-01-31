@@ -1,23 +1,19 @@
 package com.welty.nboard.thor;
 
 import com.orbanova.common.misc.Require;
-import com.welty.othello.c.CReader;
-import com.welty.othello.gdk.*;
-import com.welty.nboard.nboard.BoardSource;
-import com.welty.nboard.nboard.GgfGameText;
-import com.welty.nboard.nboard.NBoard;
-import com.welty.nboard.nboard.OptionSource;
 import com.welty.nboard.gui.Align;
 import com.welty.nboard.gui.GridColumn;
 import com.welty.nboard.gui.GridTableModel;
 import com.welty.nboard.gui.SignalListener;
-
-import static com.welty.nboard.thor.Thor.*;
-import static com.welty.nboard.thor.ThorOpeningMap.NOpenings;
-import static com.welty.nboard.thor.ThorOpeningMap.OpeningName;
-import static com.welty.othello.core.Utils.Col;
-import static com.welty.othello.core.Utils.Row;
-
+import com.welty.nboard.nboard.BoardSource;
+import com.welty.nboard.nboard.GgfGameText;
+import com.welty.nboard.nboard.NBoard;
+import com.welty.nboard.nboard.OptionSource;
+import com.welty.othello.c.CReader;
+import com.welty.othello.gdk.COsGame;
+import com.welty.othello.gdk.COsMoveListItem;
+import com.welty.othello.gdk.COsPosition;
+import com.welty.othello.gdk.OsBoard;
 import gnu.trove.list.array.TIntArrayList;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +23,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import static com.welty.nboard.thor.Thor.*;
+import static com.welty.nboard.thor.ThorOpeningMap.NOpenings;
+import static com.welty.nboard.thor.ThorOpeningMap.OpeningName;
 
 /**
  * Encapsulate all data needed by the database window
@@ -41,6 +43,8 @@ import java.util.*;
 public class DatabaseData extends GridTableModel {
     private final TextFileChooser textFileChooser = new TextFileChooser();
     private final ThorFileChooser thorFileChooser = new ThorFileChooser();
+
+    private final DatabaseDataModel ddm = new DatabaseDataModel();
 
     private static final GridColumn[] m_columns = {
             new GridColumn(120, "Black", Align.LEFT),
@@ -68,11 +72,11 @@ public class DatabaseData extends GridTableModel {
     }
 
     int NPlayers() {
-        return m_players.size();
+        return ddm.NPlayers();
     }
 
     int NTournaments() {
-        return m_tournaments.size();
+        return ddm.NTournaments();
     }
 
     void OnBoardChanged() {
@@ -100,75 +104,27 @@ public class DatabaseData extends GridTableModel {
     private final static int nFields = 6;
     private final String[] m_filters = new String[nFields];                //*< Text that must match the given field in order to display the position
 
-    private int m_nThorGames;                    //*< Number of games loaded from WTB files
-
-    /**
-     * GGF text of games loaded from GGF files
-     */
-    private final ArrayList<GgfGameText> m_ggfGames = new ArrayList<>();
-
-    /**
-     * WTB games followed by converted GGF games
-     */
-    private ArrayList<ThorGameInternal> m_tgis = new ArrayList<>();
-    private ArrayList<String> m_players = new ArrayList<>();
-    private ArrayList<String> m_tournaments = new ArrayList<>();
-
 
     /**
      * @return true if the database window should be displayed.
      */
     public boolean IsReady() {
-        return NGames() != 0;
+        return ddm.NGames() != 0;
     }
 
     /**
      * @return the total number of games loaded (both Thor and GGF)
      */
     public int NGames() {
-        return m_tgis.size();
+        return ddm.NGames();
     }
 
     /**
-     * @param iGame model row, i.e. index into the list of displayed games
+     * @param iFiltered model row, i.e. index into the list of displayed games
      * @return a game in GGS/os format.
      */
-    public COsGame GameFromFilteredRow(int iGame) {
-        COsGame game = new COsGame();
-
-        if (iGame < m_nThorGames) {
-            final ThorGameInternal tg = m_tgis.get(iGame);
-
-            game.SetDefaultStartPos();
-            game.pis[0].sName = PlayerName(tg.iWhitePlayer);
-            game.pis[1].sName = PlayerName(tg.iBlackPlayer);
-            game.pis[0].dRating = game.pis[1].dRating = 0;
-            game.sPlace = TournamentName(tg.iTournament);
-            for (int i = 0; i < 60 && tg.moves[i] >= 0; i++) {
-                final int sq = tg.moves[i];
-                COsMoveListItem mli = new COsMoveListItem(new COsMove(Row(sq), Col(sq)), 0, 0);
-
-                // illegal moves end the game. Yes, the Thor database has some.
-                if (!game.pos.board.IsMoveLegal(mli.mv))
-                    break;
-                game.Update(mli);
-
-                if (!game.pos.board.HasLegalMove() && !game.pos.board.GameOver()) {
-                    mli.mv.SetPass();
-                    game.Update(mli);
-                }
-            }
-            if (!game.pos.board.GameOver()) {
-                COsResult osResult = new COsResult();
-                osResult.status = COsResult.TStatus.kTimeout;
-                osResult.dResult = tg.nBlackDiscs * 2 - 64;
-                game.SetResult(osResult);
-            }
-        } else {
-            game.In(new CReader(m_ggfGames.get(iGame - m_nThorGames).getText()));
-        }
-
-        return game;
+    public COsGame GameFromFilteredRow(int iFiltered) {
+        return ddm.GameFromIndex(m_index.get(iFiltered));
     }
 
     /**
@@ -224,7 +180,7 @@ public class DatabaseData extends GridTableModel {
     public void LookUpPosition(final OsBoard pos) {
         if (pos.NEmpty() > 3) {
             // look up position
-            final MatchingPositions matchingPositions = ThorFindMatchingPositions(m_tgis, pos);
+            final MatchingPositions matchingPositions = ddm.findMatchingPositions(pos);
             m_index = matchingPositions.index;
             final TIntArrayList iReflections = matchingPositions.iReflections;
 
@@ -241,7 +197,7 @@ public class DatabaseData extends GridTableModel {
             }
 
             // set summary
-            m_summary = ThorSummarize(m_tgis, pos, fi, fir);
+            m_summary = ddm.summarize(pos, fi, fir);
         } else {
             m_index.clear();
             m_summary.clear();
@@ -282,81 +238,12 @@ public class DatabaseData extends GridTableModel {
     boolean FilterOk(int item) {
         for (int field = 0; field < nFields; field++) {
             String sFilter = m_filters[field];
-            if (!sFilter.isEmpty() && !sFilter.equals(GameItemText(item, field)))
+            if (!sFilter.isEmpty() && !sFilter.equals(ddm.GameItemText(item, field)))
                 return false;
         }
         return true;
     }
 
-
-    /**
-     * @return the text (e.g. "Welty Chris") given the game (item) and field (e.g. 0=black player name)
-     */
-    public String GameItemText(int item, int field) {
-        int n;
-
-        final ThorGameInternal game = m_tgis.get(item);
-
-        if (item < m_nThorGames) {
-            // Thor game
-
-            switch (field) {
-                case 0:
-                    return PlayerName(game.iBlackPlayer);
-                case 1:
-                    return PlayerName(game.iWhitePlayer);
-                case 2:
-                    n = game.year;
-                    break;
-                case 3:
-                    return TournamentName(game.iTournament);
-                case 4:
-                    n = game.nBlackDiscs * 2 - 64;
-                    break;
-                case 5:
-                    return OpeningName(game.openingCode);
-                default:
-                    return "";
-            }
-        } else {
-            // GGF game
-            final GgfGameText text = m_ggfGames.get(item - m_nThorGames);
-            switch (field) {
-                case 0:
-                    return text.PB();
-                case 1:
-                    return text.PW();
-                case 2:
-                    n = game.year;
-                    break;
-                case 3:
-                    return text.PC();
-                case 4:
-                    n = game.nBlackDiscs * 2 - 64;
-                    break;
-                case 5:
-                    return OpeningName(game.openingCode);
-                default:
-                    return "";
-            }
-        }
-
-        return Integer.toString(n);
-    }
-
-    String PlayerName(char iPlayer) {
-        if (iPlayer >= NPlayers())
-            return "???";
-        else
-            return m_players.get(iPlayer);
-    }
-
-    String TournamentName(char iTournament) {
-        if (iTournament >= NTournaments())
-            return "???";
-        else
-            return m_tournaments.get(iTournament);
-    }
 
     /**
      * Get the user's choice of thor games files and load them
@@ -392,13 +279,8 @@ public class DatabaseData extends GridTableModel {
      * Unload games database to restore memory
      */
     public void UnloadGames() {
-        m_ggfGames.clear();
-        m_tgis.clear();
         m_fnThorGames.clear();
-
-        // Reclaim memory
-        m_ggfGames.trimToSize();
-        m_tgis.trimToSize();
+        ddm.clearGames();
     }
 
     /**
@@ -418,23 +300,7 @@ public class DatabaseData extends GridTableModel {
         for (int i = 0; i < NGames(); i++)
             m_index.add(i);
 
-        // copy database data for games into m_ggfTgis for faster searching
-        m_tgis = games;
-        m_nThorGames = games.size();
-        for (final GgfGameText game : m_ggfGames) {
-            final int nBlackSquares = (new CReader(game.RE()).readInt(0) / 2) + 32;
-            final String dt = game.DT();
-            int year = new CReader(dt).readInt(0);
-            if (year > 100000) {
-                // early GGF games have a bug where the DT field is given in seconds since 1970-01-01 instead of
-                // the standard format. In this case, translate
-                final GregorianCalendar cal = new GregorianCalendar();
-                cal.setTimeInMillis((long) year * 1000);
-                year = cal.get(Calendar.YEAR);
-            }
-            ThorGameInternal tgi = new ThorGameInternal(nBlackSquares, game.Moves(), game.m_openingCode, year);
-            m_tgis.add(tgi);
-        }
+        ddm.setGames(games);
 
         LookUpPosition();
         fireTableDataChanged();
@@ -459,7 +325,7 @@ public class DatabaseData extends GridTableModel {
                         games.addAll(Thor.ThorLoadGames(it, monitor));
                     } else {
                         final ArrayList<GgfGameText> ggfGameTexts = GgfGameText.Load(new File(it), monitor);
-                        m_ggfGames.addAll(ggfGameTexts);
+                        ddm.addGgfGames(ggfGameTexts);
                     }
                     m_fnThorGames.add(it);
                 } catch (IllegalArgumentException e) {
@@ -488,7 +354,7 @@ public class DatabaseData extends GridTableModel {
      */
     void LoadPlayers(final String fn) {
         try {
-            m_players = ThorLoadPlayers(fn);
+            ddm.setPlayers(ThorLoadPlayers(fn));
             m_fnThorPlayers = fn;
             fireTableDataChanged();
         } catch (IllegalArgumentException e) {
@@ -513,7 +379,7 @@ public class DatabaseData extends GridTableModel {
      */
     void LoadTournaments(final String fn) {
         try {
-            m_tournaments = ThorLoadTournaments(fn);
+            ddm.setTournaments(ThorLoadTournaments(fn));
             m_fnThorTournaments = fn;
             NBoard.RegistryWriteString("Thor/TournamentsFile", fn);
             fireTableDataChanged();
@@ -530,13 +396,10 @@ public class DatabaseData extends GridTableModel {
         if (file != null) {
             // count opening frequencies
             final int nOpenings = NOpenings();
-            int[] counts = new int[nOpenings];
-            for (ThorGameInternal it : m_tgis) {
-                counts[it.openingCode]++;
-            }
+            final int[] counts = ddm.getOpeningCounts(nOpenings);
 
             // write to file
-            double nGames = m_tgis.size();
+            double nGames = ddm.NGames();
             StringBuilder os = new StringBuilder();
             os.append("freq.\tOpening Name\n");
             for (char openingCode = 0; openingCode < nOpenings; openingCode++) {
@@ -558,14 +421,14 @@ public class DatabaseData extends GridTableModel {
      * @return result of the game, #black discs - #white discs, for Thor games only
      */
     int GameResult(int iGame) {
-        return m_tgis.get(iGame).nBlackDiscs * 2 - 64;
+        return ddm.GameResult(iGame);
     }
 
     /**
      * @return year in which the game was played, for Thor Games only
      */
     int GameYear(int iGame) {
-        return m_tgis.get(iGame).year;
+        return ddm.getGameYear(iGame);
     }
 
     public int getRowCount() {
@@ -573,10 +436,14 @@ public class DatabaseData extends GridTableModel {
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return GameItemText(m_index.get(rowIndex), columnIndex);
+        return ddm.GameItemText(m_index.get(rowIndex), columnIndex);
     }
 
     public String getStatusString() {
         return getRowCount() + "/" + NGames() + " games selected";
+    }
+
+    public String GameItemText(int item, int field) {
+        return ddm.GameItemText(item, field);
     }
 }
