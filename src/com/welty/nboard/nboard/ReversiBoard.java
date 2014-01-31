@@ -35,6 +35,7 @@ class ReversiBoard extends JPanel {
     private static final int boardFrameWidth = 15;
     private static final int boardFrameSize = boardSize + 2 * boardFrameWidth;
 
+    @SuppressWarnings("SuspiciousNameCombination")
     private static final Rectangle boardArea = new Rectangle(boardFrameWidth, boardFrameWidth, boardSize, boardSize);
 
     private final Hints m_hints;
@@ -56,7 +57,6 @@ class ReversiBoard extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override public void mousePressed(MouseEvent e) {
                 final Point point = e.getPoint();
-                final int flags = e.getModifiers();
                 if (e.isMetaDown()) {
                     OnRightButtonDown();
                 } else {
@@ -183,13 +183,11 @@ class ReversiBoard extends JPanel {
             format = "+" + format;
 
         // eval
-        int nLines = 1;
         if (optionSource.ViewD2()) {
             ValueOut(sb, hint.vBlack, format);
             if (hint.vWhite != hint.vBlack) {
                 sb.append("\n");
                 ValueOut(sb, hint.vWhite, format);
-                nLines++;
             }
         } else {
             ValueOut(sb, hint.VNeutral(), format);
@@ -198,9 +196,8 @@ class ReversiBoard extends JPanel {
         // number of games, or ply.
         if (hint.nGames != 0) {
             sb.append("\n").append(hint.nGames);
-            nLines++;
         }
-        // if we're not in book, disply ply (unless it's 0)
+        // if we're not in book, display ply (unless it's 0)
         // ply is 0 when displaying mli.dEval from the movelist, since there's no ply field in mli.
         else if (!m_hints.HasBookHint() && hint.nPly != 0 && !hint.IsExact()) {
             sb.append("\n");
@@ -215,7 +212,6 @@ class ReversiBoard extends JPanel {
             } else {
                 sb.append(hint.sPly).append(" ply");
             }
-            nLines++;
         }
 
         GraphicsUtils.drawString(gd, sb.toString(), rectLast, Align.CENTER, VAlign.MIDDLE);

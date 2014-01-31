@@ -228,9 +228,11 @@ class Hints extends HashMap<Byte, Hint> implements SignalListener<COsMoveListIte
     }
 
     /**
+     * Determine if some of the hints are from an opening book.
+     * <p/>
+     * Things are displayed slightly differently if one of the hints is from an opening book
+     *
      * @return true if some of the hints are from an opening book
-     *         <p/>
-     *         Things are displayed slightly differently if one if the hints is from an opening book
      */
     boolean HasBookHint() {
         for (Hint it : values()) {
