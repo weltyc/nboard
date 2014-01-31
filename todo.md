@@ -17,6 +17,8 @@ L2   X   On Mac, accelerators should use command key instead of control key
 L3   X   Accelerator for quit/exit menu item on Mac
 L4   X   Move list window too narrow on Mac
 L5   NB  Display engine status [As per spec, engine status is cleared after the engine moves]
+L6   X   GGF Load progress window should finish with complete number of games
+L7       GGF Load progress window should display only 3 sig figs in engineering notation (12.3k not 12,345)
 
 F1       External engine window
 F2       Alternate start positions
@@ -29,3 +31,6 @@ F8       Timed matches
 F9       Single Paste
 F10      Copy should copy move list, not game
 F11      Filter database by player, tournament, etc.
+
+FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games
+FL2      GGF games should be stored in a more compact format

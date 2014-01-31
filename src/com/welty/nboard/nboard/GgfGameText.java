@@ -224,6 +224,7 @@ public class GgfGameText {
             }
         }
         log.info("parsed file");
+        tracker.update(); // #L6. If nInvalid!=0 the tracker would otherwise display an incorrect number of games.
 
         if (nInvalid != 0) {
             JOptionPane.showMessageDialog(null, "This file has " + nInvalid + " corrupt games", "Corrupt File alert", JOptionPane.WARNING_MESSAGE);

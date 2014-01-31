@@ -7,7 +7,16 @@ public interface IndeterminateProgressTracker extends AutoCloseable {
     public void increment();
 
     /**
-     * Promise not to throw a checked exception when we close.
+     * Notify the progress tracker that it should display progress immediately.
+     * <p/>
+     * If this is not called, the progress tracker may choose to display progress only every second or so.
+     */
+    public void update();
+
+    /**
+     * Close the window.
+     * <p/>
+     * This is an override because we promise not to throw a checked exception when we close.
      */
     @Override public void close();
 }

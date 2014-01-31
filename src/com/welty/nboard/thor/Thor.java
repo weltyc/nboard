@@ -81,6 +81,7 @@ public class Thor {
             tgs.add(tg);
             tracker.increment();
         }
+        tracker.update(); // #L6. If nInvalid!=0 the tracker would otherwise display an incorrect number of games.
 
         // check number of games vs header
         int nGames = tgs.size();
