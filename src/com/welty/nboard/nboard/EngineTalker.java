@@ -7,7 +7,7 @@ package com.welty.nboard.nboard;
  * Time: 9:34:29 PM
  * </PRE>
  */
-public interface EngineTalker {
+interface EngineTalker {
     void MayLearn();
 
     void TellEngineToLearn();

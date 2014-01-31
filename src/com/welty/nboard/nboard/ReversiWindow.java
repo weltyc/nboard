@@ -43,18 +43,18 @@ import static com.welty.nboard.gui.MenuItemBuilder.menuItem;
 public class ReversiWindow extends JFrame implements OptionSource, EngineTalker {
     private ReversiEngine m_engine;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
-    public ReversiData m_pd;
+    public final ReversiData m_pd;
 
     private final ThorWindow m_pwThor;    //< Window where thor games are displayed
-    private StatusBar m_statusBar;
+    private final StatusBar m_statusBar;
 
-    private MoveGrid m_pmg;
-    private ReversiBoard m_prb;
+    private final MoveGrid m_pmg;
+    private final ReversiBoard m_prb;
 
     private JMenu m_depthMenu;
-    private GameSelectionWindow m_pgsw;    //< Used in File/Open... dialog when there are multiple games in a file
-    private Hints m_hints;
-    private DatabaseData dd;
+    private final GameSelectionWindow m_pgsw;    //< Used in File/Open... dialog when there are multiple games in a file
+    private final Hints m_hints;
+    private final DatabaseData dd;
     private DepthRadioGroup m_depthRadioGroup;
 
     DatabaseData PD() {
@@ -351,7 +351,7 @@ Rectangle moveGridArea(5, top2, right0, bottom2);
                 m_pd.First();
             }
         }));
-        menu.add(menuItem("Last\tdown arrow").icon("last.GIF").build( new ActionListener() {
+        menu.add(menuItem("Last\tdown arrow").icon("last.GIF").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 m_pd.Last();
             }

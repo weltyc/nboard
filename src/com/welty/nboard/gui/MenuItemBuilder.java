@@ -10,8 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 public class MenuItemBuilder {
-    private @NotNull String text;
-    private int iMnemonic;
+    private @NotNull final String text;
+    private final int iMnemonic;
     private @Nullable String accelerator;
     private @Nullable String icon;
 
@@ -19,7 +19,7 @@ public class MenuItemBuilder {
 
     /**
      * Create a MenuItemBuilder.
-     *
+     * <p/>
      * textAndAccelerator contains
      * (a) the text of the menu item <br/>
      * (b) optionally, the character '&' which denotes the following character is the mnemonic <br/>
@@ -29,7 +29,7 @@ public class MenuItemBuilder {
      * Ctrl+{upper char}, which is transformed to Ctrl+char on non-Macs, and Command+char on Macs
      * "up arrow", "down arrow", "left arrow", "right arrow" which are transformed to the appropriate arrow key
      *
-     * @param textAndAccelerator  as described above
+     * @param textAndAccelerator as described above
      * @return a MenuItemBuilder
      */
     public static MenuItemBuilder menuItem(String textAndAccelerator) {
@@ -38,6 +38,7 @@ public class MenuItemBuilder {
 
     /**
      * Add an icon to the menu item
+     *
      * @param iconImageName icon image as loaded by {@link com.welty.nboard.nboard.NBoard#getImage(String)}
      * @return this, for chaining
      */
@@ -48,6 +49,7 @@ public class MenuItemBuilder {
 
     /**
      * Build a standard JMenuItem (no check box, no radio button)
+     *
      * @param listeners listeners for the menu item
      * @return the JMenuItem
      */
@@ -61,7 +63,7 @@ public class MenuItemBuilder {
             final char mnemonic = Character.toUpperCase(text.charAt(iMnemonic));
             menuItem.setMnemonic(mnemonic);
         }
-        if (accelerator!=null) {
+        if (accelerator != null) {
             if (accelerator.startsWith("Ctrl+")) {
                 final char accChar = Character.toUpperCase(accelerator.charAt(5));
                 menuItem.setAccelerator(KeyStroke.getKeyStroke(accChar, shortcutKeyMask));
@@ -103,6 +105,7 @@ public class MenuItemBuilder {
 
     /**
      * Build a JCheckBoxMenuItem
+     *
      * @param listeners listeners for the menu item
      * @return the JMenuItem
      */
@@ -112,6 +115,7 @@ public class MenuItemBuilder {
 
     /**
      * Build a JRadioButtonMenuItem
+     *
      * @param listeners listeners for the menu item
      * @return the JMenuItem
      */

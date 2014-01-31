@@ -300,7 +300,7 @@ public class DatabaseData extends GridTableModel {
 
     /**
      * Reloads games while updating the errorDisplayer and the tracker
-     *
+     * <p/>
      * If the list of files is empty, this does nothing (on the assumption that this was called in error).
      * Otherwise it unloads all existing games files and loads all games from the file.
      *
@@ -429,7 +429,7 @@ public class DatabaseData extends GridTableModel {
     }
 
     /**
-     * @return year in which the game was played, for Thor Games only
+     * @return year in which the game was played
      */
     int GameYear(int iGame) {
         return ddm.getGameYear(iGame);

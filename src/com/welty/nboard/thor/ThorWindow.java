@@ -18,8 +18,8 @@ import javax.swing.table.TableModel;
  * </PRE>
  */
 public class ThorWindow extends JFrame implements TableModelListener {
-    private ThorTable m_ptable;
-    private @NotNull DatabaseData m_pdd;
+    private final ThorTable m_ptable;
+    private @NotNull final DatabaseData m_pdd;
 
     public ThorWindow(ReversiWindow pwTarget, ReversiData pd, DatabaseData dd) {
         super("Database");

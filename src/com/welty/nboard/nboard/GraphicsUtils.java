@@ -13,7 +13,7 @@ import java.awt.*;
  * Time: 12:05:00 AM
  * To change this template use File | Settings | File Templates.
  */
-abstract public class GraphicsUtils {
+abstract class GraphicsUtils {
     public static void fillRect(Graphics gd, Rectangle rect, Color color) {
         gd.setColor(color);
         fillRect(gd, rect);

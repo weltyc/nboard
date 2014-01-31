@@ -34,7 +34,7 @@ class GameSelectionGrid extends Grid {
     }
 
     public void MouseDataClick(int modelRow, int modelCol) {
-        getTableModel().MouseDataClick(modelRow, modelCol);
+        getTableModel().MouseDataClick(modelRow);
     }
 
     public GameSelectionTableModel getTableModel() {
@@ -73,7 +73,7 @@ class GameSelectionGrid extends Grid {
          * but before the main window's PostQuitMessage() has been sent? Not sure about the relative
          * message priorities.
          */
-        public void MouseDataClick(int modelRow, int modelCol) {
+        public void MouseDataClick(int modelRow) {
             if (modelRow < getRowCount() && modelRow >= 0) {
                 m_pwTarget.m_pd.Update(m_gts.get(modelRow).m_text, true);
                 m_pwTarget.BringToTop();

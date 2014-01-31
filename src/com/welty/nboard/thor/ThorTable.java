@@ -1,8 +1,8 @@
 package com.welty.nboard.thor;
 
+import com.welty.nboard.gui.Grid;
 import com.welty.nboard.nboard.ReversiData;
 import com.welty.nboard.nboard.ReversiWindow;
-import com.welty.nboard.gui.Grid;
 
 import javax.swing.*;
 
@@ -15,10 +15,10 @@ import javax.swing.*;
  */
 class ThorTable extends Grid {
 
-    private ReversiData m_pd;            //!< Pointer to reversi data
+    private final ReversiData m_pd;            //!< Pointer to reversi data
     private final DatabaseData dd;
 
-    private ReversiWindow m_pwTarget;    //!< When a game is clicked, update this window with the new game
+    private final ReversiWindow m_pwTarget;    //!< When a game is clicked, update this window with the new game
 
     /**
      * Construct the table; create columns and sizer

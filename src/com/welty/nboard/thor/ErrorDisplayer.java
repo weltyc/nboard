@@ -3,7 +3,7 @@ package com.welty.nboard.thor;
 /**
  * Interface to notify user of errors
  */
-public interface ErrorDisplayer {
+interface ErrorDisplayer {
     /**
      * Notify the user that an error occurred
      *

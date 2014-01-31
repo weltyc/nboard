@@ -28,7 +28,7 @@ public class GgfGameText {
     };
 
     // Text of the game
-    String m_text;
+    final String m_text;
     // Location of the various fields in the game, or int(-1) if the field was not found in the game
     // Value of the result field (field 4) converted to an int. This is precomputed to save time while sorting.
     int m_nResult;
@@ -44,7 +44,7 @@ public class GgfGameText {
         return ThorOpeningMap.moveBytesFromGgf(getText());
     }
 
-    private int[] m_starts = new int[fields.length];    //< Start loc of value text for each field
+    private final int[] m_starts = new int[fields.length];    //< Start loc of value text for each field
     private boolean m_f8x8Standard;                //< true if the game was played on an 8x8 board
 
     public String getText() {
@@ -104,8 +104,7 @@ public class GgfGameText {
         try {
             final CReader in = new CReader(m_text.substring(m_starts[4]));
             m_nResult = in.readInt();
-        }
-        catch (IllegalArgumentException | EOFException e) {
+        } catch (IllegalArgumentException | EOFException e) {
             m_nResult = 0;
         }
         m_f8x8Standard = TY().equals("8");
@@ -218,8 +217,7 @@ public class GgfGameText {
                     result.add(gt);
                 }
                 tracker.increment();
-            }
-            catch (IllegalStateException | IllegalArgumentException e) {
+            } catch (IllegalStateException | IllegalArgumentException e) {
                 nInvalid++;
             }
         }

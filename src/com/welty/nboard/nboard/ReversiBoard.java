@@ -1,13 +1,13 @@
 package com.welty.nboard.nboard;
 
-import com.welty.othello.gdk.OsBoard;
-import com.welty.othello.gdk.COsMove;
-import com.welty.othello.gdk.COsMoveListItem;
-import com.welty.othello.gdk.COsPosition;
 import com.welty.nboard.gui.Align;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.gui.VAlign;
 import com.welty.othello.core.CMove;
+import com.welty.othello.gdk.COsMove;
+import com.welty.othello.gdk.COsMoveListItem;
+import com.welty.othello.gdk.COsPosition;
+import com.welty.othello.gdk.OsBoard;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -58,9 +58,9 @@ class ReversiBoard extends JPanel {
                 final Point point = e.getPoint();
                 final int flags = e.getModifiers();
                 if (e.isMetaDown()) {
-                    OnRightButtonDown(point, flags);
+                    OnRightButtonDown();
                 } else {
-                    OnButtonDown(point, flags);
+                    OnButtonDown(point);
                 }
             }
         });
@@ -226,7 +226,7 @@ class ReversiBoard extends JPanel {
      * <p/>
      * Can't move if it's the engine's move and we're not reviewing.
      */
-    void OnButtonDown(Point loc, int flags) {
+    void OnButtonDown(Point loc) {
         if (optionSource.UsersMove() || m_pd.Reviewing()) {
             final int ix = (loc.x - boardArea.x) * n / boardArea.width;
             final int iy = (loc.y - boardArea.y) * n / boardArea.height;
@@ -252,7 +252,7 @@ class ReversiBoard extends JPanel {
      *
      * @see ReversiData#Undo
      */
-    void OnRightButtonDown(Point loc, int flags) {
+    void OnRightButtonDown() {
         m_pd.Undo();
     }
 

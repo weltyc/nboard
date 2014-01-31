@@ -3,7 +3,8 @@ package com.welty.nboard.nboard;
 import com.welty.othello.core.ProcessLogger;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Class that controls communication with an engine.
@@ -21,7 +22,7 @@ import java.io.*;
  * Time: 10:41:21 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ReversiEngine {
+class ReversiEngine {
     private final ReversiWindow reversiWindow;
     private int m_ping;
     private int m_pong;

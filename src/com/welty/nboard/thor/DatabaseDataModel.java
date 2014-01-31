@@ -18,15 +18,24 @@ import static com.welty.othello.core.Utils.Row;
 /**
  * Data model for DatabaseData.
  */
-public class DatabaseDataModel {
+class DatabaseDataModel {
     /**
-     * WTB games followed by converted GGF games
+     * Thor games followed by converted GGF games
      */
     private ArrayList<ThorGameInternal> m_tgis = new ArrayList<>();
+    /**
+     * Player names for Thor database games
+     */
     private ArrayList<String> m_players = new ArrayList<>();
+    /**
+     * Tournament names for Thor database games
+     */
     private ArrayList<String> m_tournaments = new ArrayList<>();
 
-    private int m_nThorGames;                    //*< Number of games loaded from WTB files
+    /**
+     * Number of m_tgis that are Thor games. After this they are GGF games.
+     */
+    private int m_nThorGames;
 
     /**
      * GGF text of games loaded from GGF files
@@ -44,8 +53,8 @@ public class DatabaseDataModel {
         m_tgis.trimToSize();
     }
 
-    public String getGgfText(int iGame) {
-      return  m_ggfGames.get(iGame - m_nThorGames).getText();
+    String getGgfText(int iGame) {
+        return m_ggfGames.get(iGame - m_nThorGames).getText();
     }
 
     /**

@@ -17,7 +17,7 @@ import java.awt.*;
  * and "12,345k" is the Engineering representation of the number of games.
  */
 public class IndeterminateProgressMonitor implements IndeterminateProgressTracker {
-    public static final int UPDATE_MILLIS = 500;
+    private static final int UPDATE_MILLIS = 500;
     private long progress = 0;
     private final JLabel label;
     private final JDialog dialog;
