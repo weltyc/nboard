@@ -1,5 +1,6 @@
 package com.welty.nboard.thor;
 
+import com.orbanova.common.misc.Require;
 import com.welty.othello.c.CReader;
 import com.welty.othello.gdk.*;
 import com.welty.nboard.nboard.BoardSource;
@@ -441,10 +442,14 @@ public class DatabaseData extends GridTableModel {
 
     /**
      * Unload existing games and load new ones from the file
-     * @param fns
-     * @return
+     *
+     * This function creates and displays a progress bar, thus it must run on the EDT. It will block the EDT while running.
+     *
+     * @param fns filenames to load
+     * @return list of games.
      */
     private ArrayList<ThorGameInternal> loadGames(List<String> fns) {
+        Require.isTrue(SwingUtilities.isEventDispatchThread(), "must run on EDT");
         ArrayList<ThorGameInternal> games = new ArrayList<>();
         try (final IndeterminateProgressMonitor monitor = new IndeterminateProgressMonitor(" games loaded")) {
             UnloadGames();

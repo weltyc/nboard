@@ -1,55 +1,62 @@
 package com.welty.nboard.thor;
 
-import com.orbanova.common.misc.Logger;
+import com.orbanova.common.misc.Require;
 import com.welty.othello.core.Engineering;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Window where progress information is displayed.
- *
+ * Dialog where progress information is displayed.
+ * <p/>
+ * This must be constructed on the EventDispatchThread. The operation being tracked must call increment also on the EDT.
+ * If the work is also done on the EDT, this means the EDT will block.
+ * <p/>
  * Progress is displayed as a number (in Engineering format) followed by a suffix.
  * For example, "12,345k games loaded". In this case, " games loaded" is the suffix,
  * and "12,345k" is the Engineering representation of the number of games.
  */
 public class IndeterminateProgressMonitor implements IndeterminateProgressTracker {
-    private static final Logger log = Logger.logger(IndeterminateProgressMonitor.class);
-
-    private final Timer timer;
-    private final AtomicLong progress = new AtomicLong();
+    public static final int UPDATE_MILLIS = 500;
+    private long progress = 0;
     private final JLabel label;
-    private final JFrame frame;
+    private final JDialog dialog;
+    private final String suffix;
+    private long nextUpdate = System.currentTimeMillis() + UPDATE_MILLIS;
 
+    /**
+     * Construct a Monitor.
+     * <p/>
+     * Must be constructed on the EDT. See {@link IndeterminateProgressMonitor} for complete usage details.
+     *
+     * @param suffix suffix for progress display
+     */
     public IndeterminateProgressMonitor(final String suffix) {
-        frame = new JFrame("Loading Games");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.suffix = suffix;
+        Require.isTrue(SwingUtilities.isEventDispatchThread(), "Must be constructed on EDT");
+        dialog = new JDialog(null, "Loading Games", Dialog.ModalityType.MODELESS);
+        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         label = new JLabel("0 " + suffix);
-        label.setPreferredSize(new Dimension(200, 100));
-        frame.add(label);
-        frame.pack();
-
-        timer = new Timer(1000, new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                label.setText(Engineering.engineeringLong(progress.get())+suffix);
-                frame.setVisible(true);
-                log.info("Timer updated");
-            }
-        });
-        timer.setInitialDelay(1000);
-        timer.start();
+        label.setPreferredSize(new Dimension(300, 100));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        dialog.add(label);
+        dialog.pack();
+        dialog.setVisible(true);
     }
 
     @Override public void increment() {
-        progress.incrementAndGet();
+        progress++;
+        final long now = System.currentTimeMillis();
+        if (now > nextUpdate) {
+            nextUpdate = now + UPDATE_MILLIS;
+            dialog.validate();
+            label.setText(Engineering.engineeringLong(progress) + suffix);
+            label.paintImmediately(0, 0, 1000, 1000);
+        }
     }
 
     @Override public void close() {
-        timer.stop();
-        frame.setVisible(false);
-        frame.dispose();
+        dialog.setVisible(false);
+        dialog.dispose();
     }
 }
