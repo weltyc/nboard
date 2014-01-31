@@ -93,12 +93,6 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         setIconImage(icon.getImage());
 
         m_pd = new ReversiData(this, this);
-        try {
-            m_engine = new ReversiEngine(GuiOpponentSelector.getInstance());
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Unable to start engine: " + e, "External Engine Error", JOptionPane.ERROR_MESSAGE);
-        }
-        m_engine.addListener(this);
         chooser = new GgfFileChooser(this);
         setResizable(false);
         m_pgsw = new GameSelectionWindow(this);
@@ -148,8 +142,11 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         // engine initialization - do this after we've constructed the windows for
         // the responses to be displayed in
         m_statusBar.SetStatus("Loading Engine");
-        SendCommand("nboard 1", false);
-        SendCommand("set depth " + 4, true);
+        try {
+            m_engine = new ReversiEngine(GuiOpponentSelector.getInstance(), this);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Unable to start engine: " + e, "External Engine Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**

@@ -29,14 +29,22 @@ class ReversiEngine extends ListenerManager<ReversiEngine.Listener> implements O
     private volatile boolean shutdown = false;
     private final ProcessLogger processLogger;
 
-    public ReversiEngine(OpponentSelector opponentSelector) throws IOException {
+    /**
+     * Start up an engine in an external process and initialize it
+     *
+     * @param opponentSelector selector for opponent depth
+     * @param listener         listener (will receive startup status updates)
+     * @throws IOException
+     */
+    public ReversiEngine(OpponentSelector opponentSelector, Listener listener) throws IOException {
+        addListener(listener);
         this.opponentSelector = opponentSelector;
         final String[] command = "./mEdax -nboard".split("\\s+");
         final File wd = new File("/Applications/edax/4.3.2/bin");
         final Process process = new ProcessBuilder(command).directory(wd).redirectErrorStream(true).start();
         processLogger = new ProcessLogger(process, true);
-        opponentSelector.addListener(this);
-
+        SendCommand("nboard 1", false);
+        SendCommand("set depth " + opponentSelector.getOpponent().getMaxDepth(), true);
 
         new Thread("NBoard Feeder") {
             @Override public void run() {
@@ -59,6 +67,8 @@ class ReversiEngine extends ListenerManager<ReversiEngine.Listener> implements O
                 }
             }
         }.start();
+
+        opponentSelector.addListener(this);
     }
 
 
@@ -118,7 +128,7 @@ class ReversiEngine extends ListenerManager<ReversiEngine.Listener> implements O
     }
 
     @Override public void opponentChanged() {
-        final int newLevel = opponentSelector.getOpponent().getLevel();
+        final int newLevel = opponentSelector.getOpponent().getMaxDepth();
         SendCommand("set depth " + newLevel, true);
     }
 
