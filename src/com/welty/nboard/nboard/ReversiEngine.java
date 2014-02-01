@@ -53,7 +53,7 @@ class ReversiEngine extends ListenerManager<ReversiEngine.Listener> implements O
 
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
-                                parseAndSend(line);
+                                parseAndFire(line);
                             }
                         });
                     } catch (IOException e) {
@@ -80,7 +80,7 @@ class ReversiEngine extends ListenerManager<ReversiEngine.Listener> implements O
      * @param fPingFirst true if we should ping the engine before this command to ensure synchronization (e.g. if the command
      *                   affects the board state)
      */
-    void SendCommand(final String sCommand, boolean fPingFirst) {
+    private void SendCommand(final String sCommand, boolean fPingFirst) {
         if (fPingFirst)
             Ping();
 
@@ -132,11 +132,11 @@ class ReversiEngine extends ListenerManager<ReversiEngine.Listener> implements O
     }
 
     /**
-     * Parse a command received from the engine.
+     * Parse a command received from the engine and notify listeners.
      * <p/>
      * Pong is handled internally by updating m_pong.
      */
-    private void parseAndSend(String string) {
+    private void parseAndFire(String string) {
         final CReader is = new CReader(string);
         String sCommand = is.readString();
         is.ignoreWhitespace();
@@ -260,6 +260,24 @@ class ReversiEngine extends ListenerManager<ReversiEngine.Listener> implements O
         SendCommand("move " + mli, true);
     }
 
+    /**
+     * Request hints (evaluation of the top n moves) from the engine, for the current board
+     *
+     * @param nMoves number of moves to evaluate
+     */
+    public void requestHints(int nMoves) {
+        SendCommand("hint " + nMoves, false);
+    }
+
+    /**
+     * Request a valid move from the engine, for the current board.
+     * <p/>
+     * Unlike {@link #requestHints(int)}, the engine does not have to return an evaluation;
+     * if it has only one legal move it may choose to return that move immediately without searching.
+     */
+    public void requestMove() {
+        SendCommand("go", false);
+    }
 
     /**
      * Listens to responses from the Engine

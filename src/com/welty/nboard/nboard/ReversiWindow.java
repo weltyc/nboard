@@ -708,7 +708,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
     private static final int[] engineTops = {1, 2, 4, 64};
 
     /**
-     * Tell the engine "go" or "hint" if it is ready, or "learn" if the game is over
+     * Tell the engine "go" or "hint" if it is ready.
      * <p/>
      * If the engine is not ready, it will get this information once it is caught up because we call
      * this routine from the "pong" command handler.
@@ -716,7 +716,8 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
      */
     void TellEngineWhatToDo() {
         if (m_engine.IsReady()) {
-            String sCommand;
+            boolean isHint;
+
             if (m_pd.DisplayedPosition().board.GameOver()) {
                 // do nothing. learning is handled in the Update function now to ensure
                 // that the engine is learning the right game, and learning it just once.
@@ -724,44 +725,30 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
             }
             // If the user is reviewing the game, the computer gives hints
             else if (m_pd.Reviewing()) {
-                sCommand = "hint";
+                isHint = true;
             }
             // If it's the engine's move, he should move.
             else if (!UsersMove()) {
-                sCommand = "go";
-                SetStatus("Thinking");
+                isHint = false;
             }
             // If it's the user's move, get a hint if we're showing evals.
             else if (ShowEvals()) {
-                sCommand = "hint";
+                isHint = true;
             }
             // If it's the user's move and we're not showing evals, don't waste CPU time.
             else {
                 return;
             }
 
-            // for hints, figure out how many we want
-            if (sCommand.equals("hint")) {
-                sCommand = "hint " + engineTops[engineTop.getIndex()];
-            }
-
             // the engine will now give us new hints, so delete the old ones
             m_hints.Clear();
-            m_engine.SendCommand(sCommand, false);
+            if (isHint) {
+                m_engine.requestHints(engineTops[engineTop.getIndex()]);
+            } else {
+                m_engine.requestMove();
+            }
         }
     }
-
-    /**
-     * Send the command to the engine. If the board is being updated, also tell the engine what to do.
-     */
-    void SendCommand(final String sCommand, boolean fUpdateBoard) {
-        m_engine.SendCommand(sCommand, fUpdateBoard);
-        if (fUpdateBoard)
-            TellEngineWhatToDo();
-    }
-
-
-    //
 
     /**
      * Look up the displayed position in the currently loaded thor database
