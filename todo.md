@@ -11,7 +11,7 @@ H9   X   Database "look up position" doesn't, unless "Look up all" is already ch
 H10  X   Click on database game should use real player names in review window
 H11  X   Click on database game should use the correct game
 H12  X   Display progress window when loading games database
-H13      Notify user with dialog box when engine gives a bad hint
+H13  X   Notify user with dialog box when engine gives a bad hint
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key

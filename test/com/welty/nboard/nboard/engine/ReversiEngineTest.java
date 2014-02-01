@@ -1,6 +1,6 @@
 package com.welty.nboard.nboard.engine;
 
-import com.welty.othello.gui.Opponent;
+import com.welty.othello.gui.OpponentSelection;
 import com.welty.othello.gui.OpponentSelector;
 import junit.framework.TestCase;
 import org.mockito.Mockito;
@@ -29,9 +29,9 @@ public class ReversiEngineTest extends TestCase {
 
     private static OpponentSelector mockOpponentSelector() {
         final OpponentSelector opponentSelector = mock(OpponentSelector.class);
-        final Opponent opponent = mock(Opponent.class);
-        Mockito.when(opponentSelector.getOpponent()).thenReturn(opponent);
-        Mockito.when(opponent.getMaxDepth()).thenReturn(4);
+        final OpponentSelection opponentSelection = mock(OpponentSelection.class);
+        Mockito.when(opponentSelector.getOpponent()).thenReturn(opponentSelection);
+        Mockito.when(opponentSelection.getMaxDepth()).thenReturn(4);
         return opponentSelector;
     }
 }
