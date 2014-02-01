@@ -1,11 +1,13 @@
 package com.welty.nboard.nboard.engine;
 
-import com.orbanova.common.misc.ListenerManager;
+import com.welty.othello.api.ApiEngine;
+import com.welty.othello.api.NBoardEngine;
+import com.welty.othello.api.OpponentSelector;
 import com.welty.othello.c.CReader;
 import com.welty.othello.core.CMove;
+import com.welty.othello.engine.ExternalNBoardEngine;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMoveListItem;
-import com.welty.othello.gui.OpponentSelector;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.EOFException;
@@ -16,12 +18,12 @@ import java.io.IOException;
  * <p/>
  * This class also includes functions to help ensure synchronization of the board state with
  * the ReversiWindow. To ensure synchronization of the board state:
- * - Call Ping() immediately before any command that changes the board state.
+ * - Call ping() immediately before any command that changes the board state.
  * - The function IsReady() returns true if all pings have been accepted by the engine.
  * - If IsReady() returns true then messages from the engine relate to the current board state.
  * - If IsReady() returns false then messages from the engine relate to a previous board state and can be ignored.
  */
-public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> implements OpponentSelector.Listener, NBoardEngine.Listener {
+public class ParsedEngine extends ApiEngine implements OpponentSelector.Listener, NBoardEngine.Listener {
     private final OpponentSelector opponentSelector;
     private int m_ping;
     private int m_pong;
@@ -34,7 +36,7 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
      * @param opponentSelector selector for opponent depth
      * @throws IOException
      */
-    public ReversiEngine(OpponentSelector opponentSelector) throws IOException {
+    public ParsedEngine(OpponentSelector opponentSelector) throws IOException {
         this(opponentSelector, new ExternalNBoardEngine());
     }
 
@@ -42,7 +44,7 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
      * @param opponentSelector selector for opponent depth
      * @param engine           command-line engine
      */
-    ReversiEngine(OpponentSelector opponentSelector, @NotNull final NBoardEngine engine) {
+    ParsedEngine(OpponentSelector opponentSelector, @NotNull final NBoardEngine engine) {
         this.opponentSelector = opponentSelector;
         this.engine = engine;
         SendCommand("nboard 1", false);
@@ -64,7 +66,7 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
      */
     private void SendCommand(final String sCommand, boolean fPingFirst) {
         if (fPingFirst)
-            Ping();
+            ping();
 
         engine.sendCommand(sCommand);
     }
@@ -79,7 +81,7 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
     /**
      * Send the engine a ping command, engine will be ready when it sends the corresponding pong command
      */
-    void Ping() {
+    @Override public void ping() {
         SendCommand("ping " + ++m_ping, false);
     }
 
@@ -96,7 +98,7 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
      * This is called when the OS copy of the window is about to be destroyed. Sending
      * additional messages to the window could result in crashes.
      */
-    void Terminate() {
+    @Override public void terminate() {
         SendCommand("quit", false);
     }
 
@@ -113,64 +115,20 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
         SendCommand("set depth " + newLevel, true);
     }
 
-    private void fireHint(boolean book, String pv, CMove move, String eval, int nGames, String depth, String freeformText) {
-        for (Listener l : getListeners()) {
-            l.hint(book, pv, move, eval, nGames, depth, freeformText);
-        }
-    }
-
-    /**
-     * Notify listeners of a status update
-     *
-     * @param status status text
-     */
-    private void fireStatus(String status) {
-        for (Listener l : getListeners()) {
-            l.status(status);
-        }
-    }
-
-    /**
-     * Notify listeners that the engine moved
-     *
-     * @param mli move
-     */
-    private void fireEngineMove(COsMoveListItem mli) {
-        for (Listener l : getListeners()) {
-            l.engineMove(mli);
-        }
-    }
-
-    /**
-     * Notify listeners that the engine is ready to accept commands
-     */
-    private void fireEngineReady() {
-        for (Listener l : getListeners()) {
-            l.engineReady();
-        }
-    }
-
-
-    private void fireParseError(String command, String errorMessage) {
-        for (Listener l : getListeners()) {
-            l.parseError(command, errorMessage);
-        }
-    }
-
 
     /**
      * Set the NBoard protocol's current game.
      *
      * @param game game to set.
      */
-    public void setGame(COsGame game) {
+    @Override public void setGame(COsGame game) {
         SendCommand("set game " + game, true);
     }
 
     /**
      * Tell the Engine to learn the current game.
      */
-    public void learn() {
+    @Override public void learn() {
         SendCommand("learn", false);
     }
 
@@ -179,7 +137,7 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
      *
      * @param contempt contempt, in centidisks.
      */
-    public void setContempt(int contempt) {
+    @Override public void setContempt(int contempt) {
         SendCommand("set contempt " + contempt, false);
     }
 
@@ -188,7 +146,7 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
      *
      * @param mli the move to append to the protocol's current game.
      */
-    public void sendMove(COsMoveListItem mli) {
+    @Override public void sendMove(COsMoveListItem mli) {
         SendCommand("move " + mli, true);
     }
 
@@ -197,7 +155,7 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
      *
      * @param nMoves number of moves to evaluate
      */
-    public void requestHints(int nMoves) {
+    @Override public void requestHints(int nMoves) {
         SendCommand("hint " + nMoves, false);
     }
 
@@ -207,7 +165,7 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
      * Unlike {@link #requestHints(int)}, the engine does not have to return an evaluation;
      * if it has only one legal move it may choose to return that move immediately without searching.
      */
-    public void requestMove() {
+    @Override public void requestMove() {
         SendCommand("go", false);
     }
 
@@ -290,56 +248,5 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
 
     @Override public void onEngineTerminated() {
         fireStatus("The engine (" + name + ") has terminated.");
-    }
-
-    /**
-     * Listens to responses from the Engine
-     */
-    public interface Listener {
-        /**
-         * The Engine updated its status
-         *
-         * @param status status text
-         */
-        public void status(String status);
-
-        /**
-         * The engine moved.
-         * <p/>
-         * The engine only sends this message if it relates to the current board position (ping = pong).
-         * Otherwise it discards the message.
-         *
-         * @param mli engine move
-         */
-        void engineMove(COsMoveListItem mli);
-
-        /**
-         * The engine is ready to accept commands (ping=pong).
-         */
-        void engineReady();
-
-        /**
-         * The engine's evaluation of a move.
-         * <p/>
-         * The engine only sends this message if it relates to the current board position (ping = pong).
-         * Otherwise it discards the message.
-         *
-         * @param fromBook     if true, hint comes from the book
-         * @param pv           principal variation - the first two characters are the evaluated move.
-         * @param move         the evaluated move
-         * @param eval         evaluation of the move.
-         * @param nGames       # of games (for book moves only)
-         * @param depth        search depth reached when evaluating this move
-         * @param freeformText optional extra text relating to the move
-         */
-        void hint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText);
-
-        /**
-         * The engine sent a message which appears to be an nboard protocol message but can't be parsed correctly.
-         *
-         * @param command      command from engine
-         * @param errorMessage error message from parser
-         */
-        void parseError(String command, String errorMessage);
     }
 }

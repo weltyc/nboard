@@ -4,7 +4,7 @@ import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.RadioGroup;
 import com.welty.nboard.gui.SignalListener;
-import com.welty.nboard.nboard.engine.ReversiEngine;
+import com.welty.nboard.nboard.engine.ParsedEngine;
 import com.welty.nboard.thor.DatabaseData;
 import com.welty.nboard.thor.ThorWindow;
 import com.welty.othello.c.CReader;
@@ -35,10 +35,10 @@ import static com.welty.nboard.gui.MenuItemBuilder.menuItem;
  * Main window class for the Reversi app. Controls interaction with the user, the engine, and the menu.
  * The ReversiData class processes this data.
  * <p/>
- * See the ReversiEngine class for a description of synchronization issues.
+ * See the ParsedEngine class for a description of synchronization issues.
  */
-public class ReversiWindow extends JFrame implements OptionSource, EngineTalker, ReversiEngine.Listener {
-    private ReversiEngine m_engine;
+public class ReversiWindow extends JFrame implements OptionSource, EngineTalker, ParsedEngine.Listener {
+    private ParsedEngine m_engine;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData m_pd;
 
@@ -136,7 +136,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
         try {
-            m_engine = new ReversiEngine(GuiOpponentSelector.getInstance());
+            m_engine = new ParsedEngine(GuiOpponentSelector.getInstance());
         } catch (IOException e) {
             warn("Unable to start engine: " + e, "External Engine Error");
         }

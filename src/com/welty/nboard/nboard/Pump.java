@@ -91,7 +91,7 @@
 //			if (pLineEnd>pNextRead && pLineEnd[-1]=='\r')
 //				pLineEnd[-1]='\0';
 //			String* ps=new String(pNextRead);
-//			::PostMessage(m_hwnd, ReversiEngine::s_msgFromEngine, (WPARAM)ps, NULL);
+//			::PostMessage(m_hwnd, ParsedEngine::s_msgFromEngine, (WPARAM)ps, NULL);
 //
 //			pNextRead=pLineEnd+1;
 //		}
@@ -113,7 +113,7 @@
 //	if (!m_fTerminated) {
 //		Z::MessageBox(IDS_ENGINE_TERMINATED, IDS_WARNING, MB_OK);
 //		String *ps=new String("status Engine Terminated");
-//		PostMessage(m_hwnd, ReversiEngine::s_msgFromEngine, (WPARAM)ps, NULL);
+//		PostMessage(m_hwnd, ParsedEngine::s_msgFromEngine, (WPARAM)ps, NULL);
 //	}
 //
 //	// save the hReadFrom pipe handle. We will close the pipe handle AFTER deleting this

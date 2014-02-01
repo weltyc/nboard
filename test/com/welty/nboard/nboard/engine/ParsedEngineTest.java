@@ -1,7 +1,8 @@
 package com.welty.nboard.nboard.engine;
 
-import com.welty.othello.gui.OpponentSelection;
-import com.welty.othello.gui.OpponentSelector;
+import com.welty.othello.api.NBoardEngine;
+import com.welty.othello.api.OpponentSelection;
+import com.welty.othello.api.OpponentSelector;
 import junit.framework.TestCase;
 import org.mockito.Mockito;
 
@@ -12,18 +13,18 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class ReversiEngineTest extends TestCase {
+public class ParsedEngineTest extends TestCase {
     public void testParseErrors() throws IOException {
         final OpponentSelector opponentSelector = mockOpponentSelector();
         final NBoardEngine nbEngine = mock(NBoardEngine.class);
 
-        final ReversiEngine reversiEngine = new ReversiEngine(opponentSelector, nbEngine);
-        final ReversiEngine.Listener listener = mock(ReversiEngine.Listener.class);
-        reversiEngine.addListener(listener);
+        final ParsedEngine parsedEngine = new ParsedEngine(opponentSelector, nbEngine);
+        final ParsedEngine.Listener listener = mock(ParsedEngine.Listener.class);
+        parsedEngine.addListener(listener);
 
-        reversiEngine.onMessageReceived("pong 1");
+        parsedEngine.onMessageReceived("pong 1");
         final String bookMessage = "book      +1    c5";
-        reversiEngine.onMessageReceived(bookMessage);
+        parsedEngine.onMessageReceived(bookMessage);
         verify(listener).parseError(eq(bookMessage), anyString());
     }
 
