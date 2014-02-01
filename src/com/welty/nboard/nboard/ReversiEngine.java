@@ -3,6 +3,7 @@ package com.welty.nboard.nboard;
 import com.orbanova.common.misc.ListenerManager;
 import com.welty.othello.c.CReader;
 import com.welty.othello.core.ProcessLogger;
+import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gui.OpponentSelector;
 
@@ -33,11 +34,9 @@ class ReversiEngine extends ListenerManager<ReversiEngine.Listener> implements O
      * Start up an engine in an external process and initialize it
      *
      * @param opponentSelector selector for opponent depth
-     * @param listener         listener (will receive startup status updates)
      * @throws IOException
      */
-    public ReversiEngine(OpponentSelector opponentSelector, Listener listener) throws IOException {
-        addListener(listener);
+    public ReversiEngine(OpponentSelector opponentSelector) throws IOException {
         this.opponentSelector = opponentSelector;
         final String[] command = "./mEdax -nboard".split("\\s+");
         final File wd = new File("/Applications/edax/4.3.2/bin");
@@ -225,6 +224,40 @@ class ReversiEngine extends ListenerManager<ReversiEngine.Listener> implements O
         for (Listener l : getListeners()) {
             l.engineReady();
         }
+    }
+
+    /**
+     * Set the NBoard protocol's current game.
+     *
+     * @param game game to set.
+     */
+    public void setGame(COsGame game) {
+        SendCommand("set game " + game, true);
+    }
+
+    /**
+     * Tell the Engine to learn the current game.
+     */
+    public void learn() {
+        SendCommand("learn", false);
+    }
+
+    /**
+     * Set the engine's contempt factor (scoring of proven draws).
+     *
+     * @param contempt contempt, in centidisks.
+     */
+    public void setContempt(int contempt) {
+        SendCommand("set contempt " + contempt, false);
+    }
+
+    /**
+     * Append a move to the NBoard protocol's current game.
+     *
+     * @param mli the move to append to the protocol's current game.
+     */
+    public void sendMove(COsMoveListItem mli) {
+        SendCommand("move " + mli, true);
     }
 
 

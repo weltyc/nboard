@@ -102,7 +102,8 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
 
             public void handleSignal(COsMoveListItem data) {
                 if (data != null) {
-                    SendCommand("move " + data, true);
+                    m_engine.sendMove(data);
+                    TellEngineWhatToDo();
                 } else {
                     SendSetGame();
                 }
@@ -131,6 +132,13 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         mainPanel.add(m_pml);
         add(mainPanel);
 
+        // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
+        try {
+            m_engine = new ReversiEngine(GuiOpponentSelector.getInstance());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Unable to start engine: " + e, "External Engine Error", JOptionPane.ERROR_MESSAGE);
+        }
+
         ConstructMenus();
 
         m_pd.AddListener(m_hints);
@@ -142,11 +150,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         // engine initialization - do this after we've constructed the windows for
         // the responses to be displayed in
         m_statusBar.SetStatus("Loading Engine");
-        try {
-            m_engine = new ReversiEngine(GuiOpponentSelector.getInstance(), this);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Unable to start engine: " + e, "External Engine Error", JOptionPane.ERROR_MESSAGE);
-        }
+        m_engine.addListener(this);
     }
 
     /**
@@ -645,7 +649,8 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         if (iMove < nMoves) {
             displayedGame.Undo(nMoves - iMove);
         }
-        SendCommand("set game " + displayedGame, true);
+        m_engine.setGame(displayedGame);
+        TellEngineWhatToDo();
     }
 
     void SetMode(int mode) {
@@ -674,7 +679,8 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
      * Sets it based on the drawsTo member
      */
     void SendSetContempt() {
-        SendCommand("set contempt " + 100 * (1 - drawsTo.getIndex()), false);
+        final int contempt = 100 * (1 - drawsTo.getIndex());
+        m_engine.setContempt(contempt);
     }
 
     /**
@@ -693,7 +699,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         }
 
         // Tell the engine to learn the game
-        SendCommand("learn", false);
+        m_engine.learn();
 
         // reset the stored review point. The engine will update hints as a result.
         SendSetGame();
