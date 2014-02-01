@@ -9,6 +9,7 @@ import com.welty.nboard.thor.DatabaseData;
 import com.welty.nboard.thor.ThorWindow;
 import com.welty.othello.c.CReader;
 import com.welty.othello.c.CWriter;
+import com.welty.othello.core.CMove;
 import com.welty.othello.core.OperatingSystem;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMoveListItem;
@@ -137,7 +138,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         try {
             m_engine = new ReversiEngine(GuiOpponentSelector.getInstance());
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Unable to start engine: " + e, "External Engine Error", JOptionPane.ERROR_MESSAGE);
+            warn("Unable to start engine: " + e, "External Engine Error");
         }
 
         ConstructMenus();
@@ -317,7 +318,8 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
                         m_pd.Update(game, true);
                     } catch (IllegalArgumentException ex) {
                         final String msg = (s.length() < 200 ? s + " is not a legal board" : "Not a legal board");
-                        JOptionPane.showMessageDialog(ReversiWindow.this, msg, "Paste Board error", JOptionPane.ERROR_MESSAGE);
+                        final String title = "Paste Board error";
+                        warn(msg, title);
                     }
                 }
             }
@@ -327,6 +329,10 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         m_editMenu.add(createMenuItem("Flip", m_flipMenu));
         m_editMenu.add(createMoveMenu());
         return m_editMenu;
+    }
+
+    private void warn(String msg, String title) {
+        JOptionPane.showMessageDialog(this, msg, title, JOptionPane.WARNING_MESSAGE);
     }
 
     private JMenuItem createMoveMenu() {
@@ -575,7 +581,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
                 m_pd.Update(game, true);
             }
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(null, "Unable to load game from file '" + file + "'", e.toString(), JOptionPane.WARNING_MESSAGE);
+            warn("Unable to load game from file '" + file + "'", e.toString());
         }
     }
 
@@ -851,7 +857,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
             try {
                 m_pd.Update(mli, false);
             } catch (IllegalArgumentException e) {
-                JOptionPane.showMessageDialog(this, "Illegal move from engine: " + mli, "Engine Error", JOptionPane.WARNING_MESSAGE);
+                warn("Illegal move from engine: " + mli, "Engine Error");
             }
         }
     }
@@ -860,8 +866,13 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         TellEngineWhatToDo();
     }
 
-    @Override public void hint(boolean fromBook, String pv, CReader rest) {
+    @Override public void hint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText) {
         boolean fBlackMove = m_pd.Game().pos.board.fBlackMove;
-        m_hints.Add(pv, rest, fBlackMove, fromBook);
+        final Hint hint = new Hint(eval, nGames, depth, fromBook, fBlackMove);
+        m_hints.Add(move, hint);
+    }
+
+    @Override public void parseError(String command, String errorMessage) {
+        warn("Engine communication error", "Illegal engine response: " + command + "\n" + errorMessage);
     }
 }

@@ -10,6 +10,18 @@ public abstract class NBoardEngine extends ListenerManager<NBoardEngine.Listener
      */
     public abstract void sendCommand(String command);
 
+    protected void fireMessageReceived(String response) {
+        for (Listener listener : getListeners()) {
+            listener.onMessageReceived(response);
+        }
+    }
+
+    protected void fireEngineTerminated() {
+        for (Listener listener : getListeners()) {
+            listener.onEngineTerminated();
+        }
+    }
+
     public interface Listener {
         /**
          * Handle a message received from the engine

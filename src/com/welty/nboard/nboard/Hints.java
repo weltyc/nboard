@@ -2,7 +2,6 @@ package com.welty.nboard.nboard;
 
 import com.welty.nboard.gui.SignalEvent;
 import com.welty.nboard.gui.SignalListener;
-import com.welty.othello.c.CReader;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.COsMoveListItem;
 
@@ -54,23 +53,16 @@ public class Hints extends HashMap<Byte, Hint> implements SignalListener<COsMove
      * <p/>
      * - ply search depth
      *
-     * @param pv         principal variation. (first two characters assumed to be the move)
-     * @param is         istream to read the Hint from
-     * @param fBlackMove true if black to move
-     * @param fInBook    true if the move is from the opening book
-     *                   <p/>
+     * @param move move that is being valued
+     * @param hint hint that was created
      */
-    void Add(String pv, CReader is, boolean fBlackMove, boolean fInBook) {
-        CMove move = new CMove(pv.substring(0, 2));
-
-        Hint h = new Hint();
-        h.In(is, fBlackMove, fInBook);
-        if (!fInBook && !h.sPly.equals(m_sPlyRecent)) {
+    void Add(CMove move, Hint hint) {
+        if (!hint.fBook && !hint.sPly.equals(m_sPlyRecent)) {
             RemoveNonbookHints(m_sPlyRecent);
-            m_sPlyRecent = h.sPly;
-            OldNonbookHints(h.sPly);
+            m_sPlyRecent = hint.sPly;
+            OldNonbookHints(hint.sPly);
         }
-        put((byte) move.Square(), h);
+        put((byte) move.Square(), hint);
 
         ArrayList<Byte> added = new ArrayList<>();
         added.add((byte) move.Square());

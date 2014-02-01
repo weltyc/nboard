@@ -2,6 +2,7 @@ package com.welty.nboard.nboard.engine;
 
 import com.orbanova.common.misc.ListenerManager;
 import com.welty.othello.c.CReader;
+import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gui.OpponentSelector;
@@ -28,7 +29,7 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
     private final @NotNull NBoardEngine engine;
 
     /**
-     * Start up an engine in an external process and initialize it
+     * Construct with the default NBoardEngine
      *
      * @param opponentSelector selector for opponent depth
      * @throws IOException
@@ -37,7 +38,11 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
         this(opponentSelector, new ExternalNBoardEngine());
     }
 
-    private ReversiEngine(OpponentSelector opponentSelector, @NotNull final NBoardEngine engine) {
+    /**
+     * @param opponentSelector selector for opponent depth
+     * @param engine           command-line engine
+     */
+    ReversiEngine(OpponentSelector opponentSelector, @NotNull final NBoardEngine engine) {
         this.opponentSelector = opponentSelector;
         this.engine = engine;
         SendCommand("nboard 1", false);
@@ -108,9 +113,9 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
         SendCommand("set depth " + newLevel, true);
     }
 
-    private void fireHint(boolean fromBook, String pv, CReader rest) {
+    private void fireHint(boolean book, String pv, CMove move, String eval, int nGames, String depth, String freeformText) {
         for (Listener l : getListeners()) {
-            l.hint(fromBook, pv, rest);
+            l.hint(book, pv, move, eval, nGames, depth, freeformText);
         }
     }
 
@@ -144,6 +149,14 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
             l.engineReady();
         }
     }
+
+
+    private void fireParseError(String command, String errorMessage) {
+        for (Listener l : getListeners()) {
+            l.parseError(command, errorMessage);
+        }
+    }
+
 
     /**
      * Set the NBoard protocol's current game.
@@ -245,9 +258,28 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
                     fireEngineMove(mli);
                     break;
                 // computer giving hints
+                // search [pv] [eval] 0 [depth] [freeform text]
+                // book [pv] [eval] [# games] [depth] [freeform text]
                 case "book":
                 case "search":
-                    fireHint(sCommand.equals("book"), is.readString(), is);
+                    try {
+                        final boolean isBook = sCommand.equals("book");
+
+                        final String pv = is.readString();
+                        final CMove move;
+                        try {
+                            move = new CMove(pv.substring(0, 2));
+                        } catch (IllegalArgumentException e) {
+                            throw new IllegalArgumentException("Can't create move from first two characters of pv (" + pv + ")");
+                        }
+                        final String eval = is.readString();
+                        final int nGames = is.readInt();
+                        final String depth = is.readString();
+                        final String freeformText = is.readLine();
+                        fireHint(isBook, pv, move, eval, nGames, depth, freeformText);
+                    } catch (EOFException | IllegalArgumentException e) {
+                        fireParseError(message, e.toString());
+                    }
                     break;
                 case "learn":
                     fireStatus("");
@@ -292,11 +324,22 @@ public class ReversiEngine extends ListenerManager<ReversiEngine.Listener> imple
          * The engine only sends this message if it relates to the current board position (ping = pong).
          * Otherwise it discards the message.
          *
-         * @param fromBook if true, this value is from the engine's book; otherwise it is from a search.
-         * @param pv       principal variation - the first two characters are the evaluated move.
-         * @param rest     rest of the move hint - this should be parsed further in future versions.
-         *                 See {@link com.welty.nboard.nboard.Hints#Add(String, CReader, boolean, boolean)} for the format.
+         * @param fromBook     if true, hint comes from the book
+         * @param pv           principal variation - the first two characters are the evaluated move.
+         * @param move         the evaluated move
+         * @param eval         evaluation of the move.
+         * @param nGames       # of games (for book moves only)
+         * @param depth        search depth reached when evaluating this move
+         * @param freeformText optional extra text relating to the move
          */
-        void hint(boolean fromBook, String pv, CReader rest);
+        void hint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText);
+
+        /**
+         * The engine sent a message which appears to be an nboard protocol message but can't be parsed correctly.
+         *
+         * @param command      command from engine
+         * @param errorMessage error message from parser
+         */
+        void parseError(String command, String errorMessage);
     }
 }

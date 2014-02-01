@@ -51,16 +51,4 @@ public class ExternalNBoardEngine extends NBoardEngine {
     @Override public void sendCommand(String command) {
         processLogger.println(command);
     }
-
-    private void fireMessageReceived(String response) {
-        for (Listener listener : getListeners()) {
-            listener.onMessageReceived(response);
-        }
-    }
-
-    private void fireEngineTerminated() {
-        for (Listener listener : getListeners()) {
-            listener.onEngineTerminated();
-        }
-    }
 }
