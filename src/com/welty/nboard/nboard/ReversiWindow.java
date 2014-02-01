@@ -4,6 +4,7 @@ import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.RadioGroup;
 import com.welty.nboard.gui.SignalListener;
+import com.welty.nboard.nboard.engine.ReversiEngine;
 import com.welty.nboard.thor.DatabaseData;
 import com.welty.nboard.thor.ThorWindow;
 import com.welty.othello.c.CReader;
