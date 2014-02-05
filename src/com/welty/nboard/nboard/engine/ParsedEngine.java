@@ -21,11 +21,11 @@ import java.io.IOException;
  * <p/>
  * - Call ping() immediately before any command that changes the board state.
  * <p/>
- * - The function IsReady() returns true if all pings have been accepted by the engine.
+ * - The function isReady() returns true if all pings have been accepted by the engine.
  * <p/>
- * - If IsReady() returns true then messages from the engine relate to the current board state.
+ * - If isReady() returns true then messages from the engine relate to the current board state.
  * <p/>
- * - If IsReady() returns false then messages from the engine relate to a previous board state and can be ignored.
+ * - If isReady() returns false then messages from the engine relate to a previous board state and can be ignored.
  */
 public class ParsedEngine extends ApiEngine implements OpponentSelector.Listener, NBoardEngine.Listener {
     private final OpponentSelector opponentSelector;
@@ -79,7 +79,7 @@ public class ParsedEngine extends ApiEngine implements OpponentSelector.Listener
     /**
      * @return true if the engine is ready to accept commands (it has responded to all pings)
      */
-    public boolean IsReady() {
+    public boolean isReady() {
         return m_pong >= m_ping;
     }
 
@@ -100,11 +100,11 @@ public class ParsedEngine extends ApiEngine implements OpponentSelector.Listener
         SendCommand("quit", false);
     }
 
-    public String GetName() {
+    public String getName() {
         return name;
     }
 
-    public void SetName(String name) {
+    private void SetName(String name) {
         this.name = name;
     }
 
@@ -190,7 +190,7 @@ public class ParsedEngine extends ApiEngine implements OpponentSelector.Listener
                 throw new IllegalStateException("Engine response is garbage : " + message);
             }
             m_pong = n;
-            if (IsReady()) {
+            if (isReady()) {
                 fireStatus("");
                 fireEngineReady();
             }
@@ -205,7 +205,7 @@ public class ParsedEngine extends ApiEngine implements OpponentSelector.Listener
             }
         }
         // These commands are only used if the computer is up-to-date
-        else if (IsReady()) {
+        else if (isReady()) {
             switch (sCommand) {
                 case "===":
                     fireStatus("");

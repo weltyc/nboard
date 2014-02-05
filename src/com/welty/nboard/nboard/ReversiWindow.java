@@ -4,7 +4,9 @@ import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.RadioGroup;
 import com.welty.nboard.gui.SignalListener;
+import com.welty.nboard.nboard.engine.MultiEngine;
 import com.welty.nboard.nboard.engine.ParsedEngine;
+import com.welty.nboard.nboard.engine.ReversiWindowEngine;
 import com.welty.nboard.thor.DatabaseData;
 import com.welty.nboard.thor.ThorWindow;
 import com.welty.othello.c.CReader;
@@ -37,8 +39,8 @@ import static com.welty.nboard.gui.MenuItemBuilder.menuItem;
  * <p/>
  * See the ParsedEngine class for a description of synchronization issues.
  */
-public class ReversiWindow extends JFrame implements OptionSource, EngineTalker, ParsedEngine.Listener {
-    private ParsedEngine m_engine;
+public class ReversiWindow extends JFrame implements OptionSource, EngineTalker, ReversiWindowEngine.Listener {
+    private ReversiWindowEngine m_engine;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData m_pd;
 
@@ -136,7 +138,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
         try {
-            m_engine = new ParsedEngine(GuiOpponentSelector.getInstance());
+            m_engine = new MultiEngine(new ParsedEngine(GuiOpponentSelector.getInstance()));
         } catch (IOException e) {
             warn("Unable to start engine: " + e, "External Engine Error");
         }
@@ -677,7 +679,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
     }
 
     private String getPlayerName(boolean enginePlays) {
-        return enginePlays ? m_engine.GetName() : System.getProperty("user.name");
+        return enginePlays ? m_engine.getName() : System.getProperty("user.name");
     }
 
     /**
@@ -722,7 +724,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
      * If the engine is ready, we will call it as soon as the board is updated.
      */
     void TellEngineWhatToDo() {
-        if (m_engine.IsReady()) {
+        if (m_engine.isReady()) {
             boolean isHint;
 
             if (m_pd.DisplayedPosition().board.GameOver()) {
@@ -839,7 +841,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
     };
 
     public String getEngineName() {
-        return m_engine.GetName();
+        return m_engine.getName();
     }
 
     ///////////////////////////////////
