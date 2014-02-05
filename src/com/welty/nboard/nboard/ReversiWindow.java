@@ -4,7 +4,7 @@ import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.RadioGroup;
 import com.welty.nboard.gui.SignalListener;
-import com.welty.nboard.nboard.engine.MultiEngine;
+import com.welty.nboard.nboard.engine.EngineSynchronizer;
 import com.welty.nboard.nboard.engine.ParsedEngine;
 import com.welty.nboard.nboard.engine.ReversiWindowEngine;
 import com.welty.nboard.thor.DatabaseData;
@@ -138,7 +138,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
         try {
-            m_engine = new MultiEngine(new ParsedEngine(GuiOpponentSelector.getInstance()));
+            m_engine = new EngineSynchronizer(new ParsedEngine(), GuiOpponentSelector.getInstance());
         } catch (IOException e) {
             warn("Unable to start engine: " + e, "External Engine Error");
         }
