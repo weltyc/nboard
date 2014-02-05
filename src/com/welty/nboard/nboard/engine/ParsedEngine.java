@@ -18,9 +18,13 @@ import java.io.IOException;
  * <p/>
  * This class also includes functions to help ensure synchronization of the board state with
  * the ReversiWindow. To ensure synchronization of the board state:
+ * <p/>
  * - Call ping() immediately before any command that changes the board state.
+ * <p/>
  * - The function IsReady() returns true if all pings have been accepted by the engine.
+ * <p/>
  * - If IsReady() returns true then messages from the engine relate to the current board state.
+ * <p/>
  * - If IsReady() returns false then messages from the engine relate to a previous board state and can be ignored.
  */
 public class ParsedEngine extends ApiEngine implements OpponentSelector.Listener, NBoardEngine.Listener {
@@ -48,7 +52,8 @@ public class ParsedEngine extends ApiEngine implements OpponentSelector.Listener
         this.opponentSelector = opponentSelector;
         this.engine = engine;
         SendCommand("nboard 1", false);
-        SendCommand("set depth " + opponentSelector.getOpponent().getMaxDepth(), true);
+        final int maxDepth = opponentSelector.getOpponent().getMaxDepth();
+        setMaxDepth(maxDepth);
 
         engine.addListener(this);
         opponentSelector.addListener(this);
@@ -86,13 +91,6 @@ public class ParsedEngine extends ApiEngine implements OpponentSelector.Listener
     }
 
     /**
-     * Record the fact that the engine has sent a pong command.
-     */
-    void SetPong(int n) {
-        m_pong = n;
-    }
-
-    /**
      * Terminate the thread that sends messages to the window.
      * <p/>
      * This is called when the OS copy of the window is about to be destroyed. Sending
@@ -111,8 +109,8 @@ public class ParsedEngine extends ApiEngine implements OpponentSelector.Listener
     }
 
     @Override public void opponentChanged() {
-        final int newLevel = opponentSelector.getOpponent().getMaxDepth();
-        SendCommand("set depth " + newLevel, true);
+        final int maxDepth = opponentSelector.getOpponent().getMaxDepth();
+        setMaxDepth(maxDepth);
     }
 
 
@@ -139,6 +137,11 @@ public class ParsedEngine extends ApiEngine implements OpponentSelector.Listener
      */
     @Override public void setContempt(int contempt) {
         SendCommand("set contempt " + contempt, false);
+    }
+
+
+    @Override public void setMaxDepth(int maxDepth) {
+        SendCommand("set depth " + maxDepth, true);
     }
 
     /**
