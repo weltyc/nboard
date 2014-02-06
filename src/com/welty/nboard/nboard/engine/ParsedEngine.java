@@ -58,7 +58,7 @@ public class ParsedEngine extends ApiEngine implements NBoardEngine.Listener {
         return name;
     }
 
-    private void SetName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -127,35 +127,42 @@ public class ParsedEngine extends ApiEngine implements NBoardEngine.Listener {
     /**
      * Parse a command received from the engine and notify listeners.
      * <p/>
-     * Listeners are always notified regardless of whether ping is up to date.
+     * The "command" is the first word of the response.
+     * <p/>
+     * Listeners are notified of all commands regardless of whether ping is up to date.
+     * <p/>
+     * Blank lines are ignored.
+     * <p/>
+     * Unknown commands are ignored.
+     * <p/>
+     * Commands that are known but the rest of the line is in an incorrect format result
+     * in listeners receiving parseError().
      */
     @Override public void onMessageReceived(String message) {
         final CReader is = new CReader(message);
         String sCommand = is.readString();
         is.ignoreWhitespace();
 
-        if (sCommand.equals("pong")) {
-            int n;
-            try {
-                n = is.readInt();
-            } catch (EOFException e) {
-                throw new IllegalStateException("Engine response is garbage : " + message);
-            }
-            m_pong = n;
-            firePong(m_pong);
-        } else if (sCommand.equals("status")) {
-            // the engine is busy and is telling the user why
-            fireStatus(m_pong, is.readLine());
-        } else if (sCommand.equals("set")) {
-            String variable = is.readString();
-            if (variable.equals("myname")) {
-                String sName = is.readString();
-                SetName(sName);
-            }
-        }
-        // These commands are only used if the computer is up-to-date
-        else if (true) {
+        try {
             switch (sCommand) {
+                case "pong":
+                    m_pong = is.readInt();
+                    firePong(m_pong);
+                    break;
+                case "status":
+                    // the engine is busy and is telling the user why
+                    fireStatus(m_pong, is.readLine());
+                    break;
+                case "set":
+                    String variable = is.readString();
+                    if (variable.equals("myname")) {
+                        String sName = is.readString();
+                        setName(sName);
+                    }
+                    break;
+
+                // For commands from here on, the receiver should only use these commands if the computer is up-to-date
+                // but we don't verify that here - the caller now verifies that (because of multiple engines).
                 case "===":
                     fireStatus(m_pong, "");
                     // now update the move list
@@ -167,34 +174,32 @@ public class ParsedEngine extends ApiEngine implements NBoardEngine.Listener {
 
                     fireEngineMove(m_pong, mli);
                     break;
-                // computer giving hints
-                // search [pv] [eval] 0 [depth] [freeform text]
-                // book [pv] [eval] [# games] [depth] [freeform text]
                 case "book":
                 case "search":
-                    try {
-                        final boolean isBook = sCommand.equals("book");
+                    // computer giving hints
+                    // search [pv] [eval] 0         [depth] [freeform text]
+                    // book   [pv] [eval] [# games] [depth] [freeform text]
+                    final boolean isBook = sCommand.equals("book");
 
-                        final String pv = is.readString();
-                        final CMove move;
-                        try {
-                            move = new CMove(pv.substring(0, 2));
-                        } catch (IllegalArgumentException e) {
-                            throw new IllegalArgumentException("Can't create move from first two characters of pv (" + pv + ")");
-                        }
-                        final String eval = is.readString();
-                        final int nGames = is.readInt();
-                        final String depth = is.readString();
-                        final String freeformText = is.readLine();
-                        fireHint(m_pong, isBook, pv, move, eval, nGames, depth, freeformText);
-                    } catch (EOFException | IllegalArgumentException e) {
-                        fireParseError(m_pong, message, e.toString());
+                    final String pv = is.readString();
+                    final CMove move;
+                    try {
+                        move = new CMove(pv.substring(0, 2));
+                    } catch (IllegalArgumentException e) {
+                        throw new IllegalArgumentException("Can't create move from first two characters of pv (" + pv + ")");
                     }
+                    final String eval = is.readString();
+                    final int nGames = is.readInt();
+                    final String depth = is.readString();
+                    final String freeformText = is.readLine();
+                    fireHint(m_pong, isBook, pv, move, eval, nGames, depth, freeformText);
                     break;
                 case "learn":
                     fireStatus(m_pong, "");
                     break;
             }
+        } catch (EOFException | IllegalArgumentException e) {
+            fireParseError(m_pong, message, e.toString());
         }
     }
 
