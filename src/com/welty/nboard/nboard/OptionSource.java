@@ -1,5 +1,7 @@
 package com.welty.nboard.nboard;
 
+import com.welty.novello.core.Position;
+
 /**
  * <PRE>
  * User: Chris
@@ -29,4 +31,6 @@ public interface OptionSource {
     boolean EngineLearnAll();
 
     boolean UserPlays(boolean fBlack);
+
+    Position getStartPosition();
 }

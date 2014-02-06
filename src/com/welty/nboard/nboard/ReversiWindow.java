@@ -9,6 +9,7 @@ import com.welty.nboard.nboard.engine.ParsedEngine;
 import com.welty.nboard.nboard.engine.ReversiWindowEngine;
 import com.welty.nboard.thor.DatabaseData;
 import com.welty.nboard.thor.ThorWindow;
+import com.welty.novello.core.Position;
 import com.welty.othello.c.CReader;
 import com.welty.othello.c.CWriter;
 import com.welty.othello.core.CMove;
@@ -79,10 +80,12 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
     private RadioGroup drawsTo;
     private RadioGroup engineTop;
     private final GgfFileChooser chooser;
+    private final StartPositionManager startPositionManager;
 
 
     ReversiWindow() {
         super("NBoard");
+        startPositionManager = new StartPositionManagerImpl();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override public void windowClosing(WindowEvent e) {
@@ -143,7 +146,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
             warn("Unable to start engine: " + e, "External Engine Error");
         }
 
-        ConstructMenus();
+        createMenus(startPositionManager);
 
         m_pd.AddListener(m_hints);
 
@@ -159,15 +162,17 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
 
     /**
      * Construct the menus and display them in the window
+     *
+     * @param startPositionManager
      */
-    void ConstructMenus() {
+    void createMenus(StartPositionManager startPositionManager) {
         JMenuBar menuBar = new JMenuBar();
 
         menuBar.add(createMenuItem("&File", createFileMenu()));
         menuBar.add(createMenuItem("&Edit", createEditMenu()));
         menuBar.add(createMenuItem("&View", createViewMenu()));
-
         menuBar.add(createMenuItem("E&ngine", createEngineMenu()));
+        menuBar.add(createMenuItem("&Games", createGamesMenu(startPositionManager)));
 
         // set up the Thor menu
         JMenu m_thorMenu = new JMenu();
@@ -220,6 +225,12 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         menuBar.add(createMenuItem("&Database", m_thorMenu));
 
         setJMenuBar(menuBar);
+    }
+
+    private JMenu createGamesMenu(StartPositionManager startPositionManager) {
+        JMenu menu = new JMenu();
+        startPositionManager.addChoicesToMenu(menu);
+        return menu;
     }
 
     private JMenu createViewMenu() {
@@ -369,7 +380,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         m_fileMenu.add(menuItem("&New\tCtrl+N").build(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                m_pd.StartNewGame();
+                m_pd.StartNewGame(getStartPosition());
                 // if the engine is self-playing it is really annoying to have it self-play again when you start
                 // a new game. Reset mode to user plays in this case.
                 if (mode.getIndex() == 3) {
@@ -632,6 +643,10 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
      */
     public boolean UserPlays(boolean fBlack) {
         return ((~mode.getIndex() >> (fBlack ? 1 : 0)) & 1) != 0;
+    }
+
+    @Override public Position getStartPosition() {
+        return startPositionManager.getStartPosition();
     }
 
     /**

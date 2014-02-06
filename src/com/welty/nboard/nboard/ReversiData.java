@@ -1,16 +1,17 @@
 package com.welty.nboard.nboard;
 
 import com.orbanova.common.misc.Require;
-import com.welty.othello.c.CReader;
-import com.welty.othello.gdk.*;
 import com.welty.nboard.gui.SignalEvent;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.thor.Thor;
+import com.welty.novello.core.Position;
+import com.welty.othello.c.CReader;
 import com.welty.othello.core.CMove;
-import static com.welty.othello.core.Utils.*;
-
+import com.welty.othello.gdk.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static com.welty.othello.core.Utils.*;
 
 /**
  * Data displayed by ReversiWindow and its helper windows
@@ -43,7 +44,7 @@ public class ReversiData implements BoardSource {
         m_iMove = 0;
         this.optionSource = optionSource;
         this.engineTalker = engineTalker;
-        StartNewGame();
+        StartNewGame(optionSource.getStartPosition());
     }
 
     public int NMoves() {
@@ -290,9 +291,11 @@ public class ReversiData implements BoardSource {
     /**
      * Clear the game and switch back to the standard start position
      */
-    void StartNewGame() {
+    void StartNewGame(Position startPosition) {
         m_game.Clear();
-        m_game.SetDefaultStartPos();
+        m_game.Initialize("8");
+        final String sBoardText = startPosition.boardString("");
+        m_game.SetToPosition(sBoardText, startPosition.blackToMove);
         m_game.SetTime(System.currentTimeMillis());
         m_game.SetPlace("NBoard");
         m_iMove = 0;
