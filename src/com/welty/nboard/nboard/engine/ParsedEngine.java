@@ -1,7 +1,7 @@
 package com.welty.nboard.nboard.engine;
 
-import com.welty.othello.api.ApiEngine;
 import com.welty.othello.api.NBoardEngine;
+import com.welty.othello.api.PingApiEngine;
 import com.welty.othello.c.CReader;
 import com.welty.othello.core.CMove;
 import com.welty.othello.engine.ExternalNBoardEngine;
@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * Class that controls communication with an engine.
  */
-public class ParsedEngine extends ApiEngine implements NBoardEngine.Listener {
+public class ParsedEngine extends PingApiEngine implements NBoardEngine.Listener {
     private int m_pong;
     private String name = "ntest";
     private final @NotNull NBoardEngine engine;
