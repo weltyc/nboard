@@ -1,23 +1,21 @@
 package com.welty.nboard.nboard;
 
 import com.orbanova.common.misc.Require;
+import com.welty.othello.util.CheckThreadViolationRepaintManager;
 
 import javax.swing.*;
 import java.io.File;
 import java.util.prefs.Preferences;
 
 /**
- * Created by IntelliJ IDEA.
- * User: HP_Administrator
- * Date: Jun 17, 2009
- * Time: 1:07:16 AM
- * To change this template use File | Settings | File Templates.
+ * Main class for the NBoard application
  */
 public class NBoard {
 
     private static final String sRegKey = "/Software/Welty/NBoard/";
 
     public static void main(final String[] args) {
+        CheckThreadViolationRepaintManager.install();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI(args);
