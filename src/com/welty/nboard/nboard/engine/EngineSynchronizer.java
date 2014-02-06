@@ -21,10 +21,10 @@ import com.welty.othello.gdk.COsMoveListItem;
 public class EngineSynchronizer extends ReversiWindowEngine implements OpponentSelector.Listener {
     private int m_ping;
     private int m_pong;
-    private final ParsedEngine parsedEngine;
+    private final ApiEngine parsedEngine;
     private final OpponentSelector opponentSelector;
 
-    public EngineSynchronizer(ParsedEngine parsedEngine, OpponentSelector opponentSelector) {
+    public EngineSynchronizer(ApiEngine parsedEngine, OpponentSelector opponentSelector) {
         this.parsedEngine = parsedEngine;
         this.opponentSelector = opponentSelector;
         opponentSelector.addListener(this);
