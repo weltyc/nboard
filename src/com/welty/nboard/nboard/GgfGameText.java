@@ -82,9 +82,9 @@ public class GgfGameText {
     }
 
     /**
-     * construct a gameText from the text in data starting at position loc.
+     * construct a GgfGameText from the text in data starting at position loc.
      * <p/>
-     * The game is checked for validity. If the game appears invalid a String is thrown.
+     * The game is checked for validity.
      *
      * @throws IllegalArgumentException if the game is invalid.
      */
@@ -114,7 +114,7 @@ public class GgfGameText {
     }
 
     /**
-     * @return the m_text of the field
+     * @return the text of the field
      */
     String GetText(int field) {
         if (field < fields.length) {
@@ -169,7 +169,7 @@ public class GgfGameText {
     }
 
     /**
-     * @return ?
+     * @return game location (Place)
      */
     public String PC() {
         return GetText(5);
