@@ -5,8 +5,8 @@ import com.welty.othello.core.CMinimalReflection;
 import com.welty.othello.core.CMove;
 import com.welty.othello.core.CQPosition;
 import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsMove;
 import com.welty.othello.gdk.COsMoveListItem;
+import com.welty.othello.gdk.OsMove;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import junit.framework.TestCase;
 
@@ -238,7 +238,7 @@ public class ThorTest extends TestCase {
     }
 
     public static COsMoveListItem mli(String moveText) {
-        return new COsMoveListItem(new COsMove(moveText));
+        return new COsMoveListItem(new OsMove(moveText));
     }
 
     private static void checkMove(TIntObjectHashMap<ThorSummaryData> summary, byte move, int nPlayed, int nBlackWins, int nWhiteWins) {

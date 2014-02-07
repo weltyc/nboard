@@ -5,9 +5,9 @@ import com.welty.nboard.nboard.BoardSource;
 import com.welty.nboard.nboard.OptionSource;
 import com.welty.othello.c.CReader;
 import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsMove;
 import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsPosition;
+import com.welty.othello.gdk.OsMove;
 import org.easymock.EasyMock;
 import org.mockito.Mockito;
 
@@ -71,11 +71,11 @@ public class DatabaseDataTest extends ArrayTestCase {
         dd.LookUpPosition(osg.pos.board);
         assertEquals(dd.m_summary.size(), 2);
 
-        osg.Update(new COsMoveListItem(new COsMove("F5")));
+        osg.Update(new COsMoveListItem(new OsMove("F5")));
         dd.LookUpPosition(osg.pos.board);
         assertEquals(dd.m_summary.size(), 2);
 
-        osg.Update(new COsMoveListItem(new COsMove("D6")));
+        osg.Update(new COsMoveListItem(new OsMove("D6")));
         dd.LookUpPosition(osg.pos.board);
         assertEquals(dd.m_summary.size(), 1);
     }

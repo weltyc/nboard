@@ -4,10 +4,10 @@ import com.welty.nboard.gui.Align;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.gui.VAlign;
 import com.welty.othello.core.CMove;
-import com.welty.othello.gdk.COsMove;
 import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsPosition;
 import com.welty.othello.gdk.OsBoard;
+import com.welty.othello.gdk.OsMove;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -122,7 +122,7 @@ class ReversiBoard extends JPanel {
     /**
      * @return highlight char if the given move should be highlighted, else return 0
      */
-    char Highlight(CMove mv, int iHighlight, final OsBoard board, COsMove mvNext) {
+    char Highlight(CMove mv, int iHighlight, final OsBoard board, OsMove mvNext) {
         switch (iHighlight) {
             case 0:
                 return 0;
@@ -229,11 +229,11 @@ class ReversiBoard extends JPanel {
 
             if (ix >= 0 && ix < n && iy >= 0 && iy < n) {
                 final COsPosition displayedPosition = m_pd.DisplayedPosition();
-                final COsMove mv;
+                final OsMove mv;
                 if (displayedPosition.board.HasLegalMove()) {
-                    mv = new COsMove(iy, ix);
+                    mv = new OsMove(iy, ix);
                 } else {
-                    mv = COsMove.PASS;
+                    mv = OsMove.PASS;
                 }
 
                 if (displayedPosition.board.IsMoveLegal(mv)) {
@@ -322,10 +322,10 @@ class ReversiBoard extends JPanel {
      * <p/>
      * If there is no next move, or if the next move is a pass, do nothing
      */
-    void PaintNextMove(Graphics gd, final COsMove mv) {
-        if (!mv.Pass()) {
+    void PaintNextMove(Graphics gd, final OsMove mv) {
+        if (!mv.isPass()) {
             boolean fBlackMove = m_pd.DisplayedPosition().board.fBlackMove;
-            Rectangle rect = SquareRect(mv.Col(), mv.Row(), n, boardArea);
+            Rectangle rect = SquareRect(mv.col(), mv.row(), n, boardArea);
             rect = GraphicsUtils.FractionalInflate(rect, -.1);
             final Color pieceColor = fBlackMove ? Color.black : Color.white;
 
@@ -340,7 +340,7 @@ class ReversiBoard extends JPanel {
      * <p/>
      * This draws both the background and the piece itself.
      */
-    void PaintPiece(Graphics gd, int ix, int iy, COsPosition pos, int iHighlight, COsMove mvNext) {
+    void PaintPiece(Graphics gd, int ix, int iy, COsPosition pos, int iHighlight, OsMove mvNext) {
         char pc = PieceToPaint(ix, iy, pos, Highlight(new CMove(iy, ix), iHighlight, pos.board, mvNext));
 
         Rectangle rect = SquareRect(ix, iy, n, boardArea);
@@ -397,11 +397,11 @@ class ReversiBoard extends JPanel {
      * Paint a square including background, next move symbol, and eval
      */
     void PaintSquare(Graphics gd, int ix, int iy, COsPosition pos, int iHighlight) {
-        final COsMove mv = m_pd.NextMove();
+        final OsMove mv = m_pd.NextMove();
 
         PaintPiece(gd, ix, iy, pos, iHighlight, mv);
 
-        if (!mv.Pass() && mv.Row() == iy && mv.Col() == ix) {
+        if (!mv.isPass() && mv.row() == iy && mv.col() == ix) {
             PaintNextMove(gd, mv);
         }
 

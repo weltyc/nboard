@@ -1,11 +1,11 @@
 package com.welty.nboard.nboard;
 
 import com.orbanova.common.misc.Require;
-import com.welty.othello.gdk.COsMove;
 import com.welty.nboard.gui.GridTableModel;
 import com.welty.nboard.thor.DatabaseData;
 import com.welty.nboard.thor.ThorSummaryData;
 import com.welty.othello.core.CMove;
+import com.welty.othello.gdk.OsMove;
 import gnu.trove.list.array.TIntArrayList;
 
 import javax.swing.event.TableModelEvent;
@@ -67,7 +67,7 @@ class MoveGridTableModel extends GridTableModel implements TableModelListener {
 
     }
 
-    public COsMove getMove(int row) {
+    public OsMove getMove(int row) {
         Require.lt(row, "row", getRowCount());
         CMove mv = new CMove((byte) m_moves.get(row));
         return mv.toOsMove();

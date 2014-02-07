@@ -1,10 +1,10 @@
 package com.welty.nboard.nboard;
 
+import com.welty.nboard.gui.SignalListener;
 import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsMove;
 import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsPosition;
-import com.welty.nboard.gui.SignalListener;
+import com.welty.othello.gdk.OsMove;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -72,5 +72,5 @@ public interface BoardSource {
      * @return the next move made, if the user is reviewing the game.
      *         return pass otherwise
      */
-    COsMove NextMove();
+    OsMove NextMove();
 }
