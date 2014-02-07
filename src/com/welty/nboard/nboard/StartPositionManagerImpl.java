@@ -11,7 +11,7 @@ public class StartPositionManagerImpl implements StartPositionManager {
     private final MenuButtonGroup startPosition;
 
     public StartPositionManagerImpl() {
-        startPosition = new MenuButtonGroup("StartPosition", ReversiWindow.class, "Standard", "Alternate", "XOT");
+        startPosition = new MenuButtonGroup("StartPosition", ReversiWindow.class, "Standard", "Alternate", "XOT", "F5");
     }
 
     @NotNull @Override public Position getStartPosition() {

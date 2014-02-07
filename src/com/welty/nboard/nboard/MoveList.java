@@ -1,12 +1,15 @@
 package com.welty.nboard.nboard;
 
-import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.GridColumn;
 import com.welty.nboard.gui.GridTableModel;
 import com.welty.nboard.gui.SignalListener;
+import com.welty.othello.gdk.COsMoveListItem;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.text.DecimalFormat;
 
 /**
  * Displays all moves played in the game, in the order that they were played
@@ -103,9 +106,7 @@ public class MoveList extends Grid {
                 if (field == 1) {
                     return mli.mv.toString();
                 } else {
-                    if (mli.dEval != 0) {
-                        return String.format("%+.2f", mli.dEval);
-                    }
+                    return mli.dEval;
 
                 }
             }
@@ -122,6 +123,26 @@ public class MoveList extends Grid {
 
         public MoveListTable(MoveListTableModel tableModel) {
             super(tableModel);
+            setDefaultRenderer(Double.class, new EvalRenderer());
+        }
+    }
+
+    private static class EvalRenderer extends DefaultTableCellRenderer {
+        private static final DecimalFormat numberFormat = new DecimalFormat("#.0");
+
+        @Override protected void setValue(Object value) {
+            if (value == null) {
+                super.setValue("");
+                return;
+            }
+            final double v = (Double) value;
+            if (v == 0) {
+                super.setValue("");
+            } else {
+                super.setValue(numberFormat.format(v));
+            }
+            setHorizontalAlignment(JLabel.RIGHT);
+            setForeground(v < 0 ? Color.RED : Color.BLACK);
         }
     }
 }

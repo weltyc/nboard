@@ -43,7 +43,7 @@ import static com.welty.nboard.gui.MenuItemBuilder.menuItem;
 public class ReversiWindow extends JFrame implements OptionSource, EngineTalker, ReversiWindowEngine.Listener {
     private ReversiWindowEngine m_engine;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
-    public final ReversiData m_pd;
+    public final ReversiData reversiData;
 
     private final ThorWindow m_pwThor;    //< Window where thor games are displayed
     private final StatusBar m_statusBar;
@@ -99,13 +99,13 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         final ImageIcon icon = NBoard.getImage(path);
         setIconImage(icon.getImage());
 
-        m_pd = new ReversiData(this, this);
+        reversiData = new ReversiData(this, this);
         chooser = new GgfFileChooser(this);
         setResizable(false);
         m_pgsw = new GameSelectionWindow(this);
-        dd = new DatabaseData(this, m_pd);
-        m_pwThor = new ThorWindow(this, m_pd, dd);
-        m_pd.AddListener(new SignalListener<COsMoveListItem>() {
+        dd = new DatabaseData(this, reversiData);
+        m_pwThor = new ThorWindow(this, reversiData, dd);
+        reversiData.AddListener(new SignalListener<COsMoveListItem>() {
 
             public void handleSignal(COsMoveListItem data) {
                 if (data != null) {
@@ -123,14 +123,14 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         m_hints = new Hints();
 
         // and show the move grid
-        m_pmg = new MoveGrid(m_pd, PD(), m_hints);
+        m_pmg = new MoveGrid(reversiData, PD(), m_hints);
 
-        Grid m_pml = new MoveList(m_pd);
+        Grid m_pml = new MoveList(reversiData);
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
-        leftPanel.add(m_statusBar = new StatusBar(m_pd));
-        leftPanel.add(new ScoreWindow(m_pd));
-        leftPanel.add(m_prb = new ReversiBoard(m_pd, this, m_hints));
+        leftPanel.add(m_statusBar = new StatusBar(reversiData));
+        leftPanel.add(new ScoreWindow(reversiData));
+        leftPanel.add(m_prb = new ReversiBoard(reversiData, this, m_hints));
         leftPanel.add(m_pmg);
 
         JPanel mainPanel = new JPanel();
@@ -148,7 +148,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
 
         createMenus(startPositionManager);
 
-        m_pd.AddListener(m_hints);
+        reversiData.AddListener(m_hints);
 
         pack();
         setVisible(true);
@@ -158,6 +158,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         // the responses to be displayed in
         m_statusBar.SetStatus("Loading Engine");
         m_engine.addListener(this);
+        SendSetGame();
     }
 
     /**
@@ -262,33 +263,33 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         JMenu m_editMenu = new JMenu();
         m_editMenu.add(menuItem("&Undo\tCtrl+Z").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                m_pd.Undo();
+                reversiData.Undo();
             }
         }));
         m_editMenu.addSeparator();
         m_editMenu.add(menuItem("&Copy Game\tCtrl+C").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SetClipboardText(m_pd.Game().toString());
+                SetClipboardText(reversiData.Game().toString());
             }
         }));
 
         m_editMenu.add(menuItem("Copy &Move List").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SetClipboardText(m_pd.Game().GetMoveList().toMoveListString());
+                SetClipboardText(reversiData.Game().GetMoveList().toMoveListString());
             }
         }));
 
         m_editMenu.add(menuItem("Copy &Board").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 StringBuilder os = new StringBuilder();
-                COsPosition displayedPosition = m_pd.DisplayedPosition();
+                COsPosition displayedPosition = reversiData.DisplayedPosition();
                 for (int row = 0; row < n; row++) {
                     for (int col = 0; col < n; col++) {
                         os.append(displayedPosition.board.Piece(row, col));
                     }
                     os.append("\n");
                 }
-                os.append(m_pd.Game().pos.board.CMover());
+                os.append(reversiData.Game().pos.board.CMover());
                 SetClipboardText(os.toString());
 
             }
@@ -298,7 +299,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
             public void actionPerformed(ActionEvent e) {
                 String s = GetClipboardText();
                 if (s != null) {
-                    m_pd.Update(s, true);
+                    reversiData.Update(s, true);
                 }
             }
         }));
@@ -311,7 +312,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
                     COsGame game = new COsGame();
                     game.SetDefaultStartPos();
                     game.SetMoveList(s);
-                    m_pd.Update(game, true);
+                    reversiData.Update(game, true);
                 }
             }
         }));
@@ -328,7 +329,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
                         game.SetDefaultStartPos();
                         game.posStart.board.In(is);
                         game.CalcCurrentPos();
-                        m_pd.Update(game, true);
+                        reversiData.Update(game, true);
                     } catch (IllegalArgumentException ex) {
                         final String msg = (s.length() < 200 ? s + " is not a legal board" : "Not a legal board");
                         final String title = "Paste Board error";
@@ -352,22 +353,22 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         final JMenu menu = new JMenu("Move");
         menu.add(menuItem("First\tup arrow").icon("first.gif").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                m_pd.First();
+                reversiData.First();
             }
         }));
         menu.add(menuItem("Last\tdown arrow").icon("last.GIF").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                m_pd.Last();
+                reversiData.Last();
             }
         }));
         menu.add(menuItem("Back\tleft arrow").icon("undo.GIF").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                m_pd.Back();
+                reversiData.Back();
             }
         }));
         menu.add(menuItem("Fore\tright arrow").icon("redo.GIF").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                m_pd.Fore();
+                reversiData.Fore();
             }
         }));
         return menu;
@@ -380,7 +381,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         m_fileMenu.add(menuItem("&New\tCtrl+N").build(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                m_pd.StartNewGame(getStartPosition());
+                reversiData.StartNewGame(getStartPosition());
                 // if the engine is self-playing it is really annoying to have it self-play again when you start
                 // a new game. Reset mode to user plays in this case.
                 if (mode.getIndex() == 3) {
@@ -447,7 +448,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
                 file = new File(file.getAbsolutePath() + ".ggf");
             }
             final CWriter out = new CWriter(file, append);
-            out.println(m_pd.Game());
+            out.println(reversiData.Game());
             out.close();
         }
     }
@@ -526,7 +527,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
             }
 
             public void actionPerformed(ActionEvent e) {
-                m_pd.ReflectGame(iReflection);
+                reversiData.ReflectGame(iReflection);
             }
         }
         // set up the Flip menu
@@ -591,7 +592,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
             if (is.ignoreTo('(')) {
                 m_pgsw.LoadAndShow(file);
             } else {
-                m_pd.Update(game, true);
+                reversiData.Update(game, true);
             }
         } catch (FileNotFoundException e) {
             warn("Unable to load game from file '" + file + "'", e.toString());
@@ -604,7 +605,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
      * EngineLearnAll is true
      */
     public void MayLearn() {
-        if (m_pd.Game().pos.board.GameOver()) {
+        if (reversiData.Game().pos.board.GameOver()) {
             if (engineLearnAll.isSelected()) {
                 TellEngineToLearn();
             }
@@ -618,7 +619,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
      */
     public boolean IsStudying() {
         final int nMode = mode.getIndex();
-        return m_pd.Reviewing() || (nMode == 0 || nMode == 3);
+        return reversiData.Reviewing() || (nMode == 0 || nMode == 3);
     }
 
     /**
@@ -653,7 +654,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
      * @return true if it's the user's move
      */
     public boolean UsersMove() {
-        return UserPlays(m_pd.DisplayedPosition().board.fBlackMove);
+        return UserPlays(reversiData.DisplayedPosition().board.fBlackMove);
     }
 
 
@@ -661,14 +662,14 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
      * Ping the engine. Send the current displayed position to the engine.
      */
     void SendSetGame() {
-        SendSetGame(m_pd.IMove());
+        SendSetGame(reversiData.IMove());
     }
 
     /**
      * Ping the engine. Set the position as after move iMove to the engine.
      */
     void SendSetGame(int iMove) {
-        COsGame displayedGame = new COsGame(m_pd.Game());
+        COsGame displayedGame = new COsGame(reversiData.Game());
         final int nMoves = displayedGame.ml.size();
         if (iMove < nMoves) {
             displayedGame.Undo(nMoves - iMove);
@@ -687,7 +688,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
      * @param updateUsers true if various objects should be notified; false during startup
      */
     void SetMode(int mode, boolean updateUsers) {
-        m_pd.SetNames(getPlayerName((mode & 1) != 0), getPlayerName(((mode & 2) != 0)), updateUsers);
+        reversiData.SetNames(getPlayerName((mode & 1) != 0), getPlayerName(((mode & 2) != 0)), updateUsers);
         if (updateUsers) {
             TellEngineWhatToDo();
         }
@@ -717,9 +718,9 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         // If we're reviewing we want the engine to learn the complete game,
         // not just the game up to the point where we're reviewing.
         // We alter iMove and restore it afterwards.
-        boolean fReviewing = m_pd.Reviewing();
+        boolean fReviewing = reversiData.Reviewing();
         if (fReviewing) {
-            SendSetGame(m_pd.Game().ml.size());
+            SendSetGame(reversiData.Game().ml.size());
         }
 
         // Tell the engine to learn the game
@@ -742,13 +743,13 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         if (m_engine.isReady()) {
             boolean isHint;
 
-            if (m_pd.DisplayedPosition().board.GameOver()) {
+            if (reversiData.DisplayedPosition().board.GameOver()) {
                 // do nothing. learning is handled in the Update function now to ensure
                 // that the engine is learning the right game, and learning it just once.
                 return;
             }
             // If the user is reviewing the game, the computer gives hints
-            else if (m_pd.Reviewing()) {
+            else if (reversiData.Reviewing()) {
                 isHint = true;
             }
             // If it's the engine's move, he should move.
@@ -872,7 +873,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         // switched modes while the computer was thinking.
         if (!UsersMove()) {
             try {
-                m_pd.Update(mli, false);
+                reversiData.Update(mli, false);
             } catch (IllegalArgumentException e) {
                 warn("Illegal move from engine: " + mli, "Engine Error");
             }
@@ -884,7 +885,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
     }
 
     @Override public void hint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText) {
-        boolean fBlackMove = m_pd.Game().pos.board.fBlackMove;
+        boolean fBlackMove = reversiData.Game().pos.board.fBlackMove;
         final Hint hint = new Hint(eval, nGames, depth, fromBook, fBlackMove);
         m_hints.Add(move, hint);
     }

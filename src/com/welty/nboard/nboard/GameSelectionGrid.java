@@ -75,7 +75,7 @@ class GameSelectionGrid extends Grid {
          */
         public void MouseDataClick(int modelRow) {
             if (modelRow < getRowCount() && modelRow >= 0) {
-                m_pwTarget.m_pd.Update(m_gts.get(modelRow).m_text, true);
+                m_pwTarget.reversiData.Update(m_gts.get(modelRow).m_text, true);
                 m_pwTarget.BringToTop();
             }
         }

@@ -12,6 +12,7 @@ H10  X   Click on database game should use real player names in review window
 H11  X   Click on database game should use the correct game
 H12  X   Display progress window when loading games database
 H13  X   Notify user with dialog box when engine gives a bad hint
+H14  X   Notify engine of start position on new game
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key
@@ -35,3 +36,4 @@ F11      Filter database by player, tournament, etc.
 
 FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games
 FL2      GGF games should be stored in a more compact format
+FL3      Stop sending the position twice to the engine. Don't send it at all if we can send 'move' instead.
