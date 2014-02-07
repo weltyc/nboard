@@ -1,13 +1,13 @@
 package com.welty.nboard.thor;
 
 import com.orbanova.common.misc.ArrayTestCase;
+import com.welty.nboard.nboard.BoardSource;
+import com.welty.nboard.nboard.OptionSource;
 import com.welty.othello.c.CReader;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMove;
 import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsPosition;
-import com.welty.nboard.nboard.BoardSource;
-import com.welty.nboard.nboard.OptionSource;
 import org.easymock.EasyMock;
 import org.mockito.Mockito;
 
@@ -71,11 +71,11 @@ public class DatabaseDataTest extends ArrayTestCase {
         dd.LookUpPosition(osg.pos.board);
         assertEquals(dd.m_summary.size(), 2);
 
-        osg.Update(new COsMoveListItem(new COsMove("F5"), 0, 0));
+        osg.Update(new COsMoveListItem(new COsMove("F5")));
         dd.LookUpPosition(osg.pos.board);
         assertEquals(dd.m_summary.size(), 2);
 
-        osg.Update(new COsMoveListItem(new COsMove("D6"), 0, 0));
+        osg.Update(new COsMoveListItem(new COsMove("D6")));
         dd.LookUpPosition(osg.pos.board);
         assertEquals(dd.m_summary.size(), 1);
     }
@@ -119,7 +119,7 @@ public class DatabaseDataTest extends ArrayTestCase {
     /**
      * Call dd.reloadGames() with mock progress tracker and error displayer
      *
-     * @param dd database data to do the loading
+     * @param dd  database data to do the loading
      * @param fns files to load
      */
     private static void reloadGames(DatabaseData dd, List<String> fns) {

@@ -22,7 +22,7 @@ L5   NB  Display engine status [As per spec, engine status is cleared after the 
 L6   X   GGF Load progress window should finish with complete number of games
 L7   X   GGF Load progress window should display only 3 sig figs in engineering notation (12.3k not 12,345)
 L8   X   MoveList should highlight both the move and its eval. Clicking on move or eval should select.
-L9       MoveList should display nothing if eval = 0.
+L9   X   MoveList should display nothing if eval = 0.
 
 F1       External engine window
 F2   X   Alternate start positions

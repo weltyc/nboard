@@ -109,7 +109,7 @@ public class MoveList extends Grid {
                 if (field == 1) {
                     return mli.mv.toString();
                 } else {
-                    return mli.hasEval() ? "" : mli.getEval();
+                    return mli.hasEval() ? mli.getEval() : null;
 
                 }
             }

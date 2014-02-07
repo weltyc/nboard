@@ -237,7 +237,7 @@ class ReversiBoard extends JPanel {
 
                 if (displayedPosition.board.IsMoveLegal(mv)) {
                     // legal move, make the move and send to the engine.
-                    m_pd.Update(new COsMoveListItem(mv, 0, 0), true);
+                    m_pd.Update(new COsMoveListItem(mv), true);
                 }
             }
         }

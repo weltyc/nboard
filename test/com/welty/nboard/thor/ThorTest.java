@@ -1,17 +1,18 @@
 package com.welty.nboard.thor;
 
+import com.welty.othello.core.CBitBoard;
+import com.welty.othello.core.CMinimalReflection;
+import com.welty.othello.core.CMove;
+import com.welty.othello.core.CQPosition;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMove;
 import com.welty.othello.gdk.COsMoveListItem;
-import com.welty.othello.core.CBitBoard;
-import com.welty.othello.core.CMove;
-import com.welty.othello.core.CQPosition;
-import static com.welty.othello.core.Utils.*;
-import com.welty.othello.core.CMinimalReflection;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;
+
+import static com.welty.othello.core.Utils.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -227,7 +228,7 @@ public class ThorTest extends TestCase {
         osGame.SetDefaultStartPos();
         for (int i = 0; i < 37; i++) {
             CMove mv = new CMove(passGame.moves[i]);
-            osGame.Update(new COsMoveListItem(mv.toOsMove(), 0, 0));
+            osGame.Update(new COsMoveListItem(mv.toOsMove()));
         }
         matchingPositions = Thor.ThorFindMatchingPositions(games, osGame.pos.board);
         assertEquals(1, matchingPositions.index.size());
@@ -237,7 +238,7 @@ public class ThorTest extends TestCase {
     }
 
     public static COsMoveListItem mli(String moveText) {
-        return new COsMoveListItem(new COsMove(moveText), 0, 0);
+        return new COsMoveListItem(new COsMove(moveText));
     }
 
     private static void checkMove(TIntObjectHashMap<ThorSummaryData> summary, byte move, int nPlayed, int nBlackWins, int nWhiteWins) {

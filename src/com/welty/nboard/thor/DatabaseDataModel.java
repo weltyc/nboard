@@ -151,7 +151,7 @@ class DatabaseDataModel {
             game.sPlace = tournamentFromTournamentNumber(tg.iTournament);
             for (int i = 0; i < 60 && tg.moves[i] >= 0; i++) {
                 final int sq = tg.moves[i];
-                COsMoveListItem mli = new COsMoveListItem(new COsMove(Row(sq), Col(sq)), 0, 0);
+                COsMoveListItem mli = new COsMoveListItem(new COsMove(Row(sq), Col(sq)));
 
                 // illegal moves end the game. Yes, the Thor database has some.
                 if (!game.pos.board.IsMoveLegal(mli.mv))
