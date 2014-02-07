@@ -1,35 +1,40 @@
 package com.welty.nboard.nboard.engine;
 
 import com.orbanova.common.misc.ListenerManager;
+import com.welty.othello.api.SearchState;
 import com.welty.othello.core.CMove;
-import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsMoveListItem;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An engine using the interface expected by the ReversiWindow
  */
 public abstract class ReversiWindowEngine extends ListenerManager<ReversiWindowEngine.Listener> {
-    public abstract void sendMove(OsMoveListItem mli);
-
-    public abstract void setGame(COsGame displayedGame);
 
     public abstract String getName();
 
-    public abstract void setContempt(int contempt);
-
-    public abstract void learn();
-
+    /**
+     * @return true if the engine is up-to-date (it has responded to all pings).
+     */
     public abstract boolean isReady();
 
-    public abstract void requestHints(int nHints);
+    public abstract void learn(@NotNull SearchState state);
 
-    public abstract void requestMove();
+    public abstract void requestHints(@NotNull SearchState state, int nHints);
+
+    public abstract void requestMove(@NotNull SearchState state);
 
     public interface Listener {
         void status(String status);
 
         void engineMove(OsMoveListItem mli);
 
+        /**
+         * This message is sent when the engine is ready to accept new commands.
+         * <p/>
+         * For efficiency reasons, the gui should not send commands to an engine that is not ready,
+         * so that commands don't just "stack up" on their way to the engine.
+         */
         void engineReady();
 
         void hint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText);
@@ -38,60 +43,4 @@ public abstract class ReversiWindowEngine extends ListenerManager<ReversiWindowE
 
         void engineError(String message);
     }
-
-    /**
-     * Notify listeners of a status update
-     *
-     * @param status status text
-     */
-    protected void fireStatus(String status) {
-        for (Listener l : getListeners()) {
-            l.status(status);
-        }
-    }
-
-    /**
-     * Notify listeners that the engine moved
-     *
-     * @param mli move
-     */
-    protected void fireEngineMove(OsMoveListItem mli) {
-        for (Listener l : getListeners()) {
-            l.engineMove(mli);
-        }
-    }
-
-    /**
-     * Notify listeners of an error.
-     *
-     * @param message error message.
-     */
-    protected void fireEngineError(String message) {
-        for (Listener l : getListeners()) {
-            l.engineError(message);
-        }
-    }
-
-    /**
-     * Notify listeners that the engine is ready to accept commands
-     */
-    protected void fireEngineReady() {
-        for (Listener l : getListeners()) {
-            l.engineReady();
-        }
-    }
-
-    protected void fireHint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText) {
-        for (Listener l : getListeners()) {
-            l.hint(fromBook, pv, move, eval, nGames, depth, freeformText);
-        }
-    }
-
-    protected void fireParseError(String command, String errorMessage) {
-        for (Listener l : getListeners()) {
-            l.parseError(command, errorMessage);
-        }
-    }
-
-
 }

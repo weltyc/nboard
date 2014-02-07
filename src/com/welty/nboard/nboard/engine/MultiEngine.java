@@ -1,62 +1,49 @@
 package com.welty.nboard.nboard.engine;
 
-import com.welty.othello.api.PingEngine;
+import com.welty.othello.api.PingPong;
+import com.welty.othello.api.SearchState;
+import com.welty.othello.api.StatelessEngine;
 import com.welty.othello.core.CMove;
-import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsMoveListItem;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A PingEngine that combines multiple PingEngines into one.
+ * A StatelessEngine that combines multiple PingEngines into one.
  * <p/>
  * No synchronization is performed; instead the caller checks the ping state.
  */
-public class MultiEngine extends PingEngine implements PingEngine.Listener {
-    private volatile @NotNull PingEngine engine;
+public class MultiEngine extends StatelessEngine implements StatelessEngine.Listener {
+    private volatile @NotNull StatelessEngine engine;
 
-    public MultiEngine(@NotNull PingEngine engine) {
+    public MultiEngine(@NotNull StatelessEngine engine) {
         this.engine = engine;
         engine.addListener(this);
     }
 
-    public void setEngine(int ping, PingEngine engine) {
-        this.engine = engine;
-        engine.addListener(this);
-//        engine.setGame(game);
-//        engine.setContempt(contempt);
-        sendPing(ping);
+    public void setEngine(PingPong pingPong, StatelessEngine engine) {
+        if (engine != this.engine) {
+            // need to check engine has changed, otherwise can get a race condition when removing/adding listeners
+            this.engine.removeListener(this);
+            this.engine = engine;
+            engine.addListener(this);
+            pingPong.next(); // invalidate all previous engine responses
+        }
     }
 
     @Override public void terminate() {
         throw new IllegalStateException("Not implemented");
     }
 
-    @Override public void setGame(int ping, COsGame game) {
-        engine.setGame(ping, game);
+    @Override public void learn(PingPong pingPong, SearchState state) {
+        engine.learn(pingPong, state);
     }
 
-    @Override public void learn() {
-        engine.learn();
+    @Override public void requestHints(PingPong pingPong, SearchState state, int nMoves) {
+        engine.requestHints(pingPong, state, nMoves);
     }
 
-    @Override public void setContempt(int ping, int contempt) {
-        engine.setContempt(ping, contempt);
-    }
-
-    @Override public void setMaxDepth(int ping, int maxDepth) {
-        engine.setMaxDepth(ping, maxDepth);
-    }
-
-    @Override public void sendMove(int ping, OsMoveListItem mli) {
-        engine.sendMove(ping, mli);
-    }
-
-    @Override public void requestHints(int nMoves) {
-        engine.requestHints(nMoves);
-    }
-
-    @Override public void requestMove() {
-        engine.requestMove();
+    @Override public void requestMove(PingPong pingPong, SearchState state) {
+        engine.requestMove(pingPong, state);
     }
 
     @NotNull @Override public String getName() {
@@ -67,8 +54,8 @@ public class MultiEngine extends PingEngine implements PingEngine.Listener {
         return engine.getStatus();
     }
 
-    @Override public void sendPing(int ping) {
-        engine.sendPing(ping);
+    @Override public boolean isReady() {
+        return engine.isReady();
     }
 
     @Override public void statusChanged() {
@@ -76,12 +63,11 @@ public class MultiEngine extends PingEngine implements PingEngine.Listener {
     }
 
     @Override public void engineMove(int pong, OsMoveListItem mli) {
-        // if the engine has changed, pong will change. So don't worry about it.
         fireEngineMove(pong, mli);
     }
 
-    @Override public void pong(int pong) {
-        firePong(pong);
+    @Override public void engineReady(int pong) {
+        fireEngineReady(pong);
     }
 
     @Override public void hint(int pong, boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText) {

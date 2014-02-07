@@ -10,6 +10,7 @@ import com.welty.nboard.nboard.selector.GuiOpponentSelector;
 import com.welty.nboard.thor.DatabaseData;
 import com.welty.nboard.thor.ThorWindow;
 import com.welty.novello.core.Position;
+import com.welty.othello.api.SearchState;
 import com.welty.othello.c.CReader;
 import com.welty.othello.c.CWriter;
 import com.welty.othello.core.CMove;
@@ -108,12 +109,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         reversiData.AddListener(new SignalListener<OsMoveListItem>() {
 
             public void handleSignal(OsMoveListItem data) {
-                if (data != null) {
-                    m_engine.sendMove(data);
-                    TellEngineWhatToDo();
-                } else {
-                    SendSetGame();
-                }
+                TellEngineWhatToDo();
             }
         }
 
@@ -158,7 +154,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         // the responses to be displayed in
         m_statusBar.SetStatus("Loading Engine");
         m_engine.addListener(this);
-        SendSetGame();
+        TellEngineWhatToDo();
     }
 
     /**
@@ -489,7 +485,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
 
         ActionListener contemptSetter = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SendSetContempt();
+                TellEngineWhatToDo();
             }
         };
         drawsTo = new RadioGroup(menu, "Engine/DrawsTo", 1, shutdownHooks,
@@ -610,7 +606,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
                 TellEngineToLearn();
             }
         }
-        SendSetGame();
+        TellEngineWhatToDo();
     }
 
 
@@ -657,34 +653,21 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         return UserPlays(reversiData.DisplayedPosition().board.fBlackMove);
     }
 
-
     /**
-     * Ping the engine. Send the current displayed position to the engine.
+     * Set the engine's mode (which colours it plays) and update the ui.
+     *
+     * @param mode engine mode. 1=black, 2= white, 3= both
      */
-    void SendSetGame() {
-        SendSetGame(reversiData.IMove());
-    }
-
-    /**
-     * Ping the engine. Set the position as after move iMove to the engine.
-     */
-    void SendSetGame(int iMove) {
-        COsGame displayedGame = new COsGame(reversiData.Game());
-        final int nMoves = displayedGame.ml.size();
-        if (iMove < nMoves) {
-            displayedGame.Undo(nMoves - iMove);
-        }
-        m_engine.setGame(displayedGame);
-        TellEngineWhatToDo();
-    }
-
     void SetMode(int mode) {
         SetMode(mode, true);
     }
 
     /**
-     * Set the engine's mode, update the radio buttons on the menu, and save the mode in m_mode
+     * Set the engine's mode, (which colours it plays), and update the ui.
+     * <p/>
+     * Updates the radio buttons on the menu, and save the mode in m_mode
      *
+     * @param mode        engine mode. 1=black, 2= white, 3= both
      * @param updateUsers true if various objects should be notified; false during startup
      */
     void SetMode(int mode, boolean updateUsers) {
@@ -699,13 +682,21 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
     }
 
     /**
-     * Set the engine's contempt factor so it can avoid or seek draws
-     * <p/>
-     * Sets it based on the drawsTo member
+     * Get the currently selected contempt factor
+     *
+     * @return contempt factor, in centidisks
      */
-    void SendSetContempt() {
-        final int contempt = 100 * (1 - drawsTo.getIndex());
-        m_engine.setContempt(contempt);
+    private int getContempt() {
+        return 100 * (1 - drawsTo.getIndex());
+    }
+
+    /**
+     * Get the currently selected max depth
+     *
+     * @return max depth, in ply
+     */
+    private int getMaxDepth() {
+        return GuiOpponentSelector.getInstance().getOpponent().getMaxDepth();
     }
 
     /**
@@ -715,19 +706,11 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
      * Also update the hints afterwards.
      */
     public void TellEngineToLearn() {
-        // If we're reviewing we want the engine to learn the complete game,
-        // not just the game up to the point where we're reviewing.
-        // We alter iMove and restore it afterwards.
-        boolean fReviewing = reversiData.Reviewing();
-        if (fReviewing) {
-            SendSetGame(reversiData.Game().ml.size());
-        }
-
         // Tell the engine to learn the game
-        m_engine.learn();
+        m_engine.learn(new SearchState(reversiData.Game(), getMaxDepth(), getContempt()));
 
         // reset the stored review point. The engine will update hints as a result.
-        SendSetGame();
+        TellEngineWhatToDo();
     }
 
     private static final int[] engineTops = {1, 2, 4, 64};
@@ -768,9 +751,13 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
             // the engine will now give us new hints, so delete the old ones
             m_hints.Clear();
             if (isHint) {
-                m_engine.requestHints(engineTops[engineTop.getIndex()]);
+                // hints always relate to the displayed position.
+                final SearchState searchState = new SearchState(reversiData.Game(), reversiData.IMove(), getMaxDepth(), getContempt());
+                m_engine.requestHints(searchState, engineTops[engineTop.getIndex()]);
             } else {
-                m_engine.requestMove();
+                // a move request relates to the final position in the game
+                final SearchState searchState = new SearchState(reversiData.Game(), getMaxDepth(), getContempt());
+                m_engine.requestMove(searchState);
             }
         }
     }
