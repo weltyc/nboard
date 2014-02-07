@@ -228,10 +228,10 @@ class ReversiBoard extends JPanel {
             final int iy = (loc.y - boardArea.y) * n / boardArea.height;
 
             if (ix >= 0 && ix < n && iy >= 0 && iy < n) {
-                COsMove mv = new COsMove();
-                COsPosition displayedPosition = m_pd.DisplayedPosition();
+                final COsPosition displayedPosition = m_pd.DisplayedPosition();
+                final COsMove mv;
                 if (displayedPosition.board.HasLegalMove()) {
-                    mv.Set(iy, ix);
+                    mv = new COsMove(iy, ix);
                 } else {
                     mv = COsMove.PASS;
                 }
