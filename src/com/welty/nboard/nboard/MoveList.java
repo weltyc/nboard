@@ -4,7 +4,7 @@ import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.GridColumn;
 import com.welty.nboard.gui.GridTableModel;
 import com.welty.nboard.gui.SignalListener;
-import com.welty.othello.gdk.COsMoveListItem;
+import com.welty.othello.gdk.OsMoveListItem;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -53,8 +53,8 @@ public class MoveList extends Grid {
         table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
 
-        boardSource.AddListener(new SignalListener<COsMoveListItem>() {
-            public void handleSignal(COsMoveListItem data) {
+        boardSource.AddListener(new SignalListener<OsMoveListItem>() {
+            public void handleSignal(OsMoveListItem data) {
                 final int iMove = boardSource.IMove();
                 final int col = field(iMove);
                 final int row = item(iMove);
@@ -105,7 +105,7 @@ public class MoveList extends Grid {
                 field -= 2;
             }
             if (iMove < boardSource.NMoves()) {
-                COsMoveListItem mli = boardSource.Game().ml.get(iMove);
+                OsMoveListItem mli = boardSource.Game().ml.get(iMove);
                 if (field == 1) {
                     return mli.mv.toString();
                 } else {

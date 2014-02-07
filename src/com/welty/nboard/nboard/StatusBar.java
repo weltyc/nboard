@@ -1,16 +1,17 @@
 package com.welty.nboard.nboard;
 
-import com.welty.othello.gdk.COsMoveListItem;
-import static com.welty.nboard.nboard.GraphicsUtils.setPlainFont;
 import com.welty.nboard.gui.SignalListener;
-import static com.welty.nboard.thor.ThorOpeningMap.OpeningCodeFromGgf;
-import static com.welty.nboard.thor.ThorOpeningMap.OpeningName;
+import com.welty.othello.gdk.OsMoveListItem;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
+import static com.welty.nboard.nboard.GraphicsUtils.setPlainFont;
+import static com.welty.nboard.thor.ThorOpeningMap.OpeningCodeFromGgf;
+import static com.welty.nboard.thor.ThorOpeningMap.OpeningName;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,9 +31,9 @@ class StatusBar extends JPanel {
 
     StatusBar(ReversiData d) {
         m_pd = d;
-        m_pd.AddListener(new SignalListener<COsMoveListItem>() {
+        m_pd.AddListener(new SignalListener<OsMoveListItem>() {
 
-            public void handleSignal(COsMoveListItem data) {
+            public void handleSignal(OsMoveListItem data) {
                 final String sGgfGame = m_pd.Game().toString();
                 final int openingCode = OpeningCodeFromGgf(sGgfGame);
                 openingField.setText(OpeningName(openingCode));

@@ -6,7 +6,7 @@ import com.welty.othello.c.CReader;
 import com.welty.othello.core.CMove;
 import com.welty.othello.engine.ExternalNBoardEngine;
 import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsMoveListItem;
+import com.welty.othello.gdk.OsMoveListItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.EOFException;
@@ -100,7 +100,7 @@ public class ParsedEngine extends PingApiEngine implements NBoardEngine.Listener
      *
      * @param mli the move to append to the protocol's current game.
      */
-    @Override public void sendMove(int ping, COsMoveListItem mli) {
+    @Override public void sendMove(int ping, OsMoveListItem mli) {
         ping(ping);
         engine.sendCommand("move " + mli);
     }
@@ -170,7 +170,7 @@ public class ParsedEngine extends PingApiEngine implements NBoardEngine.Listener
                     // Edax produces the mli with spaces between components rather than slashes.
                     // Translate to normal form if there are spaces.
                     final String mliText = is.readLine().trim().replaceAll("\\s+", "/");
-                    final COsMoveListItem mli = new COsMoveListItem(mliText);
+                    final OsMoveListItem mli = new OsMoveListItem(mliText);
 
                     fireEngineMove(m_pong, mli);
                     break;

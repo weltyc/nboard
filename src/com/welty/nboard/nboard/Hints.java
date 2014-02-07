@@ -3,7 +3,7 @@ package com.welty.nboard.nboard;
 import com.welty.nboard.gui.SignalEvent;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.othello.core.CMove;
-import com.welty.othello.gdk.COsMoveListItem;
+import com.welty.othello.gdk.OsMoveListItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * The set of all hints for the current position
  */
-public class Hints extends HashMap<Byte, Hint> implements SignalListener<COsMoveListItem> {
+public class Hints extends HashMap<Byte, Hint> implements SignalListener<OsMoveListItem> {
     final HashMap<Byte, Hint> Map() {
         return this;
     }
@@ -155,7 +155,7 @@ public class Hints extends HashMap<Byte, Hint> implements SignalListener<COsMove
         return false;
     }
 
-    public void handleSignal(COsMoveListItem data) {
+    public void handleSignal(OsMoveListItem data) {
         Clear();
     }
 }

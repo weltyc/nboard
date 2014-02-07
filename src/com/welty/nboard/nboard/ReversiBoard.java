@@ -4,10 +4,10 @@ import com.welty.nboard.gui.Align;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.gui.VAlign;
 import com.welty.othello.core.CMove;
-import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsPosition;
 import com.welty.othello.gdk.OsBoard;
 import com.welty.othello.gdk.OsMove;
+import com.welty.othello.gdk.OsMoveListItem;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -238,7 +238,7 @@ class ReversiBoard extends JPanel {
 
                 if (displayedPosition.board.IsMoveLegal(mv)) {
                     // legal move, make the move and send to the engine.
-                    m_pd.Update(new COsMoveListItem(mv), true);
+                    m_pd.Update(new OsMoveListItem(mv), true);
                 }
             }
         }

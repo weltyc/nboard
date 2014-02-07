@@ -1,13 +1,14 @@
 package com.welty.nboard.nboard;
 
-import com.welty.othello.gdk.OsBoard;
-import com.welty.othello.gdk.COsMoveListItem;
-import com.welty.othello.gdk.PieceCounts;
-import static com.welty.nboard.nboard.GraphicsUtils.setPlainFont;
 import com.welty.nboard.gui.SignalListener;
+import com.welty.othello.gdk.OsBoard;
+import com.welty.othello.gdk.OsMoveListItem;
+import com.welty.othello.gdk.PieceCounts;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static com.welty.nboard.nboard.GraphicsUtils.setPlainFont;
 
 /**
  * A score window is where the piece counts/player names/clocks are displayed
@@ -37,8 +38,8 @@ class ScoreWindow extends JPanel {
         setPreferredSize(size);
         setMaximumSize(size);
         setMinimumSize(size);
-        m_pd.AddListener(new SignalListener<COsMoveListItem>() {
-            public void handleSignal(COsMoveListItem data) {
+        m_pd.AddListener(new SignalListener<OsMoveListItem>() {
+            public void handleSignal(OsMoveListItem data) {
                 OsBoard board = m_pd.DisplayedPosition().board;
                 final PieceCounts pieceCounts = board.getPieceCounts();
                 blackPanel.player.setText(m_pd.Game().pis[1].sName);

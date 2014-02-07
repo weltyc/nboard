@@ -3,13 +3,13 @@ package com.welty.nboard.nboard.engine;
 import com.orbanova.common.misc.ListenerManager;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsMoveListItem;
+import com.welty.othello.gdk.OsMoveListItem;
 
 /**
  * An engine using the interface expected by the ReversiWindow
  */
 public abstract class ReversiWindowEngine extends ListenerManager<ReversiWindowEngine.Listener> {
-    public abstract void sendMove(COsMoveListItem mli);
+    public abstract void sendMove(OsMoveListItem mli);
 
     public abstract void setGame(COsGame displayedGame);
 
@@ -28,7 +28,7 @@ public abstract class ReversiWindowEngine extends ListenerManager<ReversiWindowE
     public interface Listener {
         public void status(String status);
 
-        public void engineMove(COsMoveListItem mli);
+        public void engineMove(OsMoveListItem mli);
 
         public void engineReady();
 
@@ -53,7 +53,7 @@ public abstract class ReversiWindowEngine extends ListenerManager<ReversiWindowE
      *
      * @param mli move
      */
-    protected void fireEngineMove(COsMoveListItem mli) {
+    protected void fireEngineMove(OsMoveListItem mli) {
         for (Listener l : getListeners()) {
             l.engineMove(mli);
         }

@@ -2,9 +2,9 @@ package com.welty.nboard.nboard;
 
 import com.welty.nboard.gui.SignalListener;
 import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsPosition;
 import com.welty.othello.gdk.OsMove;
+import com.welty.othello.gdk.OsMoveListItem;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -25,7 +25,7 @@ public interface BoardSource {
      */
     int IMove();
 
-    void AddListener(SignalListener<COsMoveListItem> signalListener);
+    void AddListener(SignalListener<OsMoveListItem> signalListener);
 
     /**
      * @return the number of moves played so far in the game.
@@ -55,7 +55,7 @@ public interface BoardSource {
      * Update the board with a move list item; update the engine; tell the engine what to do
      * todo engine talker should be a listener and tell the engine itself
      */
-    void Update(COsMoveListItem mli, boolean fUserMove);
+    void Update(OsMoveListItem mli, boolean fUserMove);
 
     /**
      * In study mode, move back one move and review. In game mode, remove moves from the game back to the last user move.

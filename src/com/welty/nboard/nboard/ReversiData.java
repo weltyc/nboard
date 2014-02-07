@@ -31,10 +31,10 @@ public class ReversiData implements BoardSource {
     //
     /**
      * Event that is fired when the displayed board position changes
-     * Event data = COsMoveListItem* if the change is an update of the position by 1 move, or NULL otherwise
+     * Event data = OsMoveListItem* if the change is an update of the position by 1 move, or NULL otherwise
      * don't raise this directly, raise via BoardChanged()
      */
-    private final SignalEvent<COsMoveListItem> m_seBoardChanged = new SignalEvent<>();
+    private final SignalEvent<OsMoveListItem> m_seBoardChanged = new SignalEvent<>();
 
 
     /**
@@ -55,7 +55,7 @@ public class ReversiData implements BoardSource {
         return m_game.PosAtMove(m_iMove);
     }
 
-    public void AddListener(SignalListener<COsMoveListItem> signalListener) {
+    public void AddListener(SignalListener<OsMoveListItem> signalListener) {
         m_seBoardChanged.Add(signalListener);
     }
 
@@ -180,11 +180,11 @@ public class ReversiData implements BoardSource {
         m_game.posStart.board.Set(newStart);
 
         for (int i = 0; i < m_game.ml.size(); i++) {
-            COsMoveListItem mli = m_game.ml.get(i);
+            OsMoveListItem mli = m_game.ml.get(i);
             CMove mv = new CMove(mli.mv);
             int sq = mv.Square();
             final OsMove rMv = new CMove((byte) Thor.MoveFromIReflection(sq, iReflection)).toOsMove();
-            m_game.ml.set(i, new COsMoveListItem(rMv, mli.getEval(), mli.getElapsedTime()));
+            m_game.ml.set(i, new OsMoveListItem(rMv, mli.getEval(), mli.getElapsedTime()));
         }
 
         m_game.pos = m_game.PosAtMove(10000);
@@ -196,7 +196,7 @@ public class ReversiData implements BoardSource {
     /**
      * The displayed position changed. Update the displays. Clear the hints. Raise the event.
      */
-    void BoardChanged(@Nullable COsMoveListItem data) {
+    void BoardChanged(@Nullable OsMoveListItem data) {
         m_seBoardChanged.Raise(data);
     }
 
@@ -209,7 +209,7 @@ public class ReversiData implements BoardSource {
         if (iMove != m_iMove) {
             if (iMove == m_iMove + 1) {
                 m_iMove = iMove;
-                COsMoveListItem mli = new COsMoveListItem(m_game.ml.get(m_iMove - 1));
+                OsMoveListItem mli = new OsMoveListItem(m_game.ml.get(m_iMove - 1));
                 BoardChanged(mli);
             } else {
                 m_iMove = iMove;
@@ -218,7 +218,7 @@ public class ReversiData implements BoardSource {
         }
     }
 
-    public void Update(final COsMoveListItem mli, boolean fUserMove) {
+    public void Update(final OsMoveListItem mli, boolean fUserMove) {
         final int nMoves = NMoves();
         final int iMove = IMove();
 
@@ -243,7 +243,7 @@ public class ReversiData implements BoardSource {
         }
 
         m_iMove++;
-        COsMoveListItem mli2 = new COsMoveListItem(mli);
+        OsMoveListItem mli2 = new OsMoveListItem(mli);
         BoardChanged(mli2);
     }
 

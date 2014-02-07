@@ -15,8 +15,8 @@ import com.welty.othello.c.CWriter;
 import com.welty.othello.core.CMove;
 import com.welty.othello.core.OperatingSystem;
 import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsPosition;
+import com.welty.othello.gdk.OsMoveListItem;
 import com.welty.othello.gui.selector.GuiOpponentSelector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -106,9 +106,9 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         m_pgsw = new GameSelectionWindow(this);
         dd = new DatabaseData(this, reversiData);
         m_pwThor = new ThorWindow(this, reversiData, dd);
-        reversiData.AddListener(new SignalListener<COsMoveListItem>() {
+        reversiData.AddListener(new SignalListener<OsMoveListItem>() {
 
-            public void handleSignal(COsMoveListItem data) {
+            public void handleSignal(OsMoveListItem data) {
                 if (data != null) {
                     m_engine.sendMove(data);
                     TellEngineWhatToDo();
@@ -869,7 +869,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         SetStatus(status);
     }
 
-    @Override public void engineMove(COsMoveListItem mli) {
+    @Override public void engineMove(OsMoveListItem mli) {
         // Need to check whether it's the computer's move. This is because the user may have
         // switched modes while the computer was thinking.
         if (!UsersMove()) {

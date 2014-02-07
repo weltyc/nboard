@@ -11,9 +11,9 @@ import com.welty.nboard.nboard.NBoard;
 import com.welty.nboard.nboard.OptionSource;
 import com.welty.othello.c.CReader;
 import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsPosition;
 import com.welty.othello.gdk.OsBoard;
+import com.welty.othello.gdk.OsMoveListItem;
 import gnu.trove.list.array.TIntArrayList;
 import org.jetbrains.annotations.NotNull;
 
@@ -64,8 +64,8 @@ public class DatabaseData extends GridTableModel {
         for (int i = 0; i < m_filters.length; i++) {
             m_filters[i] = "";
         }
-        boardSource.AddListener(new SignalListener<COsMoveListItem>() {
-            public void handleSignal(COsMoveListItem data) {
+        boardSource.AddListener(new SignalListener<OsMoveListItem>() {
+            public void handleSignal(OsMoveListItem data) {
                 OnBoardChanged();
             }
         });

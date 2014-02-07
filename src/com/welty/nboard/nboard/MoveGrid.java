@@ -2,8 +2,8 @@ package com.welty.nboard.nboard;
 
 import com.welty.nboard.gui.*;
 import com.welty.nboard.thor.DatabaseData;
-import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.OsMove;
+import com.welty.othello.gdk.OsMoveListItem;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
@@ -86,7 +86,7 @@ public class MoveGrid extends Grid {
     public void MouseDataClick(int row, int col) {
         MoveGridTableModel model = getModel();
         OsMove mv = model.getMove(row);
-        m_pd.Update(new COsMoveListItem(mv), true);
+        m_pd.Update(new OsMoveListItem(mv), true);
     }
 
     public void UpdateHints() {

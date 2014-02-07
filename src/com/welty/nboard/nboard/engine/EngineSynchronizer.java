@@ -4,7 +4,7 @@ import com.welty.othello.api.OpponentSelector;
 import com.welty.othello.api.PingApiEngine;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsMoveListItem;
+import com.welty.othello.gdk.OsMoveListItem;
 
 /**
  * This class includes functions to help ensure synchronization of the board state with
@@ -32,7 +32,7 @@ public class EngineSynchronizer extends ReversiWindowEngine implements OpponentS
         parsedEngine.setMaxDepth(++m_ping, opponentSelector.getOpponent().getMaxDepth());
     }
 
-    @Override public void sendMove(COsMoveListItem mli) {
+    @Override public void sendMove(OsMoveListItem mli) {
         parsedEngine.sendMove(++m_ping, mli);
     }
 
@@ -85,7 +85,7 @@ public class EngineSynchronizer extends ReversiWindowEngine implements OpponentS
             fireStatus(status);
         }
 
-        @Override public void engineMove(int pong, COsMoveListItem mli) {
+        @Override public void engineMove(int pong, OsMoveListItem mli) {
             if (update(pong)) {
                 fireEngineMove(mli);
             }

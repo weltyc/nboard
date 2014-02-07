@@ -3,9 +3,9 @@ package com.welty.nboard.thor;
 import com.welty.othello.c.CBinaryReader;
 import com.welty.othello.core.Utils;
 import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsResult;
 import com.welty.othello.gdk.OsMove;
+import com.welty.othello.gdk.OsMoveListItem;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ class ThorGameInternal extends ThorGame8 {
         game.SetTimeYear(year);
         for (byte move : moves) {
             final OsMove osMove = new OsMove(Utils.Row(move), Utils.Col(move));
-            game.ml.add(new COsMoveListItem(osMove));
+            game.ml.add(new OsMoveListItem(osMove));
         }
         return game;
     }
