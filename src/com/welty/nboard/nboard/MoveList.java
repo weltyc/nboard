@@ -107,7 +107,7 @@ public class MoveList extends Grid {
             if (iMove < boardSource.NMoves()) {
                 OsMoveListItem mli = boardSource.Game().ml.get(iMove);
                 if (field == 1) {
-                    return mli.mv.toString();
+                    return mli.move.toString();
                 } else {
                     return mli.hasEval() ? mli.getEval() : null;
 

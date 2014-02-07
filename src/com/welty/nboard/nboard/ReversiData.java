@@ -82,7 +82,7 @@ public class ReversiData implements BoardSource {
     private static final int n = 8;
 
     public OsMove NextMove() {
-        return Reviewing() ? m_game.ml.get(m_iMove).mv : OsMove.PASS;
+        return Reviewing() ? m_game.ml.get(m_iMove).move : OsMove.PASS;
     }
 
     /**
@@ -181,7 +181,7 @@ public class ReversiData implements BoardSource {
 
         for (int i = 0; i < m_game.ml.size(); i++) {
             OsMoveListItem mli = m_game.ml.get(i);
-            CMove mv = new CMove(mli.mv);
+            CMove mv = new CMove(mli.move);
             int sq = mv.Square();
             final OsMove rMv = new CMove((byte) Thor.MoveFromIReflection(sq, iReflection)).toOsMove();
             m_game.ml.set(i, new OsMoveListItem(rMv, mli.getEval(), mli.getElapsedTime()));
@@ -209,7 +209,7 @@ public class ReversiData implements BoardSource {
         if (iMove != m_iMove) {
             if (iMove == m_iMove + 1) {
                 m_iMove = iMove;
-                OsMoveListItem mli = new OsMoveListItem(m_game.ml.get(m_iMove - 1));
+                OsMoveListItem mli = m_game.ml.get(m_iMove - 1);
                 BoardChanged(mli);
             } else {
                 m_iMove = iMove;
@@ -222,7 +222,7 @@ public class ReversiData implements BoardSource {
         final int nMoves = NMoves();
         final int iMove = IMove();
 
-        if (iMove >= nMoves || !(mli.mv.equals(m_game.ml.get(iMove).mv))) {
+        if (iMove >= nMoves || !(mli.move.equals(m_game.ml.get(iMove).move))) {
             // if the user played a different move while reviewing, break the game
             // (eliminate subsequent moves which now make no sense)
             if (iMove < nMoves)
@@ -243,8 +243,7 @@ public class ReversiData implements BoardSource {
         }
 
         m_iMove++;
-        OsMoveListItem mli2 = new OsMoveListItem(mli);
-        BoardChanged(mli2);
+        BoardChanged(mli);
     }
 
     /**

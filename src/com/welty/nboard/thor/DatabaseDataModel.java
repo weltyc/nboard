@@ -154,7 +154,7 @@ class DatabaseDataModel {
                 OsMoveListItem mli = new OsMoveListItem(new OsMove(Row(sq), Col(sq)));
 
                 // illegal moves end the game. Yes, the Thor database has some.
-                if (!game.pos.board.IsMoveLegal(mli.mv)) {
+                if (!game.pos.board.IsMoveLegal(mli.move)) {
                     break;
                 }
                 game.Update(mli);

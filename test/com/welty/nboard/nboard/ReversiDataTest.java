@@ -32,7 +32,7 @@ public class ReversiDataTest extends TestCase {
         game.Update(ThorTest.mli("F5"));
         data.ReflectGame(iReflection);
         assertEquals(1, game.ml.size());
-        assertEquals(expected, game.ml.get(0).mv.toString());
+        assertEquals(expected, game.ml.get(0).move.toString());
         data.ReflectGame(iReflection);
     }
 

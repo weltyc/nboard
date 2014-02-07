@@ -35,6 +35,7 @@ F8       Timed matches
 F9       Single Paste
 F10      Copy should copy move list, not game
 F11      Filter database by player, tournament, etc.
+F12      Score graph
 
 FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games
 FL2      GGF games should be stored in a more compact format
