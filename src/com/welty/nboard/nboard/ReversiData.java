@@ -291,7 +291,7 @@ public class ReversiData implements BoardSource {
     /**
      * Clear the game and switch back to the standard start position
      */
-    void StartNewGame(Position startPosition) {
+    void StartNewGame(@NotNull Position startPosition) {
         m_game.Clear();
         m_game.Initialize("8");
         final String sBoardText = startPosition.boardString("");

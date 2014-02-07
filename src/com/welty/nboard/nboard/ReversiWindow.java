@@ -18,6 +18,7 @@ import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMoveListItem;
 import com.welty.othello.gdk.COsPosition;
 import com.welty.othello.gui.selector.GuiOpponentSelector;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -646,7 +647,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         return ((~mode.getIndex() >> (fBlack ? 1 : 0)) & 1) != 0;
     }
 
-    @Override public Position getStartPosition() {
+    @NotNull @Override public Position getStartPosition() {
         return startPositionManager.getStartPosition();
     }
 

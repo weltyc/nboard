@@ -1,19 +1,14 @@
 package com.welty.nboard.nboard;
 
-import com.welty.nboard.nboard.EngineTalker;
-import com.welty.nboard.nboard.OptionSource;
-import com.welty.nboard.nboard.ReversiData;
-import com.welty.othello.gdk.COsGame;
 import com.welty.nboard.thor.ThorTest;
+import com.welty.novello.core.Position;
+import com.welty.othello.gdk.COsGame;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
+import org.mockito.Mockito;
 
 /**
- * Created by IntelliJ IDEA.
- * User: HP_Administrator
- * Date: Jun 21, 2009
- * Time: 2:57:36 PM
- * To change this template use File | Settings | File Templates.
+ * Test accessing the ReversiGame
  */
 public class ReversiDataTest extends TestCase {
 
@@ -29,8 +24,8 @@ public class ReversiDataTest extends TestCase {
     }
 
     private static void testReflectGame(int iReflection, String expected) {
-        final OptionSource optionSource = EasyMock.createMock(OptionSource.class);
-        final EngineTalker engineTalker = EasyMock.createMock(EngineTalker.class);
+        final OptionSource optionSource = mockOptionSource();
+        final EngineTalker engineTalker = Mockito.mock(EngineTalker.class);
         final ReversiData data = new ReversiData(optionSource, engineTalker);
         final COsGame game = data.Game();
         game.SetDefaultStartPos();
@@ -41,8 +36,14 @@ public class ReversiDataTest extends TestCase {
         data.ReflectGame(iReflection);
     }
 
+    private static OptionSource mockOptionSource() {
+        final OptionSource optionSource = Mockito.mock(OptionSource.class);
+        Mockito.stub(optionSource.getStartPosition()).toReturn(Position.START_POSITION);
+        return optionSource;
+    }
+
     public void testUpdate() {
-        final OptionSource optionSource = EasyMock.createNiceMock(OptionSource.class);
+        final OptionSource optionSource = mockOptionSource();
         final EngineTalker engineTalker = EasyMock.createMock(EngineTalker.class);
 
         final ReversiData data = new ReversiData(optionSource, engineTalker);
