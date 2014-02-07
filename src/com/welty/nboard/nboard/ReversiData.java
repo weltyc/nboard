@@ -183,7 +183,8 @@ public class ReversiData implements BoardSource {
             COsMoveListItem mli = m_game.ml.get(i);
             CMove mv = new CMove(mli.mv);
             int sq = mv.Square();
-            mli.mv = new CMove((byte) Thor.MoveFromIReflection(sq, iReflection)).toOsMove();
+            final OsMove rMv = new CMove((byte) Thor.MoveFromIReflection(sq, iReflection)).toOsMove();
+            m_game.ml.set(i, new COsMoveListItem(rMv, mli.getEval(), mli.getElapsedTime()));
         }
 
         m_game.pos = m_game.PosAtMove(10000);

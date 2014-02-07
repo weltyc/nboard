@@ -160,8 +160,7 @@ class DatabaseDataModel {
                 game.Update(mli);
 
                 if (!game.pos.board.HasLegalMove() && !game.pos.board.GameOver()) {
-                    mli.mv = OsMove.PASS;
-                    game.Update(mli);
+                    game.Update(COsMoveListItem.PASS);
                 }
             }
             if (!game.pos.board.GameOver()) {
