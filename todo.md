@@ -23,7 +23,7 @@ L6   X   GGF Load progress window should finish with complete number of games
 L7   X   GGF Load progress window should display only 3 sig figs in engineering notation (12.3k not 12,345)
 
 F1       External engine window
-F2       Alternate start positions
+F2   X   Alternate start positions
 F3       Internal engines should support NBoard protocol
 F4       Symmetry menu items should display first move and icon
 F5       More convenient external engine add window
