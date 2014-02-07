@@ -21,35 +21,35 @@ import com.welty.othello.gdk.OsMoveListItem;
 public class EngineSynchronizer extends ReversiWindowEngine implements OpponentSelector.Listener {
     private int m_ping;
     private int m_pong;
-    private final PingApiEngine parsedEngine;
+    private final PingApiEngine pingEngine;
     private final OpponentSelector opponentSelector;
 
-    public EngineSynchronizer(PingApiEngine parsedEngine, OpponentSelector opponentSelector) {
-        this.parsedEngine = parsedEngine;
+    public EngineSynchronizer(PingApiEngine pingEngine, OpponentSelector opponentSelector) {
+        this.pingEngine = pingEngine;
         this.opponentSelector = opponentSelector;
         opponentSelector.addListener(this);
-        parsedEngine.addListener(new MyListener());
-        parsedEngine.setMaxDepth(++m_ping, opponentSelector.getOpponent().getMaxDepth());
+        pingEngine.addListener(new MyListener());
+        pingEngine.setMaxDepth(++m_ping, opponentSelector.getOpponent().getMaxDepth());
     }
 
     @Override public void sendMove(OsMoveListItem mli) {
-        parsedEngine.sendMove(++m_ping, mli);
+        pingEngine.sendMove(++m_ping, mli);
     }
 
     @Override public void setGame(COsGame game) {
-        parsedEngine.setGame(++m_ping, game);
+        pingEngine.setGame(++m_ping, game);
     }
 
     @Override public String getName() {
-        return parsedEngine.getName();
+        return pingEngine.getName();
     }
 
     @Override public void setContempt(int contempt) {
-        parsedEngine.setContempt(++m_ping, contempt);
+        pingEngine.setContempt(++m_ping, contempt);
     }
 
     @Override public void learn() {
-        parsedEngine.learn();
+        pingEngine.learn();
     }
 
     @Override public boolean isReady() {
@@ -57,16 +57,16 @@ public class EngineSynchronizer extends ReversiWindowEngine implements OpponentS
     }
 
     @Override public void requestHints(int nHints) {
-        parsedEngine.requestHints(nHints);
+        pingEngine.requestHints(nHints);
     }
 
     @Override public void requestMove() {
-        parsedEngine.requestMove();
+        pingEngine.requestMove();
     }
 
     @Override public void opponentChanged() {
         final int maxDepth = opponentSelector.getOpponent().getMaxDepth();
-        parsedEngine.setMaxDepth(++m_ping, maxDepth);
+        pingEngine.setMaxDepth(++m_ping, maxDepth);
     }
 
     /**
@@ -81,8 +81,8 @@ public class EngineSynchronizer extends ReversiWindowEngine implements OpponentS
 
 
     private class MyListener implements PingApiEngine.Listener {
-        @Override public void status(int pong, String status) {
-            fireStatus(status);
+        @Override public void statusChanged() {
+            fireStatus(pingEngine.getStatus());
         }
 
         @Override public void engineMove(int pong, OsMoveListItem mli) {

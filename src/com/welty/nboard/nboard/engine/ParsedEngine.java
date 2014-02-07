@@ -19,6 +19,7 @@ public class ParsedEngine extends PingApiEngine implements NBoardEngine.Listener
     private int m_pong;
     private String name = "ntest";
     private final @NotNull NBoardEngine engine;
+    private volatile @NotNull String status = "";
 
     /**
      * Construct with the default NBoardEngine
@@ -40,7 +41,7 @@ public class ParsedEngine extends PingApiEngine implements NBoardEngine.Listener
     }
 
 
-    private void ping(int ping) {
+    public void ping(int ping) {
         engine.sendCommand("ping " + ping);
     }
 
@@ -54,8 +55,12 @@ public class ParsedEngine extends PingApiEngine implements NBoardEngine.Listener
         engine.sendCommand("quit");
     }
 
-    public String getName() {
+    @NotNull public String getName() {
         return name;
+    }
+
+    @Override public @NotNull String getStatus() {
+        return status;
     }
 
     private void setName(String name) {
@@ -151,7 +156,7 @@ public class ParsedEngine extends PingApiEngine implements NBoardEngine.Listener
                     break;
                 case "status":
                     // the engine is busy and is telling the user why
-                    fireStatus(m_pong, is.readLine());
+                    setStatus(is.readLine());
                     break;
                 case "set":
                     String variable = is.readString();
@@ -164,7 +169,7 @@ public class ParsedEngine extends PingApiEngine implements NBoardEngine.Listener
                 // For commands from here on, the receiver should only use these commands if the computer is up-to-date
                 // but we don't verify that here - the caller now verifies that (because of multiple engines).
                 case "===":
-                    fireStatus(m_pong, "");
+                    setStatus("");
                     // now update the move list
 
                     // Edax produces the mli with spaces between components rather than slashes.
@@ -195,7 +200,7 @@ public class ParsedEngine extends PingApiEngine implements NBoardEngine.Listener
                     fireHint(m_pong, isBook, pv, move, eval, nGames, depth, freeformText);
                     break;
                 case "learn":
-                    fireStatus(m_pong, "");
+                    setStatus("");
                     break;
             }
         } catch (EOFException | IllegalArgumentException e) {
@@ -204,6 +209,11 @@ public class ParsedEngine extends PingApiEngine implements NBoardEngine.Listener
     }
 
     @Override public void onEngineTerminated() {
-        fireStatus(m_pong, "The engine (" + name + ") has terminated.");
+        setStatus("The engine (" + name + ") has terminated.");
+    }
+
+    private void setStatus(String status) {
+        this.status = status;
+        fireStatusChanged();
     }
 }
