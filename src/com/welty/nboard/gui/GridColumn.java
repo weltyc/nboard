@@ -10,15 +10,25 @@ package com.welty.nboard.gui;
 public class GridColumn {
     final int width;
     final String name;
+    public final Class columnClass;
     public final Align align;
 
     public GridColumn(int width, String name) {
-        this(width, name, Align.RIGHT);
+        this(width, name, Object.class, Align.RIGHT);
     }
 
     public GridColumn(int width, String name, Align align) {
+        this(width, name, Object.class, align);
+    }
+
+    public GridColumn(int width, String name, Class columnClass) {
+        this(width, name, columnClass, Number.class.isAssignableFrom(columnClass) ? Align.RIGHT : Align.LEFT);
+    }
+
+    public GridColumn(int width, String name, Class columnClass, Align align) {
         this.width = width;
         this.name = name;
+        this.columnClass = columnClass;
         this.align = align;
     }
 }

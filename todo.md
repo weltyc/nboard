@@ -14,6 +14,7 @@ H12  X   Display progress window when loading games database
 H13  X   Notify user with dialog box when engine gives a bad hint
 H14  X   Notify engine of start position on new game
 H15  X   Edax looping infinitely on hint
+H16      Exception when trying to add new opponent
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key
@@ -24,11 +25,12 @@ L6   X   GGF Load progress window should finish with complete number of games
 L7   X   GGF Load progress window should display only 3 sig figs in engineering notation (12.3k not 12,345)
 L8   X   MoveList should highlight both the move and its eval. Clicking on move or eval should select.
 L9   X   MoveList should display nothing if eval = 0.
-L10      MoveList displays eval*100 for internal engines
+L10  X   MoveList displays eval*100 for internal engines
+L11  X   MoveList displays too many decimal places for eval, should display just 1
 
 F1       External engine window
 F1a      Remove depth parameter from NBoardEngine
-F1b      Simplify construction of SyncPlayer, almost always construct an EvalSyncEngine right there.
+F1b      Simplify construction of SyncPlayer, we almost always construct an EvalSyncEngine right there.
 F2   X   Alternate start positions
 F3       Internal engines should support NBoard protocol
 F4       Symmetry menu items should display first move and icon

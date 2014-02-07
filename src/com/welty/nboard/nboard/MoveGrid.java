@@ -24,7 +24,7 @@ public class MoveGrid extends Grid {
     private final ReversiData m_pd;
 
     static final GridColumn[] columns = {
-            new GridColumn(37, "Move", Align.CENTER),
+            new GridColumn(37, "Move", Object.class, Align.CENTER),
             new GridColumn(50, "D=0"),
             new GridColumn(50, "DtW"),
             new GridColumn(50, "DtB"),
@@ -49,7 +49,7 @@ public class MoveGrid extends Grid {
             rowSorter.setComparator(col, comparator);
         }
         ArrayList<RowSorter.SortKey> sortKeys
-                = new ArrayList<RowSorter.SortKey>();
+                = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
         rowSorter.setSortKeys(sortKeys);
 
@@ -71,6 +71,7 @@ public class MoveGrid extends Grid {
 
     private static void setColorColumn(TableColumnModel columnModel, Color backgroundColor, int column) {
         final ColorColumnRenderer renderer = new ColorColumnRenderer(backgroundColor, Color.blue);
+        //noinspection MagicConstant
         renderer.setHorizontalAlignment(columns[column].align.getSwingValue());
         columnModel.getColumn(column).setCellRenderer(renderer);
     }

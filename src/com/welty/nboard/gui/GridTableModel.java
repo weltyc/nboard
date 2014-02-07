@@ -31,4 +31,8 @@ abstract public class GridTableModel extends AbstractTableModel {
     public int getColumnSwingAlignment(int column) {
         return columns[column].align.getSwingValue();
     }
+
+    @Override public Class<?> getColumnClass(int columnIndex) {
+        return columns[columnIndex].columnClass;
+    }
 }

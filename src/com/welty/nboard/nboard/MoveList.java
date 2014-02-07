@@ -8,6 +8,7 @@ import com.welty.othello.gdk.OsMoveListItem;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -33,9 +34,9 @@ public class MoveList extends Grid {
     private static final GridColumn[] columns = {
             new GridColumn(30, "#"),
             new GridColumn(35, "Bk"),
-            new GridColumn(50, "Eval"),
+            new GridColumn(50, "Eval", Double.class),
             new GridColumn(35, "Wt"),
-            new GridColumn(50, "Eval")
+            new GridColumn(50, "Eval", Double.class)
     };
 
     MoveList(ReversiData pd) {
@@ -113,7 +114,7 @@ public class MoveList extends Grid {
 
                 }
             }
-            return "";
+            return null;
         }
 
         private void switchToPositionAt(int row, int col) {
@@ -128,9 +129,10 @@ public class MoveList extends Grid {
     }
 
     private static class MoveListTable extends JTable {
+        private static final EvalRenderer evalRenderer = new EvalRenderer();
+
         public MoveListTable(MoveListTableModel tableModel) {
             super(tableModel);
-            setDefaultRenderer(Double.class, new EvalRenderer());
 
             // disable mouse selection
             for (MouseListener l : getMouseListeners()) {
@@ -142,6 +144,14 @@ public class MoveList extends Grid {
 
             // add my own mouse listener
             addMouseListener(new MyMouseAdapter(tableModel, this));
+        }
+
+        @Override public TableCellRenderer getCellRenderer(int row, int column) {
+            if (column == 2 || column == 4) {
+                return evalRenderer;
+            } else {
+                return super.getCellRenderer(row, column);
+            }
         }
     }
 
