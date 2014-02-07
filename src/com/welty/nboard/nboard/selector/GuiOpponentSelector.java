@@ -32,13 +32,22 @@ public class GuiOpponentSelector extends OpponentSelector {
     /**
      * Data used to initialize engineSelectors on startup.
      */
-    private static final java.util.List<EngineSelector> ENGINE_SELECTORS = new ArrayList<>();
+    private static final java.util.List<EngineSelector> INTERNAL_ENGINE_SELECTORS = internalOpponentSelectors();
 
-    static {
+    /**
+     * Create a list of internal opponent selectors
+     *
+     * @return the list
+     */
+    public static List<EngineSelector> internalOpponentSelectors() {
+        final ArrayList<EngineSelector> selectors = new ArrayList<>();
+
         for (String name : SimpleEval.getEvalNames()) {
-            ENGINE_SELECTORS.add(new InternalEngineSelector(name));
+            selectors.add(new InternalEngineSelector(name));
         }
-        ENGINE_SELECTORS.add(new InternalEngineSelector("Vegtbl", true, "d2", ""));
+        selectors.add(new InternalEngineSelector("Vegtbl", true, "d2", ""));
+
+        return selectors;
     }
 
 
@@ -46,7 +55,7 @@ public class GuiOpponentSelector extends OpponentSelector {
 
     private final JDialog frame;
     private final JList<Integer> levels = new JList<>();
-    static final EngineListModel engineListModel = new EngineListModel(ENGINE_SELECTORS);
+    static final EngineListModel engineListModel = new EngineListModel(INTERNAL_ENGINE_SELECTORS);
     private final JList<EngineSelector> engineSelectors = new JList<>(engineListModel);
 
     // these are written to when the user clicks "OK"

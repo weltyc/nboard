@@ -5,13 +5,11 @@ import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.RadioGroup;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.nboard.engine.EngineSynchronizer;
-import com.welty.nboard.nboard.engine.MultiEngine;
 import com.welty.nboard.nboard.engine.ReversiWindowEngine;
 import com.welty.nboard.nboard.selector.GuiOpponentSelector;
 import com.welty.nboard.thor.DatabaseData;
 import com.welty.nboard.thor.ThorWindow;
 import com.welty.novello.core.Position;
-import com.welty.othello.api.ParsedEngine;
 import com.welty.othello.c.CReader;
 import com.welty.othello.c.CWriter;
 import com.welty.othello.core.CMove;
@@ -143,7 +141,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
         try {
-            m_engine = new EngineSynchronizer(new MultiEngine(new ParsedEngine()), GuiOpponentSelector.getInstance());
+            m_engine = new EngineSynchronizer(GuiOpponentSelector.getInstance());
         } catch (IOException e) {
             warn("Unable to start engine: " + e, "External Engine Error");
         }
@@ -894,5 +892,9 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
 
     @Override public void parseError(String command, String errorMessage) {
         warn("Engine communication error", "Illegal engine response: " + command + "\n" + errorMessage);
+    }
+
+    @Override public void engineError(String message) {
+        warn("Engine communication error", message);
     }
 }

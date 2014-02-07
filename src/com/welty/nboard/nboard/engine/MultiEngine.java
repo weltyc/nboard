@@ -22,7 +22,9 @@ public class MultiEngine extends PingEngine implements PingEngine.Listener {
     public void setEngine(int ping, PingEngine engine) {
         this.engine = engine;
         engine.addListener(this);
-        ping(ping);
+//        engine.setGame(game);
+//        engine.setContempt(contempt);
+        sendPing(ping);
     }
 
     @Override public void terminate() {
@@ -65,8 +67,8 @@ public class MultiEngine extends PingEngine implements PingEngine.Listener {
         return engine.getStatus();
     }
 
-    @Override public void ping(int ping) {
-        engine.ping(ping);
+    @Override public void sendPing(int ping) {
+        engine.sendPing(ping);
     }
 
     @Override public void statusChanged() {

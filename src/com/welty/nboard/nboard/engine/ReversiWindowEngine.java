@@ -26,15 +26,17 @@ public abstract class ReversiWindowEngine extends ListenerManager<ReversiWindowE
     public abstract void requestMove();
 
     public interface Listener {
-        public void status(String status);
+        void status(String status);
 
-        public void engineMove(OsMoveListItem mli);
+        void engineMove(OsMoveListItem mli);
 
-        public void engineReady();
+        void engineReady();
 
-        public void hint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText);
+        void hint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText);
 
-        public void parseError(String command, String errorMessage);
+        void parseError(String command, String errorMessage);
+
+        void engineError(String message);
     }
 
     /**
@@ -56,6 +58,17 @@ public abstract class ReversiWindowEngine extends ListenerManager<ReversiWindowE
     protected void fireEngineMove(OsMoveListItem mli) {
         for (Listener l : getListeners()) {
             l.engineMove(mli);
+        }
+    }
+
+    /**
+     * Notify listeners of an error.
+     *
+     * @param message error message.
+     */
+    protected void fireEngineError(String message) {
+        for (Listener l : getListeners()) {
+            l.engineError(message);
         }
     }
 

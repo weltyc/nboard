@@ -1,10 +1,14 @@
 package com.welty.nboard.nboard.engine;
 
+import com.welty.othello.api.OpponentSelection;
 import com.welty.othello.api.OpponentSelector;
 import com.welty.othello.api.PingEngine;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsMoveListItem;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 
 /**
  * This class includes functions to help ensure synchronization of the board state with
@@ -21,35 +25,36 @@ import com.welty.othello.gdk.OsMoveListItem;
 public class EngineSynchronizer extends ReversiWindowEngine implements OpponentSelector.Listener {
     private int m_ping;
     private int m_pong;
-    private final PingEngine pingEngine;
+    private final @NotNull MultiEngine multiEngine;
     private final OpponentSelector opponentSelector;
 
-    public EngineSynchronizer(PingEngine pingEngine, OpponentSelector opponentSelector) {
-        this.pingEngine = pingEngine;
+    public EngineSynchronizer(OpponentSelector opponentSelector) throws IOException {
+        final PingEngine firstEngine = opponentSelector.getOpponent().getOrCreateEngine(++m_ping);
+        this.multiEngine = new MultiEngine(firstEngine);
         this.opponentSelector = opponentSelector;
         opponentSelector.addListener(this);
-        pingEngine.addListener(new MyListener());
-        pingEngine.setMaxDepth(++m_ping, opponentSelector.getOpponent().getMaxDepth());
+        multiEngine.addListener(new MyListener());
+        multiEngine.setMaxDepth(++m_ping, opponentSelector.getOpponent().getMaxDepth());
     }
 
     @Override public synchronized void sendMove(OsMoveListItem mli) {
-        pingEngine.sendMove(++m_ping, mli);
+        multiEngine.sendMove(++m_ping, mli);
     }
 
     @Override public synchronized void setGame(COsGame game) {
-        pingEngine.setGame(++m_ping, game);
+        multiEngine.setGame(++m_ping, game);
     }
 
     @Override public synchronized String getName() {
-        return pingEngine.getName();
+        return multiEngine.getName();
     }
 
     @Override public synchronized void setContempt(int contempt) {
-        pingEngine.setContempt(++m_ping, contempt);
+        multiEngine.setContempt(++m_ping, contempt);
     }
 
     @Override public synchronized void learn() {
-        pingEngine.learn();
+        multiEngine.learn();
     }
 
     @Override public synchronized boolean isReady() {
@@ -57,16 +62,25 @@ public class EngineSynchronizer extends ReversiWindowEngine implements OpponentS
     }
 
     @Override public synchronized void requestHints(int nHints) {
-        pingEngine.requestHints(nHints);
+        multiEngine.requestHints(nHints);
     }
 
     @Override public synchronized void requestMove() {
-        pingEngine.requestMove();
+        multiEngine.requestMove();
     }
 
     @Override public synchronized void opponentChanged() {
-        final int maxDepth = opponentSelector.getOpponent().getMaxDepth();
-        pingEngine.setMaxDepth(++m_ping, maxDepth);
+        final OpponentSelection opponent = opponentSelector.getOpponent();
+        try {
+            final PingEngine newEngine = opponent.getOrCreateEngine(m_ping + 1);
+            // only update ping if we were successful
+            m_ping += 1;
+
+            multiEngine.setEngine(++m_ping, newEngine);
+        } catch (IOException e) {
+            // keep using the existing engine.
+            fireEngineError("Unable to start up " + opponent + ": " + e);
+        }
     }
 
     /**
@@ -83,7 +97,7 @@ public class EngineSynchronizer extends ReversiWindowEngine implements OpponentS
     private class MyListener implements PingEngine.Listener {
         @Override public void statusChanged() {
             synchronized (EngineSynchronizer.this) {
-                fireStatus(pingEngine.getStatus());
+                fireStatus(multiEngine.getStatus());
             }
         }
 
