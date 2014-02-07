@@ -9,6 +9,10 @@ import com.welty.othello.gdk.COsMoveListItem;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
 
 /**
@@ -23,7 +27,9 @@ import java.text.DecimalFormat;
  * To change this template use File | Settings | File Templates.
  */
 public class MoveList extends Grid {
-    private final BoardSource m_pd;
+    private final BoardSource boardSource;
+    private final MoveListTableModel tableModel;
+
     private static final GridColumn[] columns = {
             new GridColumn(30, "#"),
             new GridColumn(35, "Bk"),
@@ -39,15 +45,20 @@ public class MoveList extends Grid {
 
     private MoveList(ReversiData pd, MoveListTableModel tableModel) {
         super(tableModel, new MoveListTable(tableModel), true, true, false);
-        m_pd = pd;
-        getTable().setColumnSelectionAllowed(true);
+        boardSource = pd;
+        this.tableModel = tableModel;
+        final JTable table = getTable();
+        table.setRowSelectionAllowed(true);
+        table.setColumnSelectionAllowed(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
-        m_pd.AddListener(new SignalListener<COsMoveListItem>() {
+
+        boardSource.AddListener(new SignalListener<COsMoveListItem>() {
             public void handleSignal(COsMoveListItem data) {
-                final int iMove = m_pd.IMove();
+                final int iMove = boardSource.IMove();
                 final int col = field(iMove);
                 final int row = item(iMove);
-                setSelectedCell(row, col);
+                setSelectedRange(row, row, col, col + 1);
                 repaint();
             }
         });
@@ -57,15 +68,7 @@ public class MoveList extends Grid {
      * Switch the displayed position to the one that the user clicked on.
      */
     public void MouseDataClick(int row, int col) {
-        if (row >= 0) {
-            // row < 0 is header row? maybe
-            if ((col & 1) != 0) {
-                int iMove = IMove(row, col);
-                if (iMove <= m_pd.NMoves()) {
-                    m_pd.SetIMove(iMove);
-                }
-            }
-        }
+        tableModel.switchToPositionAt(row, col);
     }
 
     private static int IMove(int item, int field) {
@@ -81,15 +84,15 @@ public class MoveList extends Grid {
     }
 
     private static class MoveListTableModel extends GridTableModel {
-        private final BoardSource m_pd;
+        private final BoardSource boardSource;
 
-        public MoveListTableModel(ReversiData pd) {
+        public MoveListTableModel(BoardSource boardSource) {
             super(columns);
-            m_pd = pd;
+            this.boardSource = boardSource;
         }
 
         public int getRowCount() {
-            return (m_pd.NMoves() + 2) / 2;
+            return (boardSource.NMoves() + 2) / 2;
         }
 
         public Object getValueAt(int item, int field) {
@@ -101,8 +104,8 @@ public class MoveList extends Grid {
                 iMove++;
                 field -= 2;
             }
-            if (iMove < m_pd.NMoves()) {
-                COsMoveListItem mli = m_pd.Game().ml.get(iMove);
+            if (iMove < boardSource.NMoves()) {
+                COsMoveListItem mli = boardSource.Game().ml.get(iMove);
                 if (field == 1) {
                     return mli.mv.toString();
                 } else {
@@ -112,20 +115,52 @@ public class MoveList extends Grid {
             }
             return "";
         }
+
+        private void switchToPositionAt(int row, int col) {
+            // row < 0 is header row? maybe
+            if (row >= 0 && col >= 1) {
+                int iMove = IMove(row, col);
+                if (iMove <= boardSource.NMoves()) {
+                    boardSource.SetIMove(iMove);
+                }
+            }
+        }
     }
 
     private static class MoveListTable extends JTable {
-        @Override public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
-            if ((columnIndex & 1) == 1) {
-                super.changeSelection(rowIndex, columnIndex, toggle, extend);
-            }
-        }
-
         public MoveListTable(MoveListTableModel tableModel) {
             super(tableModel);
             setDefaultRenderer(Double.class, new EvalRenderer());
+
+            // disable mouse selection
+            for (MouseListener l : getMouseListeners()) {
+                removeMouseListener(l);
+            }
+            for (MouseMotionListener l : getMouseMotionListeners()) {
+                removeMouseMotionListener(l);
+            }
+
+            // add my own mouse listener
+            addMouseListener(new MyMouseAdapter(tableModel, this));
         }
     }
+
+    private static class MyMouseAdapter extends MouseAdapter {
+        private final MoveListTableModel model;
+        private final JTable jTable;
+
+        public MyMouseAdapter(MoveListTableModel model, JTable jTable) {
+            this.model = model;
+            this.jTable = jTable;
+        }
+
+        @Override public void mousePressed(MouseEvent e) {
+            final int row = jTable.rowAtPoint(e.getPoint());
+            final int col = jTable.columnAtPoint(e.getPoint());
+            model.switchToPositionAt(row, col);
+        }
+    }
+
 
     private static class EvalRenderer extends DefaultTableCellRenderer {
         private static final DecimalFormat numberFormat = new DecimalFormat("#.0");

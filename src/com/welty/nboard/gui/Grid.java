@@ -87,9 +87,12 @@ public abstract class Grid extends JScrollPane {
     }
 
     protected void setSelectedCell(int row, int col) {
-        final JTable table = getTable();
-        table.getColumnModel().getSelectionModel().setSelectionInterval(col, col);
-        this.table.getSelectionModel().setSelectionInterval(row, row);
+        setSelectedRange(row, row, col, col);
+    }
+
+    protected void setSelectedRange(int row0, int row1, int col0, int col1) {
+        table.getColumnModel().getSelectionModel().setSelectionInterval(col0, col1);
+        table.getSelectionModel().setSelectionInterval(row0, row1);
     }
 
     protected abstract void MouseDataClick(int modelRow, int modelCol);
@@ -128,8 +131,7 @@ public abstract class Grid extends JScrollPane {
         private double value(String a) {
             try {
                 return Double.parseDouble(a);
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 return Double.NEGATIVE_INFINITY;
             }
         }
