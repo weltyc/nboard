@@ -174,10 +174,10 @@ public class ReversiData implements BoardSource {
                 int newSquare = Thor.MoveFromIReflection(oldSquare, iReflection);
                 int newCol = Col(newSquare);
                 int newRow = Row(newSquare);
-                newStart.SetPiece(newRow, newCol, m_game.posStart.board.Piece(row, col));
+                newStart.setPiece(newRow, newCol, m_game.posStart.board.getPiece(row, col));
             }
         }
-        m_game.posStart.board.Set(newStart);
+        m_game.posStart.board.copy(newStart);
 
         for (int i = 0; i < m_game.ml.size(); i++) {
             OsMoveListItem mli = m_game.ml.get(i);
@@ -233,7 +233,7 @@ public class ReversiData implements BoardSource {
 
 
             m_game.Update(mli);
-            if (m_game.pos.board.GameOver()) {
+            if (m_game.pos.board.isGameOver()) {
                 if (optionSource.EngineLearnAll()) {
                     engineTalker.TellEngineToLearn();
                 }

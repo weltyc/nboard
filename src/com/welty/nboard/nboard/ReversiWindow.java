@@ -6,11 +6,12 @@ import com.welty.nboard.gui.RadioGroup;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.nboard.engine.EngineSynchronizer;
 import com.welty.nboard.nboard.engine.MultiEngine;
-import com.welty.nboard.nboard.engine.ParsedEngine;
 import com.welty.nboard.nboard.engine.ReversiWindowEngine;
+import com.welty.nboard.nboard.selector.GuiOpponentSelector;
 import com.welty.nboard.thor.DatabaseData;
 import com.welty.nboard.thor.ThorWindow;
 import com.welty.novello.core.Position;
+import com.welty.othello.api.ParsedEngine;
 import com.welty.othello.c.CReader;
 import com.welty.othello.c.CWriter;
 import com.welty.othello.core.CMove;
@@ -18,7 +19,6 @@ import com.welty.othello.core.OperatingSystem;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsPosition;
 import com.welty.othello.gdk.OsMoveListItem;
-import com.welty.othello.gui.selector.GuiOpponentSelector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -287,11 +287,11 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
                 COsPosition displayedPosition = reversiData.DisplayedPosition();
                 for (int row = 0; row < n; row++) {
                     for (int col = 0; col < n; col++) {
-                        os.append(displayedPosition.board.Piece(row, col));
+                        os.append(displayedPosition.board.getPiece(row, col));
                     }
                     os.append("\n");
                 }
-                os.append(reversiData.Game().pos.board.CMover());
+                os.append(reversiData.Game().pos.board.getMoverChar());
                 SetClipboardText(os.toString());
 
             }
@@ -329,7 +329,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
                         COsGame game = new COsGame();
                         game.Clear();
                         game.SetDefaultStartPos();
-                        game.posStart.board.In(is);
+                        game.posStart.board.in(is);
                         game.CalcCurrentPos();
                         reversiData.Update(game, true);
                     } catch (IllegalArgumentException ex) {
@@ -607,7 +607,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
      * EngineLearnAll is true
      */
     public void MayLearn() {
-        if (reversiData.Game().pos.board.GameOver()) {
+        if (reversiData.Game().pos.board.isGameOver()) {
             if (engineLearnAll.isSelected()) {
                 TellEngineToLearn();
             }
@@ -745,7 +745,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         if (m_engine.isReady()) {
             boolean isHint;
 
-            if (reversiData.DisplayedPosition().board.GameOver()) {
+            if (reversiData.DisplayedPosition().board.isGameOver()) {
                 // do nothing. learning is handled in the Update function now to ensure
                 // that the engine is learning the right game, and learning it just once.
                 return;

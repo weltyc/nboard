@@ -2,19 +2,18 @@ package com.welty.nboard.thor;
 
 import com.orbanova.common.misc.Require;
 import com.welty.othello.c.CBinaryReader;
-import com.welty.othello.gdk.OsBoard;
 import com.welty.othello.core.CBitBoard;
 import com.welty.othello.core.CMove;
 import com.welty.othello.core.CMoves;
 import com.welty.othello.core.CQPosition;
-
-import static com.welty.othello.core.Utils.*;
-
+import com.welty.othello.gdk.OsBoard;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.procedure.TObjectProcedure;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+
+import static com.welty.othello.core.Utils.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -287,9 +286,9 @@ public class Thor {
     static TThorSummary ThorSummarize(final ArrayList<ThorGameInternal> games, final OsBoard pos, final TIntArrayList index, final TIntArrayList iReflections) {
         TThorSummary summary = new TThorSummary();
 
-        final boolean fMustPass = !pos.HasLegalMove() && !pos.GameOver();
+        final boolean fMustPass = !pos.hasLegalMove() && !pos.isGameOver();
 
-        final int iMove = 60 - pos.NEmpty();
+        final int iMove = 60 - pos.nEmpty();
         for (int i = 0; i < index.size(); i++) {
             final ThorGameInternal game = games.get(index.get(i));
 

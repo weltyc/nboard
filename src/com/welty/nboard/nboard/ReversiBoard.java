@@ -106,7 +106,7 @@ class ReversiBoard extends JPanel {
      * @return the piece code to display on the screen based on location and legal-moves flag
      */
     private static char PieceToPaint(int ix, int iy, COsPosition pos, char pcBackground) {
-        char piece = pos.board.Piece(iy, ix);
+        char piece = pos.board.getPiece(iy, ix);
         if (piece == OsBoard.EMPTY && pcBackground != 0)
             piece = pcBackground;
         return piece;
@@ -127,7 +127,7 @@ class ReversiBoard extends JPanel {
             case 0:
                 return 0;
             case 1:
-                return board.IsMoveLegal(mv.toOsMove()) ? 'L' : 0;
+                return board.isMoveLegal(mv.toOsMove()) ? 'L' : 0;
             case 2:
                 if (optionSource.ShowEvals()) {
                     final Hint hint = m_hints.get((byte) mv.Square());
@@ -230,13 +230,13 @@ class ReversiBoard extends JPanel {
             if (ix >= 0 && ix < n && iy >= 0 && iy < n) {
                 final COsPosition displayedPosition = m_pd.DisplayedPosition();
                 final OsMove mv;
-                if (displayedPosition.board.HasLegalMove()) {
+                if (displayedPosition.board.hasLegalMove()) {
                     mv = new OsMove(iy, ix);
                 } else {
                     mv = OsMove.PASS;
                 }
 
-                if (displayedPosition.board.IsMoveLegal(mv)) {
+                if (displayedPosition.board.isMoveLegal(mv)) {
                     // legal move, make the move and send to the engine.
                     m_pd.Update(new OsMoveListItem(mv), true);
                 }

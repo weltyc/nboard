@@ -47,10 +47,10 @@ class ScoreWindow extends JPanel {
                 whitePanel.player.setText(m_pd.Game().pis[0].sName);
                 whitePanel.score.setText(Integer.toString(pieceCounts.nWhite));
                 emptiesPanel.score.setText(Integer.toString(pieceCounts.nEmpty));
-                if (board.GameOver()) {
+                if (board.isGameOver()) {
                     blackPanel.setBackground(null);
                     whitePanel.setBackground(null);
-                } else if (board.blackMove()) {
+                } else if (board.isBlackMove()) {
                     blackPanel.setBackground(Color.RED);
                     whitePanel.setBackground(null);
                 } else {

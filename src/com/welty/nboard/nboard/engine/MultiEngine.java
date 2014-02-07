@@ -1,6 +1,6 @@
 package com.welty.nboard.nboard.engine;
 
-import com.welty.othello.api.PingApiEngine;
+import com.welty.othello.api.PingEngine;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsMoveListItem;
@@ -11,15 +11,15 @@ import org.jetbrains.annotations.NotNull;
  * <p/>
  * No synchronization is performed; instead the caller checks the ping state.
  */
-public class MultiEngine extends PingApiEngine implements PingApiEngine.Listener {
-    private volatile @NotNull PingApiEngine engine;
+public class MultiEngine extends PingEngine implements PingEngine.Listener {
+    private volatile @NotNull PingEngine engine;
 
-    public MultiEngine(@NotNull PingApiEngine engine) {
+    public MultiEngine(@NotNull PingEngine engine) {
         this.engine = engine;
         engine.addListener(this);
     }
 
-    public void setEngine(int ping, PingApiEngine engine) {
+    public void setEngine(int ping, PingEngine engine) {
         this.engine = engine;
         engine.addListener(this);
         ping(ping);

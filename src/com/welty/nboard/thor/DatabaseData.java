@@ -178,7 +178,7 @@ public class DatabaseData extends GridTableModel {
      * Look up a position in the database, filter, set summary, and signal that this has been done.
      */
     public void LookUpPosition(final OsBoard pos) {
-        if (pos.NEmpty() > 3) {
+        if (pos.nEmpty() > 3) {
             // look up position
             final MatchingPositions matchingPositions = ddm.findMatchingPositions(pos);
             m_index = matchingPositions.index;

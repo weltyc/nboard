@@ -1,6 +1,7 @@
 package com.welty.nboard.nboard.engine;
 
 import com.welty.othello.api.NBoardEngine;
+import com.welty.othello.api.ParsedEngine;
 import junit.framework.TestCase;
 
 import java.io.IOException;

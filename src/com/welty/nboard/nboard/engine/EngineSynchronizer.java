@@ -1,7 +1,7 @@
 package com.welty.nboard.nboard.engine;
 
 import com.welty.othello.api.OpponentSelector;
-import com.welty.othello.api.PingApiEngine;
+import com.welty.othello.api.PingEngine;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsMoveListItem;
@@ -21,10 +21,10 @@ import com.welty.othello.gdk.OsMoveListItem;
 public class EngineSynchronizer extends ReversiWindowEngine implements OpponentSelector.Listener {
     private int m_ping;
     private int m_pong;
-    private final PingApiEngine pingEngine;
+    private final PingEngine pingEngine;
     private final OpponentSelector opponentSelector;
 
-    public EngineSynchronizer(PingApiEngine pingEngine, OpponentSelector opponentSelector) {
+    public EngineSynchronizer(PingEngine pingEngine, OpponentSelector opponentSelector) {
         this.pingEngine = pingEngine;
         this.opponentSelector = opponentSelector;
         opponentSelector.addListener(this);
@@ -80,7 +80,7 @@ public class EngineSynchronizer extends ReversiWindowEngine implements OpponentS
     }
 
 
-    private class MyListener implements PingApiEngine.Listener {
+    private class MyListener implements PingEngine.Listener {
         @Override public void statusChanged() {
             synchronized (EngineSynchronizer.this) {
                 fireStatus(pingEngine.getStatus());
