@@ -13,7 +13,7 @@ H11  X   Click on database game should use the correct game
 H12  X   Display progress window when loading games database
 H13  X   Notify user with dialog box when engine gives a bad hint
 H14  X   Notify engine of start position on new game
-H15      Edax looping infinitely on hint
+H15  X   Edax looping infinitely on hint
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key

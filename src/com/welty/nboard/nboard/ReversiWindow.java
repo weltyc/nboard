@@ -56,6 +56,12 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
     private final Hints m_hints;
     private final DatabaseData dd;
 
+    /**
+     * If this is true, the window needs to request an update from the engine.
+     * It hasn't already done it because the engine was not ready.
+     */
+    private boolean needsLove;
+
     DatabaseData PD() {
         return m_pwThor.PD();
     }
@@ -109,6 +115,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         reversiData.AddListener(new SignalListener<OsMoveListItem>() {
 
             public void handleSignal(OsMoveListItem data) {
+                needsLove = true;
                 TellEngineWhatToDo();
             }
         }
@@ -154,6 +161,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         // the responses to be displayed in
         m_statusBar.SetStatus("Loading Engine");
         m_engine.addListener(this);
+        needsLove = true;
         TellEngineWhatToDo();
     }
 
@@ -673,6 +681,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
     void SetMode(int mode, boolean updateUsers) {
         reversiData.SetNames(getPlayerName((mode & 1) != 0), getPlayerName(((mode & 2) != 0)), updateUsers);
         if (updateUsers) {
+            needsLove = true;
             TellEngineWhatToDo();
         }
     }
@@ -723,7 +732,8 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
      * If the engine is ready, we will call it as soon as the board is updated.
      */
     void TellEngineWhatToDo() {
-        if (m_engine.isReady()) {
+        if (m_engine.isReady() && needsLove) {
+            needsLove = false;
             boolean isHint;
 
             if (reversiData.DisplayedPosition().board.isGameOver()) {
@@ -838,6 +848,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
 
     private final ActionListener engineUpdater = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
+            needsLove = true;
             TellEngineWhatToDo();
             m_prb.repaint();
         }
