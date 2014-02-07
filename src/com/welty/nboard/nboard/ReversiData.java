@@ -82,12 +82,7 @@ public class ReversiData implements BoardSource {
     private static final int n = 8;
 
     public COsMove NextMove() {
-        COsMove mv = new COsMove();
-        if (Reviewing())
-            mv = m_game.ml.get(m_iMove).mv;
-        else
-            mv.SetPass();
-        return mv;
+        return Reviewing() ? m_game.ml.get(m_iMove).mv : COsMove.PASS;
     }
 
     /**

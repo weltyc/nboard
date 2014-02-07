@@ -230,10 +230,11 @@ class ReversiBoard extends JPanel {
             if (ix >= 0 && ix < n && iy >= 0 && iy < n) {
                 COsMove mv = new COsMove();
                 COsPosition displayedPosition = m_pd.DisplayedPosition();
-                if (displayedPosition.board.HasLegalMove())
+                if (displayedPosition.board.HasLegalMove()) {
                     mv.Set(iy, ix);
-                else
-                    mv.SetPass();
+                } else {
+                    mv = COsMove.PASS;
+                }
 
                 if (displayedPosition.board.IsMoveLegal(mv)) {
                     // legal move, make the move and send to the engine.
