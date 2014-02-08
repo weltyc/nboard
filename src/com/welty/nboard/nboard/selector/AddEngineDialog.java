@@ -63,7 +63,7 @@ class AddEngineDialog extends JDialog {
 
         final String osName = (OperatingSystem.os == OperatingSystem.MACINTOSH) ? "Mac" : "Win";
         final String helpFile = "OpponentSelectionWindow_" + osName + ".html";
-        final InputStream in = GuiOpponentSelector.class.getResourceAsStream(helpFile);
+        final InputStream in = AddEngineDialog.class.getResourceAsStream(helpFile);
         final String helpHtml = Feeds.ofLines(in).join("\n");
 
         add(vBox(
