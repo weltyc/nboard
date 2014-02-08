@@ -27,6 +27,7 @@ L8   X   MoveList should highlight both the move and its eval. Clicking on move 
 L9   X   MoveList should display nothing if eval = 0.
 L10  X   MoveList displays eval*100 for internal engines
 L11  X   MoveList displays too many decimal places for eval, should display just 1
+L12      Hints are displayed after a self-play game is over
 
 F1       External engine window
 F1a  X   Remove depth parameter from NBoardEngine
