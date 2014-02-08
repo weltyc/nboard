@@ -15,6 +15,7 @@ H13  X   Notify user with dialog box when engine gives a bad hint
 H14  X   Notify engine of start position on new game
 H15  X   Edax looping infinitely on hint
 H16  X   Exception when trying to add new opponent
+H17  X   Board display messed up on Windows
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key
@@ -28,8 +29,11 @@ L9   X   MoveList should display nothing if eval = 0.
 L10  X   MoveList displays eval*100 for internal engines
 L11  X   MoveList displays too many decimal places for eval, should display just 1
 L12      Hints are displayed after a self-play game is over
+L13      Eval displaying as "-1073" when Abigail passes.
+L14      Abigail's Engine Status is never updated
+L15      Hints are displayed on the first move of the game if it's user to move
 
-F1       External engine window
+F1   X   External engine window
 F1a  X   Remove depth parameter from NBoardEngine
 F1b  NF  Simplify construction of SyncPlayer, we almost always construct an EvalSyncEngine right there.  [not really]
 F2   X   Alternate start positions

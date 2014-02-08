@@ -1,5 +1,6 @@
 package com.welty.nboard.nboard;
 
+import com.orbanova.common.jsb.JSwingBuilder;
 import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.RadioGroup;
@@ -33,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.orbanova.common.jsb.JSwingBuilder.*;
 import static com.welty.nboard.gui.MenuItemBuilder.menuItem;
 
 /**
@@ -41,7 +43,8 @@ import static com.welty.nboard.gui.MenuItemBuilder.menuItem;
  * <p/>
  * See the ParsedEngine class for a description of synchronization issues.
  */
-public class ReversiWindow extends JFrame implements OptionSource, EngineTalker, ReversiWindowEngine.Listener {
+public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowEngine.Listener {
+    private final JFrame frame;
     private ReversiWindowEngine m_engine;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData reversiData;
@@ -91,24 +94,10 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
 
 
     ReversiWindow() {
-        super("NBoard");
+
         startPositionManager = new StartPositionManagerImpl();
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            @Override public void windowClosing(WindowEvent e) {
-                setVisible(false);
-                for (Runnable hook : shutdownHooks) {
-                    hook.run();
-                }
-            }
-        });
-        final String path = "small.PNG";
-        final ImageIcon icon = NBoard.getImage(path);
-        setIconImage(icon.getImage());
 
         reversiData = new ReversiData(this, this);
-        chooser = new GgfFileChooser(this);
-        setResizable(false);
         m_pgsw = new GameSelectionWindow(this);
         dd = new DatabaseData(this, reversiData);
         m_pwThor = new ThorWindow(this, reversiData, dd);
@@ -129,18 +118,6 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         m_pmg = new MoveGrid(reversiData, PD(), m_hints);
 
         Grid m_pml = new MoveList(reversiData);
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
-        leftPanel.add(m_statusBar = new StatusBar(reversiData));
-        leftPanel.add(new ScoreWindow(reversiData));
-        leftPanel.add(m_prb = new ReversiBoard(reversiData, this, m_hints));
-        leftPanel.add(m_pmg);
-
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.LINE_AXIS));
-        mainPanel.add(leftPanel);
-        mainPanel.add(m_pml);
-        add(mainPanel);
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
         try {
@@ -149,20 +126,47 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
             warn("Unable to start engine: " + e, "External Engine Error");
         }
 
-        createMenus(startPositionManager);
+        final JMenuBar menuBar = createMenus(startPositionManager);
 
         reversiData.AddListener(m_hints);
 
-        pack();
-        setVisible(true);
-
-
         // engine initialization - do this after we've constructed the windows for
         // the responses to be displayed in
-        m_statusBar.SetStatus("Loading Engine");
         m_engine.addListener(this);
         needsLove = true;
         TellEngineWhatToDo();
+
+        frame = JSwingBuilder.frame("NBoard", WindowConstants.EXIT_ON_CLOSE, menuBar,
+                hBox(
+                        vBox(
+                                m_statusBar = new StatusBar(reversiData),
+                                new ScoreWindow(reversiData),
+                                m_prb = new ReversiBoard(reversiData, this, m_hints),
+                                m_pmg
+                        )
+                        , m_pml
+                )
+
+        );
+        m_statusBar.SetStatus("Loading Engine");
+
+        //////
+        // decorate frame
+        //////////////////////
+        final String path = "small.PNG";
+        final ImageIcon icon = NBoard.getImage(path);
+        frame.setIconImage(icon.getImage());
+        frame.setResizable(false);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override public void windowClosing(WindowEvent e) {
+                e.getWindow().setVisible(false);
+                for (Runnable hook : shutdownHooks) {
+                    hook.run();
+                }
+            }
+        });
+
+        chooser = new GgfFileChooser(frame);
     }
 
     /**
@@ -170,7 +174,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
      *
      * @param startPositionManager source of start positions
      */
-    void createMenus(StartPositionManager startPositionManager) {
+    JMenuBar createMenus(StartPositionManager startPositionManager) {
         JMenuBar menuBar = new JMenuBar();
 
         menuBar.add(createMenuItem("&File", createFileMenu()));
@@ -229,7 +233,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
 
         menuBar.add(createMenuItem("&Database", m_thorMenu));
 
-        setJMenuBar(menuBar);
+       return menuBar;
     }
 
     private JMenu createGamesMenu(StartPositionManager startPositionManager) {
@@ -350,7 +354,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
     }
 
     private void warn(String msg, String title) {
-        JOptionPane.showMessageDialog(this, msg, title, JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(frame, msg, title, JOptionPane.WARNING_MESSAGE);
     }
 
     private JMenuItem createMoveMenu() {
@@ -416,7 +420,7 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
         final String text = OperatingSystem.os.isMacintosh() ? "&Quit\tCtrl+Q" : "E&xit";
         m_fileMenu.add(menuItem(text).build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                getToolkit().getSystemEventQueue().postEvent(new WindowEvent(ReversiWindow.this, WindowEvent.WINDOW_CLOSING));
+                frame.getToolkit().getSystemEventQueue().postEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
             }
         }));
         return m_fileMenu;
@@ -838,12 +842,12 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
     }
 
     public void BringToTop() {
-        if (getExtendedState() == Frame.ICONIFIED) {
-            setExtendedState(Frame.NORMAL);
+        if (frame.getExtendedState() == Frame.ICONIFIED) {
+            frame.setExtendedState(Frame.NORMAL);
         }
-        setVisible(true);
-        toFront();
-        repaint();
+        frame.setVisible(true);
+        frame.toFront();
+        frame.repaint();
     }
 
     private final ActionListener engineUpdater = new ActionListener() {
@@ -894,5 +898,9 @@ public class ReversiWindow extends JFrame implements OptionSource, EngineTalker,
 
     @Override public void engineError(String message) {
         warn("Engine communication error", message);
+    }
+
+    public void repaint() {
+        frame.repaint();
     }
 }

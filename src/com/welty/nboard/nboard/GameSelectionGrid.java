@@ -48,7 +48,7 @@ class GameSelectionGrid extends Grid {
     private static final int[] gameTextFieldFromColumn = {0, 1, 2, 4, 6};
 
     static class GameSelectionTableModel extends GridTableModel {
-        private ArrayList<GgfGameText> m_gts = new ArrayList<GgfGameText>();
+        private ArrayList<GgfGameText> m_gts = new ArrayList<>();
         private final ReversiWindow m_pwTarget;
 
         public GameSelectionTableModel(ReversiWindow pwTarget) {

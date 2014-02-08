@@ -14,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 
 /**
  * Display the board (with pieces, evals, etc)
@@ -254,8 +255,13 @@ class ReversiBoard extends JPanel {
     }
 
     public void paint(Graphics gd) {
+//        System.out.println("I am at " + this.getBounds() + " relative to my parent; "
+//                + this.getLocationOnScreen() + " on the screen");
+
         COsPosition pos = m_pd.DisplayedPosition();
-        //gd.FillRect(GetClientRect(), Z::Color::red);
+        gd.setColor(new Color(0xFF, 0xCC, 0x88));
+        final Dimension size = getSize();
+        gd.fillRect(0,0,size.width, size.height);
 
         // draw squares
         // hints in bold
