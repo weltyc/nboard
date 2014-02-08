@@ -130,12 +130,6 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         reversiData.AddListener(m_hints);
 
-        // engine initialization - do this after we've constructed the windows for
-        // the responses to be displayed in
-        m_engine.addListener(this);
-        needsLove = true;
-        TellEngineWhatToDo();
-
         frame = JSwingBuilder.frame("NBoard", WindowConstants.EXIT_ON_CLOSE, menuBar,
                 hBox(
                         vBox(
@@ -167,6 +161,12 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         });
 
         chooser = new GgfFileChooser(frame);
+
+        // engine initialization - do this after we've constructed the windows for
+        // the responses to be displayed in
+        m_engine.addListener(this);
+        needsLove = true;
+        TellEngineWhatToDo();
     }
 
     /**
