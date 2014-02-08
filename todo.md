@@ -29,7 +29,7 @@ L10  X   MoveList displays eval*100 for internal engines
 L11  X   MoveList displays too many decimal places for eval, should display just 1
 
 F1       External engine window
-F1a      Remove depth parameter from NBoardEngine
+F1a  X   Remove depth parameter from NBoardEngine
 F1b      Simplify construction of SyncPlayer, we almost always construct an EvalSyncEngine right there.
 F2   X   Alternate start positions
 F3       Internal engines should support NBoard protocol
