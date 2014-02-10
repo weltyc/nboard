@@ -35,6 +35,7 @@ L15      Hints are displayed on the first move of the game when switching users'
 L16      "Engine communication error" dialog not displaying reason.
 
 CC1      Make CMove immutable?
+CC2      Make HintResponse.eval into a parsed class rather than an unparsed string
 
 F1   X   External engine window
 F1a  X   Remove depth parameter from NBoardEngine

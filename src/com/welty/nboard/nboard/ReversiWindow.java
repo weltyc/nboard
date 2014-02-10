@@ -34,7 +34,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.orbanova.common.jsb.JSwingBuilder.*;
+import static com.orbanova.common.jsb.JSwingBuilder.hBox;
+import static com.orbanova.common.jsb.JSwingBuilder.vBox;
 import static com.welty.nboard.gui.MenuItemBuilder.menuItem;
 
 /**
@@ -121,7 +122,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
         try {
-            m_engine = new EngineSynchronizer(GuiOpponentSelector.getInstance());
+            m_engine = new EngineSynchronizer(GuiOpponentSelector.getInstance(), this);
         } catch (IOException e) {
             warn("Unable to start engine: " + e, "External Engine Error");
         }
@@ -164,7 +165,6 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         // engine initialization - do this after we've constructed the windows for
         // the responses to be displayed in
-        m_engine.addListener(this);
         needsLove = true;
         TellEngineWhatToDo();
     }
@@ -233,7 +233,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         menuBar.add(createMenuItem("&Database", m_thorMenu));
 
-       return menuBar;
+        return menuBar;
     }
 
     private JMenu createGamesMenu(StartPositionManager startPositionManager) {
@@ -353,7 +353,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         return m_editMenu;
     }
 
-    private void warn(String msg, String title) {
+    private void warn(String title, String msg) {
         JOptionPane.showMessageDialog(frame, msg, title, JOptionPane.WARNING_MESSAGE);
     }
 

@@ -4,7 +4,6 @@ import com.welty.nboard.nboard.selector.GuiOpponentSelector;
 import com.welty.othello.api.OpponentSelection;
 import com.welty.othello.api.OpponentSelector;
 import com.welty.othello.api.SearchState;
-import com.welty.othello.api.StatelessEngine;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsMoveListItem;
 import com.welty.othello.gui.selector.EngineSelector;
@@ -18,17 +17,15 @@ public class EngineSynchronizerTest extends TestCase {
     private static final List<EngineSelector> selectors = GuiOpponentSelector.internalOpponentSelectors();
 
     public void testSingleEngine() throws IOException {
-        final StatelessEngine engine0 = selectors.get(0).createPingEngine(3);
-        assertNotNull(engine0);
-
         // set the game with the first engine
         OpponentSelector selector = Mockito.mock(OpponentSelector.class);
         stubSelector(selector, 0, 1);
-        final EngineSynchronizer sync = new EngineSynchronizer(selector);
+
+        final ReversiWindowEngine.Listener rwl = Mockito.mock(ReversiWindowEngine.Listener.class);
+
+        final EngineSynchronizer sync = new EngineSynchronizer(selector, rwl);
 
         // now request a move.
-        final EngineSynchronizer.Listener listener = Mockito.mock(EngineSynchronizer.Listener.class);
-        sync.addListener(listener);
         sync.requestMove(createState());
 
         // this test assumes that the engine returned its move in the same thread this method is
@@ -36,7 +33,7 @@ public class EngineSynchronizerTest extends TestCase {
         // that currently happens for internal engines.
         //
         // If this behaviour changes, stub a Listener and use wait/notify to verify that we received the message.
-        Mockito.verify(listener).engineMove(Mockito.any(OsMoveListItem.class));
+        Mockito.verify(rwl).engineMove(Mockito.any(OsMoveListItem.class));
     }
 
     private static void stubSelector(OpponentSelector selector, int engineSelectorIndex, int maxDepth) {
@@ -50,15 +47,15 @@ public class EngineSynchronizerTest extends TestCase {
         final OpponentSelector stub = Mockito.mock(OpponentSelector.class);
         stubSelector(stub, 0, 1);
 
+        final ReversiWindowEngine.Listener rwl = Mockito.mock(ReversiWindowEngine.Listener.class);
 
         // set the game with the first engine
-        final EngineSynchronizer sync = new EngineSynchronizer(stub);
+        final EngineSynchronizer sync = new EngineSynchronizer(stub, rwl);
 
         // now switch engines and request a move. The second engine should have received a position.
         stubSelector(stub, 1, 2);
         sync.opponentChanged();
         final EngineSynchronizer.Listener listener = Mockito.mock(EngineSynchronizer.Listener.class);
-        sync.addListener(listener);
         sync.requestMove(createState());
 
         // this test assumes that the engine returned its move in the same thread this method is

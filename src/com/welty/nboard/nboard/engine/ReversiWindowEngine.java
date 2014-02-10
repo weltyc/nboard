@@ -1,6 +1,5 @@
 package com.welty.nboard.nboard.engine;
 
-import com.orbanova.common.misc.ListenerManager;
 import com.welty.othello.api.SearchState;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.OsMoveListItem;
@@ -9,20 +8,20 @@ import org.jetbrains.annotations.NotNull;
 /**
  * An engine using the interface expected by the ReversiWindow
  */
-public abstract class ReversiWindowEngine extends ListenerManager<ReversiWindowEngine.Listener> {
+public interface ReversiWindowEngine {
 
-    public abstract String getName();
+    String getName();
 
     /**
      * @return true if the engine is up-to-date (it has responded to all pings).
      */
-    public abstract boolean isReady();
+    boolean isReady();
 
-    public abstract void learn(@NotNull SearchState state);
+    void learn(@NotNull SearchState state);
 
-    public abstract void requestHints(@NotNull SearchState state, int nHints);
+    void requestHints(@NotNull SearchState state, int nHints);
 
-    public abstract void requestMove(@NotNull SearchState state);
+    void requestMove(@NotNull SearchState state);
 
     public interface Listener {
         void status(String status);

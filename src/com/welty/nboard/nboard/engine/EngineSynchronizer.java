@@ -1,10 +1,12 @@
 package com.welty.nboard.nboard.engine;
 
+import com.orbanova.common.misc.Require;
 import com.welty.othello.api.*;
 import com.welty.othello.core.CMove;
-import com.welty.othello.gdk.OsMoveListItem;
+import com.welty.othello.protocol.*;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.io.IOException;
 
 /**
@@ -19,48 +21,58 @@ import java.io.IOException;
  * <p/>
  * - If isReady() returns false then messages from the engine relate to a previous board state and can be ignored.
  */
-public class EngineSynchronizer extends ReversiWindowEngine implements OpponentSelector.Listener {
+public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector.Listener {
     private final PingPong pingPong = new PingPong();
 
     private final @NotNull MultiEngine multiEngine;
     private final OpponentSelector opponentSelector;
+    private final ReversiWindowEngine.Listener listener;
+    private final ResponseHandler responseHandler;
 
-    public EngineSynchronizer(OpponentSelector opponentSelector) throws IOException {
-        final StatelessEngine firstEngine = opponentSelector.getOpponent().getOrCreateEngine();
+    public EngineSynchronizer(OpponentSelector opponentSelector, ReversiWindowEngine.Listener listener) throws IOException {
+        verifyEdt();
+        this.listener = listener;
+        responseHandler = new MyResponder();
+        final StatelessEngine firstEngine = opponentSelector.getOpponent().getOrCreateEngine(responseHandler);
         this.multiEngine = new MultiEngine(firstEngine);
         this.opponentSelector = opponentSelector;
         opponentSelector.addListener(this);
-        multiEngine.addListener(new MyListener());
     }
 
-    @Override public synchronized String getName() {
+    @Override public String getName() {
+        verifyEdt();
         return multiEngine.getName();
     }
 
-    @Override public synchronized void learn(@NotNull SearchState state) {
+    @Override public void learn(@NotNull SearchState state) {
+        verifyEdt();
         multiEngine.learn(pingPong, state);
     }
 
-    @Override public synchronized boolean isReady() {
+    @Override public boolean isReady() {
+        verifyEdt();
         return multiEngine.isReady();
     }
 
-    @Override public synchronized void requestHints(@NotNull SearchState state, int nHints) {
+    @Override public void requestHints(@NotNull SearchState state, int nHints) {
+        verifyEdt();
         multiEngine.requestHints(pingPong, state, nHints);
     }
 
-    @Override public synchronized void requestMove(@NotNull SearchState state) {
+    @Override public void requestMove(@NotNull SearchState state) {
+        verifyEdt();
         multiEngine.requestMove(pingPong, state);
     }
 
-    @Override public synchronized void opponentChanged() {
+    @Override public void opponentChanged() {
+        verifyEdt();
         final OpponentSelection opponent = opponentSelector.getOpponent();
         try {
-            final StatelessEngine newEngine = opponent.getOrCreateEngine();
+            final StatelessEngine newEngine = opponent.getOrCreateEngine(responseHandler);
             multiEngine.setEngine(pingPong, newEngine);
         } catch (IOException e) {
             // keep using the existing engine.
-            fireEngineError("Unable to start up " + opponent + ": " + e);
+            listener.engineError("Unable to start up " + opponent + ": " + e);
         }
     }
 
@@ -73,100 +85,63 @@ public class EngineSynchronizer extends ReversiWindowEngine implements OpponentS
         return pong == pingPong.get();
     }
 
-
-    private class MyListener implements StatelessEngine.Listener {
-        @Override public void statusChanged() {
-            synchronized (EngineSynchronizer.this) {
-                fireStatus(multiEngine.getStatus());
-            }
-        }
-
-        @Override public void engineMove(int pong, OsMoveListItem mli) {
-            synchronized (EngineSynchronizer.this) {
-                if (isCurrent(pong)) {
-                    fireEngineMove(mli);
-                }
-            }
-        }
-
-        @Override public void engineReady(int pong) {
-            synchronized (EngineSynchronizer.this) {
-                if (isCurrent(pong)) {
-                    fireStatus("");
-                    fireEngineReady();
-                }
-            }
-        }
-
-        @Override public void hint(int pong, boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText) {
-            synchronized (EngineSynchronizer.this) {
-                if (isCurrent(pong)) {
-                    fireHint(fromBook, pv, move, eval, nGames, depth, freeformText);
-                }
-            }
-        }
-
-        @Override public void parseError(int pong, String command, String errorMessage) {
-            synchronized (EngineSynchronizer.this) {
-                if (isCurrent(pong)) {
-                    fireParseError(command, errorMessage);
-                }
-            }
-        }
+    private static void verifyEdt() {
+        Require.isTrue(SwingUtilities.isEventDispatchThread(), "is on EDT");
     }
 
-
-    /**
-     * Notify listeners of a status update
-     *
-     * @param status status text
-     */
-    protected void fireStatus(String status) {
-        for (Listener l : getListeners()) {
-            l.status(status);
+    private class MyResponder implements ResponseHandler {
+        @Override public void handle(@NotNull NBoardResponse nBoardResponse) {
+            SwingUtilities.invokeLater(new ResponseRunner(nBoardResponse));
         }
     }
 
     /**
-     * Notify listeners that the engine moved
-     *
-     * @param mli move
+     * The action that gets run on the EDT
      */
-    protected void fireEngineMove(OsMoveListItem mli) {
-        for (Listener l : getListeners()) {
-            l.engineMove(mli);
-        }
-    }
+    private class ResponseRunner implements Runnable {
+        private final NBoardResponse response;
 
-    /**
-     * Notify listeners of an error.
-     *
-     * @param message error message.
-     */
-    protected void fireEngineError(String message) {
-        for (Listener l : getListeners()) {
-            l.engineError(message);
+        public ResponseRunner(NBoardResponse response) {
+            this.response = response;
         }
-    }
 
-    /**
-     * Notify listeners that the engine is ready to accept commands
-     */
-    protected void fireEngineReady() {
-        for (Listener l : getListeners()) {
-            l.engineReady();
-        }
-    }
+        @Override public void run() {
+            verifyEdt();
+            final Class<? extends NBoardResponse> c = response.getClass();
 
-    protected void fireHint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText) {
-        for (Listener l : getListeners()) {
-            l.hint(fromBook, pv, move, eval, nGames, depth, freeformText);
-        }
-    }
+            if (c == StatusChangedResponse.class) {
+                // Get the status from the current engine so it's guaranteed correct,
+                // even if the message came from a different engine.
+                listener.status(multiEngine.getStatus());
 
-    protected void fireParseError(String command, String errorMessage) {
-        for (Listener l : getListeners()) {
-            l.parseError(command, errorMessage);
+            } else if (c == MoveResponse.class) {
+                final MoveResponse r = (MoveResponse) response;
+                if (isCurrent(r.pong)) {
+                    listener.engineMove(r.mli);
+                }
+
+            } else if (c == HintResponse.class) {
+                final HintResponse r = (HintResponse) response;
+                if (isCurrent(r.pong)) {
+                    final CMove mv = new CMove(r.move);
+                    listener.hint(r.book, r.pv, mv, r.eval, r.nGames, r.depth, r.freeformText);
+                }
+
+            } else if (c == ErrorResponse.class) {
+                final ErrorResponse r = (ErrorResponse) response;
+                listener.engineError(r.message);
+
+            } else if (c == PongResponse.class) {
+                final PongResponse r = (PongResponse) response;
+                if (isCurrent(r.pong)) {
+                    // We update ping every time we change the engine, so if the pong
+                    // is current we know the current engine sent the message.
+                    listener.engineReady();
+                }
+
+            } else {
+                throw new IllegalArgumentException("Unknown message : " + response);
+            }
         }
     }
 }
