@@ -32,8 +32,10 @@ L12      Hints are displayed after a self-play game is over
 L13  X   Eval displaying as "-1073" when Abigail passes.
 L14      Abigail's Engine Status is never updated
 L15      Hints are displayed on the first move of the game when switching users' color
+L16      "Engine communication error" dialog not displaying reason.
 
 CC1      Make CMove immutable?
+
 F1   X   External engine window
 F1a  X   Remove depth parameter from NBoardEngine
 F1b  NF  Simplify construction of SyncPlayer, we almost always construct an EvalSyncEngine right there.  [not really]
