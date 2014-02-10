@@ -899,12 +899,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         m_hints.Add(move, hint);
     }
 
-    @Override public void parseError(String command, String errorMessage) {
-        warn("Engine communication error", "Illegal engine response: " + command + "\n" + errorMessage);
-    }
-
-    @Override public void engineError(String message) {
-        warn("Engine communication error", message);
+    @Override public void engineError(String message, String comment) {
+        warn("Engine communication error", "received \"" + message + "\"\n\n" + comment);
     }
 
     public void repaint() {

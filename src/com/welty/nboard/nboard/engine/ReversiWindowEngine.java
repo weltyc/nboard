@@ -38,9 +38,13 @@ public interface ReversiWindowEngine {
 
         void hint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText);
 
-        void parseError(String command, String errorMessage);
-
-        void engineError(String message);
+        /**
+         * The engine has produced a line of text that cannot be parsed by the NBoard format.
+         *
+         * @param message the line of text
+         * @param comment information on why the text is invalid
+         */
+        void engineError(String message, String comment);
 
         /**
          * Notify the ReversiWindow that the engine's name has changed

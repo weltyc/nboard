@@ -32,7 +32,7 @@ L12  X   Hints are displayed after a self-play game is over
 L13  X   Eval displaying as "-1073" when Abigail passes.
 L14  X   Abigail's Engine Status is never updated
 L15  X   Hints are displayed on the first move of the game when switching users' color
-L16      "Engine communication error" dialog not displaying reason.
+L16  X   "Engine communication error" dialog not displaying reason.
 L17      Document 'set contempt' request.
 L18      NaN displayed in Move Grid for eval sometimes, should be blank
 L19      "pa" displayed in Move Grid at end of game (and other times?)

@@ -73,7 +73,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
             listener.status(multiEngine.getStatus());
         } catch (IOException e) {
             // keep using the existing engine.
-            listener.engineError("Unable to start up " + opponent + ": " + e);
+            listener.engineError("Unable to start up " + opponent + ": " + e, "");
         }
     }
 
@@ -133,7 +133,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
 
             } else if (c == ErrorResponse.class) {
                 final ErrorResponse r = (ErrorResponse) response;
-                listener.engineError(r.message);
+                listener.engineError(r.message, r.comment);
 
             } else if (c == PongResponse.class) {
                 final PongResponse r = (PongResponse) response;
