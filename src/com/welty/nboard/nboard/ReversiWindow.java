@@ -696,7 +696,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     /**
      * Get the currently selected contempt factor
      *
-     * @return contempt factor, in centidisks
+     * @return contempt factor, in disks
      */
     private int getContempt() {
         return 100 * (1 - drawsTo.getIndex());
