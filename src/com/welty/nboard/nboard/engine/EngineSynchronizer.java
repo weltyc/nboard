@@ -70,6 +70,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
         try {
             final StatelessEngine newEngine = opponent.getOrCreateEngine(responseHandler);
             multiEngine.setEngine(pingPong, newEngine);
+            listener.status(multiEngine.getStatus());
         } catch (IOException e) {
             // keep using the existing engine.
             listener.engineError("Unable to start up " + opponent + ": " + e);

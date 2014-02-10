@@ -22,7 +22,7 @@ import static com.welty.nboard.thor.ThorOpeningMap.OpeningName;
  */
 class StatusBar extends JPanel {
     private final ReversiData m_pd;
-    private final JLabel statusField = new JLabel("Loading Engine");
+    private final JLabel statusField = new JLabel();
     private final JLabel openingField = new JLabel();
 
     private static final int preferredHeight = 24;

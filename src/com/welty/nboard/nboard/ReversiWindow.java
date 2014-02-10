@@ -143,7 +143,6 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 )
 
         );
-        m_statusBar.SetStatus("Loading Engine");
 
         //////
         // decorate frame

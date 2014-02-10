@@ -30,10 +30,13 @@ L10  X   MoveList displays eval*100 for internal engines
 L11  X   MoveList displays too many decimal places for eval, should display just 1
 L12  X   Hints are displayed after a self-play game is over
 L13  X   Eval displaying as "-1073" when Abigail passes.
-L14      Abigail's Engine Status is never updated
+L14  X   Abigail's Engine Status is never updated
 L15  X   Hints are displayed on the first move of the game when switching users' color
 L16      "Engine communication error" dialog not displaying reason.
 L17      Document 'set contempt' request.
+L18      NaN displayed in Move Grid for eval sometimes, should be blank
+L19      "pa" displayed in Move Grid at end of game (and other times?)
+L20      Display "Engine Loading" when external engine is starting up.
 
 CC1      Make CMove immutable?
 CC2      Make HintResponse.eval into a parsed class rather than an unparsed string
