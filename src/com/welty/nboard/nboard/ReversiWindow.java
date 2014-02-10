@@ -870,6 +870,14 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         SetStatus(status);
     }
 
+    @Override public void nameChanged(String name) {
+        // do nothing right now. The game currently reads the player name from this window.
+    }
+
+    @Override public void nodeStats(double nNodes, double tElapsed) {
+        // todo ??
+    }
+
     @Override public void engineMove(OsMoveListItem mli) {
         // Need to check whether it's the computer's move. This is because the user may have
         // switched modes while the computer was thinking.

@@ -41,5 +41,20 @@ public interface ReversiWindowEngine {
         void parseError(String command, String errorMessage);
 
         void engineError(String message);
+
+        /**
+         * Notify the ReversiWindow that the engine's name has changed
+         *
+         * @param name new engine name
+         */
+        void nameChanged(String name);
+
+        /**
+         * Notify the ReversiWindow that the engine's node stats are updated
+         *
+         * @param nNodes   number of nodes searched
+         * @param tElapsed time taken to search
+         */
+        void nodeStats(double nNodes, double tElapsed);
     }
 }

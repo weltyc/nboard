@@ -114,6 +114,9 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
                 // even if the message came from a different engine.
                 listener.status(multiEngine.getStatus());
 
+            } else if (c == NameChangedResponse.class) {
+                listener.nameChanged(multiEngine.getName());
+
             } else if (c == MoveResponse.class) {
                 final MoveResponse r = (MoveResponse) response;
                 if (isCurrent(r.pong)) {
@@ -139,6 +142,13 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
                     listener.engineReady();
                 }
 
+            } else if (c == NodeStatsResponse.class) {
+                final NodeStatsResponse r = (NodeStatsResponse) response;
+                if (isCurrent(r.pong)) {
+                    // We update ping every time we change the engine, so if the pong
+                    // is current we know the current engine sent the message.
+                    listener.nodeStats(r.nNodes, r.tElapsed);
+                }
             } else {
                 throw new IllegalArgumentException("Unknown message : " + response);
             }

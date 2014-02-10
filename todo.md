@@ -28,11 +28,12 @@ L8   X   MoveList should highlight both the move and its eval. Clicking on move 
 L9   X   MoveList should display nothing if eval = 0.
 L10  X   MoveList displays eval*100 for internal engines
 L11  X   MoveList displays too many decimal places for eval, should display just 1
-L12      Hints are displayed after a self-play game is over
+L12  X   Hints are displayed after a self-play game is over
 L13  X   Eval displaying as "-1073" when Abigail passes.
 L14      Abigail's Engine Status is never updated
-L15      Hints are displayed on the first move of the game when switching users' color
+L15  X   Hints are displayed on the first move of the game when switching users' color
 L16      "Engine communication error" dialog not displaying reason.
+L17      Document 'set contempt' request.
 
 CC1      Make CMove immutable?
 CC2      Make HintResponse.eval into a parsed class rather than an unparsed string
@@ -41,7 +42,7 @@ F1   X   External engine window
 F1a  X   Remove depth parameter from NBoardEngine
 F1b  NF  Simplify construction of SyncPlayer, we almost always construct an EvalSyncEngine right there.  [not really]
 F2   X   Alternate start positions
-F3       Internal engines should support NBoard protocol
+F3   X   Internal engines should support NBoard protocol
 F4       Symmetry menu items should display first move and icon
 F5       More convenient external engine add window
 F6       Display node count
@@ -52,6 +53,7 @@ F10      Copy should copy move list, not game
 F11      Filter database by player, tournament, etc.
 F12      Score graph
 F13      Remove overly verbose external engine communication
+F14      Display node stats
 
 FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games
 FL2      GGF games should be stored in a more compact format
