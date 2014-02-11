@@ -3,10 +3,7 @@ package com.welty.nboard.gui;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
 import java.awt.*;
 import java.util.Comparator;
 
@@ -61,6 +58,9 @@ public abstract class Grid extends JScrollPane {
         if (columnSelectionAllowed) {
             columns.getSelectionModel().addListSelectionListener(listener);
         }
+
+        final JTableHeader tableHeader = table.getTableHeader();
+        tableHeader.setReorderingAllowed(false);
 
         table.setShowGrid(false);
 

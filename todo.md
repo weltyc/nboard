@@ -37,6 +37,8 @@ L17  X   Document 'set contempt' request.
 L18      NaN displayed in Move Grid for eval sometimes, should be blank
 L19      "pa" displayed in Move Grid at end of game (and other times?)
 L20  X   Display "Engine Loading" when external engine is starting up.
+L21  X   Don't allow reordering of move table columns - it results in exceptions and is horrible
+L22  X   Use NTestJ for eval, it's the only one that works on all machines
 
 CC1      Make CMove immutable?
 CC2      Make HintResponse.eval into a parsed class rather than an unparsed string

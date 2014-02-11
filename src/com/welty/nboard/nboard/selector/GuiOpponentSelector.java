@@ -45,7 +45,7 @@ public class GuiOpponentSelector extends OpponentSelector {
         for (String name : SimpleEval.getEvalNames()) {
             selectors.add(new InternalEngineSelector(name));
         }
-        selectors.add(new InternalEngineSelector("Vegtbl", true, "d2", ""));
+        selectors.add(new InternalEngineSelector("Vegtbl", true, "ntestJ", ""));
 
         return selectors;
     }

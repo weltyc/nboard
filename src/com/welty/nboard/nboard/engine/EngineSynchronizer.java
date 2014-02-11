@@ -87,7 +87,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
     }
 
     private static void verifyEdt() {
-        Require.isTrue(SwingUtilities.isEventDispatchThread(), "is on EDT");
+        Require.isTrue(SwingUtilities.isEventDispatchThread(), "must run on EDT");
     }
 
     private class MyResponder implements ResponseHandler {
