@@ -64,6 +64,13 @@ F11      Filter database by player, tournament, etc.
 F12      Score graph
 F13      Remove overly verbose external engine communication
 F14      Display node stats
+F15      XOT start position should include moves
+F16      Ctrl-C should copy move list, Ctrl-Shift-C should copy board
+F17      Paste command should paste any format (move list, game, board)
+F18      Set up board command
+F19      Time graph
+F20      Lost disks graph
 
 FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games
 FL2      GGF games should be stored in a more compact format
+FL3      Enter tournament games
