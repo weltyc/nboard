@@ -102,7 +102,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         m_pgsw = new GameSelectionWindow(this);
         dd = new DatabaseData(this, reversiData);
         m_pwThor = new ThorWindow(this, reversiData, dd);
-        reversiData.AddListener(new SignalListener<OsMoveListItem>() {
+        reversiData.addListener(new SignalListener<OsMoveListItem>() {
 
             public void handleSignal(OsMoveListItem data) {
                 needsLove = true;
@@ -125,7 +125,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         final JMenuBar menuBar = createMenus(startPositionManager);
 
-        reversiData.AddListener(m_hints);
+        reversiData.addListener(m_hints);
 
         frame = JSwingBuilder.frame("NBoard", WindowConstants.EXIT_ON_CLOSE, menuBar,
                 hBox(
@@ -178,58 +178,60 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         menuBar.add(createMenuItem("E&ngine", createEngineMenu()));
         menuBar.add(createMenuItem("&Analysis", createAnalysisMenu()));
         menuBar.add(createMenuItem("&Games", createGamesMenu(startPositionManager)));
+        menuBar.add(createMenuItem("&Database", createThorMenu()));
 
+        return menuBar;
+    }
+
+    private JMenu createThorMenu() {
         // set up the Thor menu
-        JMenu m_thorMenu = new JMenu();
-        m_thorMenu.add(menuItem("Load &games").build(new ActionListener() {
+        JMenu thorMenu = new JMenu();
+        thorMenu.add(menuItem("Load &games").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().LoadGames();
             }
         }));
-        m_thorMenu.add(menuItem("&Unload games").build(new ActionListener() {
+        thorMenu.add(menuItem("&Unload games").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().UnloadGames();
             }
         }));
-        m_thorMenu.add(menuItem("Load &players").build(new ActionListener() {
+        thorMenu.add(menuItem("Load &players").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().LoadPlayers();
             }
         }));
-        m_thorMenu.add(menuItem("Load &tournaments").build(new ActionListener() {
+        thorMenu.add(menuItem("Load &tournaments").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().LoadTournaments();
             }
         }));
-        m_thorMenu.addSeparator();
-        m_thorMenu.add(menuItem("Load &config").build(new ActionListener() {
+        thorMenu.addSeparator();
+        thorMenu.add(menuItem("Load &config").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().LoadConfig();
             }
         }));
-        m_thorMenu.add(menuItem("&Save config").build(new ActionListener() {
+        thorMenu.add(menuItem("&Save config").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().SaveConfig();
             }
         }));
-        m_thorMenu.addSeparator();
-        m_thorMenu.add(menuItem("&Look up position").build(new ActionListener() {
+        thorMenu.addSeparator();
+        thorMenu.add(menuItem("&Look up position").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().LookUpPosition();
             }
         }));
         thorLookUpAll = createCheckBoxMenuItem("Look up &all", "Thor/LookUpAll", true);
-        m_thorMenu.add(thorLookUpAll);
-        m_thorMenu.addSeparator();
-        m_thorMenu.add(menuItem("Save Opening &Frequencies").build(new ActionListener() {
+        thorMenu.add(thorLookUpAll);
+        thorMenu.addSeparator();
+        thorMenu.add(menuItem("Save Opening &Frequencies").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PDD().SaveOpeningFrequencies();
             }
         }));
-
-        menuBar.add(createMenuItem("&Database", m_thorMenu));
-
-        return menuBar;
+        return thorMenu;
     }
 
     private JMenu createGamesMenu(StartPositionManager startPositionManager) {
@@ -262,7 +264,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     }
 
     private JMenu createEditMenu() {
-        JMenu m_flipMenu = createFlipMenu();
+        JMenu flipMenu = createFlipMenu();
         // set up the Edit menu
         JMenu m_editMenu = new JMenu();
         m_editMenu.add(menuItem("&Undo\tCtrl+Z").build(new ActionListener() {
@@ -344,7 +346,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         }));
 
         m_editMenu.addSeparator();
-        m_editMenu.add(createMenuItem("Flip", m_flipMenu));
+        m_editMenu.add(createMenuItem("Flip", flipMenu));
         m_editMenu.add(createMoveMenu());
         return m_editMenu;
     }
@@ -537,18 +539,49 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             public void actionPerformed(ActionEvent e) {
                 reversiData.ReflectGame(iReflection);
             }
+
+            public String getMenuText() {
+                final COsGame game = reversiData.Game();
+                if (game.nMoves() == 0) {
+                    return "";
+                } else {
+                    return "1. " + game.getMli(0).move.reflect(iReflection);
+                }
+
+            }
         }
+
         // set up the Flip menu
-        JMenu m_flipMenu = new JMenu();
-        m_flipMenu.add(menuItem("").icon("flip3.png").build(new BoardFlipper(3)));
-        m_flipMenu.add(menuItem("").icon("flip4.png").build(new BoardFlipper(4)));
-        m_flipMenu.add(menuItem("").icon("flip7.png").build(new BoardFlipper(7)));
-        m_flipMenu.addSeparator();
-        m_flipMenu.add(menuItem("").icon("flip2.png").build(new BoardFlipper(2)));
-        m_flipMenu.add(menuItem("").icon("flip1.png").build(new BoardFlipper(1)));
-        m_flipMenu.add(menuItem("").icon("flip6.png").build(new BoardFlipper(6)));
-        m_flipMenu.add(menuItem("").icon("flip5.png").build(new BoardFlipper(5)));
-        return m_flipMenu;
+        final JMenu flipMenu = new JMenu();
+        flipMenu.add(menuItem("").icon("flip3.png").build(new BoardFlipper(3)));
+        flipMenu.add(menuItem("").icon("flip4.png").build(new BoardFlipper(4)));
+        flipMenu.add(menuItem("").icon("flip7.png").build(new BoardFlipper(7)));
+        flipMenu.addSeparator();
+        flipMenu.add(menuItem("").icon("flip2.png").build(new BoardFlipper(2)));
+        flipMenu.add(menuItem("").icon("flip1.png").build(new BoardFlipper(1)));
+        flipMenu.add(menuItem("").icon("flip6.png").build(new BoardFlipper(6)));
+        flipMenu.add(menuItem("").icon("flip5.png").build(new BoardFlipper(5)));
+
+        // Updater for menu item texts when board changes
+        final SignalListener<OsMoveListItem> updater = new SignalListener<OsMoveListItem>() {
+            @Override public void handleSignal(OsMoveListItem data) {
+                final int n = flipMenu.getItemCount();
+                for (int i = 0; i < n; i++) {
+                    final JMenuItem item = flipMenu.getItem(i);
+                    if (item != null) {
+                        for (ActionListener l : item.getActionListeners()) {
+                            if (l instanceof BoardFlipper) {
+                                final String menuText = ((BoardFlipper) l).getMenuText();
+                                item.setText(menuText);
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        reversiData.addListener(updater);
+
+        return flipMenu;
     }
 
     /**

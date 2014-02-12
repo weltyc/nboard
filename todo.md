@@ -53,7 +53,7 @@ F1a  X   Remove depth parameter from NBoardEngine
 F1b  NF  Simplify construction of SyncPlayer, we almost always construct an EvalSyncEngine right there.  [not really]
 F2   X   Alternate start positions
 F3   X   Internal engines should support NBoard protocol
-F4       Symmetry menu items should display first move and icon
+F4   X   Symmetry menu items should display first move and icon
 F5       More convenient external engine add window
 F6       Display node count
 F7       Display clock

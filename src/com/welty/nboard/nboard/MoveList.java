@@ -49,7 +49,7 @@ public class MoveList extends Grid {
         table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
 
-        boardSource.AddListener(new SignalListener<OsMoveListItem>() {
+        boardSource.addListener(new SignalListener<OsMoveListItem>() {
             public void handleSignal(OsMoveListItem data) {
                 final int iMove = boardSource.IMove();
                 final int col = field(iMove);

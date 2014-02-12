@@ -25,7 +25,7 @@ public interface BoardSource {
      */
     int IMove();
 
-    void AddListener(SignalListener<OsMoveListItem> signalListener);
+    void addListener(SignalListener<OsMoveListItem> signalListener);
 
     /**
      * @return the number of moves played so far in the game.

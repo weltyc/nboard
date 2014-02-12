@@ -31,7 +31,7 @@ class StatusBar extends JPanel {
 
     StatusBar(ReversiData d) {
         m_pd = d;
-        m_pd.AddListener(new SignalListener<OsMoveListItem>() {
+        m_pd.addListener(new SignalListener<OsMoveListItem>() {
 
             public void handleSignal(OsMoveListItem data) {
                 final String sGgfGame = m_pd.Game().toString();

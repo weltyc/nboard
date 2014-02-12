@@ -38,7 +38,7 @@ class ScoreWindow extends JPanel {
         setPreferredSize(size);
         setMaximumSize(size);
         setMinimumSize(size);
-        m_pd.AddListener(new SignalListener<OsMoveListItem>() {
+        m_pd.addListener(new SignalListener<OsMoveListItem>() {
             public void handleSignal(OsMoveListItem data) {
                 OsBoard board = m_pd.DisplayedPosition().board;
                 final PieceCounts pieceCounts = board.getPieceCounts();

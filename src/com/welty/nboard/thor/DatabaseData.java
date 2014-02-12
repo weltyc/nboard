@@ -64,7 +64,7 @@ public class DatabaseData extends GridTableModel {
         for (int i = 0; i < m_filters.length; i++) {
             m_filters[i] = "";
         }
-        boardSource.AddListener(new SignalListener<OsMoveListItem>() {
+        boardSource.addListener(new SignalListener<OsMoveListItem>() {
             public void handleSignal(OsMoveListItem data) {
                 OnBoardChanged();
             }

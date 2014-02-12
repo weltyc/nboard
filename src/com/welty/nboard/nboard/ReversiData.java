@@ -5,7 +5,10 @@ import com.welty.nboard.gui.SignalEvent;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.novello.core.Position;
 import com.welty.othello.c.CReader;
-import com.welty.othello.gdk.*;
+import com.welty.othello.gdk.COsGame;
+import com.welty.othello.gdk.COsPosition;
+import com.welty.othello.gdk.OsMove;
+import com.welty.othello.gdk.OsMoveListItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +31,7 @@ public class ReversiData implements BoardSource {
     /**
      * Event that is fired when the displayed board position changes
      * Event data = OsMoveListItem* if the change is an update of the position by 1 move, or NULL otherwise
-     * don't raise this directly, raise via BoardChanged()
+     * don't raise this directly, raise via fireBoardChanged()
      */
     private final SignalEvent<OsMoveListItem> m_seBoardChanged = new SignalEvent<>();
 
@@ -51,7 +54,7 @@ public class ReversiData implements BoardSource {
         return game.PosAtMove(m_iMove);
     }
 
-    public void AddListener(SignalListener<OsMoveListItem> signalListener) {
+    public void addListener(SignalListener<OsMoveListItem> signalListener) {
         m_seBoardChanged.Add(signalListener);
     }
 
@@ -67,15 +70,15 @@ public class ReversiData implements BoardSource {
         return m_iMove != game.nMoves();
     }
 
-    private void BoardChanged() {
-        BoardChanged(null);
+    /**
+     * The board changed in some way that can't be represented by a MoveListItem
+     */
+    private void fireBoardChanged() {
+        fireBoardChanged(null);
     }
 
     private COsGame game = new COsGame();    // game data
     private int m_iMove;    // currently displayed move
-
-
-    private static final int n = 8;
 
     public OsMove NextMove() {
         return Reviewing() ? game.getMli(m_iMove).move : OsMove.PASS;
@@ -163,14 +166,14 @@ public class ReversiData implements BoardSource {
      */
     void ReflectGame(int iReflection) {
         game.reflect(iReflection);
-        BoardChanged();
+        fireBoardChanged();
     }
 
 
     /**
      * The displayed position changed. Update the displays. Clear the hints. Raise the event.
      */
-    void BoardChanged(@Nullable OsMoveListItem data) {
+    void fireBoardChanged(@Nullable OsMoveListItem data) {
         m_seBoardChanged.Raise(data);
     }
 
@@ -184,10 +187,10 @@ public class ReversiData implements BoardSource {
             if (iMove == m_iMove + 1) {
                 m_iMove = iMove;
                 OsMoveListItem mli = game.getMli(m_iMove - 1);
-                BoardChanged(mli);
+                fireBoardChanged(mli);
             } else {
                 m_iMove = iMove;
-                BoardChanged();
+                fireBoardChanged();
             }
         }
     }
@@ -217,7 +220,7 @@ public class ReversiData implements BoardSource {
         }
 
         m_iMove++;
-        BoardChanged(mli);
+        fireBoardChanged(mli);
     }
 
     /**
@@ -253,7 +256,7 @@ public class ReversiData implements BoardSource {
         this.game = game;
         if (fResetMove || IMove() >= game.nMoves())
             m_iMove = 0;
-        BoardChanged();
+        fireBoardChanged();
         engineTalker.MayLearn();
     }
 
@@ -268,7 +271,7 @@ public class ReversiData implements BoardSource {
         game.SetTime(System.currentTimeMillis());
         game.SetPlace("NBoard");
         m_iMove = 0;
-        BoardChanged();
+        fireBoardChanged();
     }
 
     public void Redo() {
