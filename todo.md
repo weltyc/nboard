@@ -43,6 +43,7 @@ L23  X   second-to-last move displayed in move grid when clicking on end-of-game
 L24  X   NullPointerException when trying to run a nonexistent executable.
 L25  X   MoveGrid database columns should have a blue background.
 
+CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
 CC2      Make HintResponse.eval into a parsed class rather than an unparsed string
 
