@@ -121,11 +121,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         Grid m_pml = new MoveList(reversiData);
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
-        try {
             m_engine = new EngineSynchronizer(GuiOpponentSelector.getInstance(), this);
-        } catch (IOException e) {
-            warn("Unable to start engine: " + e, "External Engine Error");
-        }
 
         final JMenuBar menuBar = createMenus(startPositionManager);
 
@@ -306,7 +302,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             public void actionPerformed(ActionEvent e) {
                 String s = GetClipboardText();
                 if (s != null) {
-                    reversiData.Update(s, true);
+                    reversiData.setGameText(s, true);
                 }
             }
         }));
@@ -319,7 +315,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                     COsGame game = new COsGame();
                     game.SetDefaultStartPos();
                     game.SetMoveList(s);
-                    reversiData.Update(game, true);
+                    reversiData.setGame(game, true);
                 }
             }
         }));
@@ -336,7 +332,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                         game.SetDefaultStartPos();
                         game.posStart.board.in(is);
                         game.CalcCurrentPos();
-                        reversiData.Update(game, true);
+                        reversiData.setGame(game, true);
                     } catch (IllegalArgumentException ex) {
                         final String msg = (s.length() < 200 ? s + " is not a legal board" : "Not a legal board");
                         final String title = "Paste Board error";
@@ -599,7 +595,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             if (is.ignoreTo('(')) {
                 m_pgsw.LoadAndShow(file);
             } else {
-                reversiData.Update(game, true);
+                reversiData.setGame(game, true);
             }
         } catch (FileNotFoundException e) {
             warn("Unable to load game from file '" + file + "'", e.toString());
@@ -735,6 +731,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      * If the engine is ready, we will call it as soon as the board is updated.
      */
     void TellEngineWhatToDo() {
+        EngineSynchronizer.verifyEdt();
         if (m_engine.isReady() && needsLove) {
             needsLove = false;
             boolean isHint;

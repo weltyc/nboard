@@ -3,6 +3,7 @@ package com.welty.nboard.nboard.engine;
 import com.orbanova.common.misc.Require;
 import com.welty.othello.api.*;
 import com.welty.othello.core.CMove;
+import com.welty.othello.gui.selector.InternalEngineSelector;
 import com.welty.othello.protocol.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,14 +30,22 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
     private final ReversiWindowEngine.Listener listener;
     private final ResponseHandler responseHandler;
 
-    public EngineSynchronizer(OpponentSelector opponentSelector, ReversiWindowEngine.Listener listener) throws IOException {
+    public EngineSynchronizer(OpponentSelector opponentSelector, ReversiWindowEngine.Listener listener)  {
         verifyEdt();
         this.listener = listener;
         responseHandler = new MyResponder();
-        final StatelessEngine firstEngine = opponentSelector.getOpponent().getOrCreateEngine(responseHandler);
+        final StatelessEngine firstEngine = createInitialEngine(opponentSelector);
         this.multiEngine = new MultiEngine(firstEngine);
         this.opponentSelector = opponentSelector;
         opponentSelector.addListener(this);
+    }
+
+    private StatelessEngine createInitialEngine(OpponentSelector opponentSelector)  {
+        try {
+            return opponentSelector.getOpponent().getOrCreateEngine(responseHandler);
+        } catch (IOException e) {
+            return new InternalEngineSelector("Abigail").createPingEngine(1, responseHandler);
+        }
     }
 
     @Override public String getName() {
@@ -86,7 +95,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
         return pong == pingPong.get();
     }
 
-    private static void verifyEdt() {
+    public static void verifyEdt() {
         Require.isTrue(SwingUtilities.isEventDispatchThread(), "must run on EDT");
     }
 

@@ -33,8 +33,8 @@ class GameSelectionGrid extends Grid {
         ((DefaultRowSorter) table.getRowSorter()).setComparator(4, new AsDoubleSort());
     }
 
-    public void MouseDataClick(int modelRow, int modelCol) {
-        getTableModel().MouseDataClick(modelRow);
+    public void selectionChanged(int modelRow, int modelCol) {
+        getTableModel().selectGame(modelRow);
     }
 
     public GameSelectionTableModel getTableModel() {
@@ -49,11 +49,11 @@ class GameSelectionGrid extends Grid {
 
     static class GameSelectionTableModel extends GridTableModel {
         private ArrayList<GgfGameText> m_gts = new ArrayList<>();
-        private final ReversiWindow m_pwTarget;
+        private final ReversiWindow reversiWindow;
 
-        public GameSelectionTableModel(ReversiWindow pwTarget) {
+        public GameSelectionTableModel(ReversiWindow reversiWindow) {
             super(gridColumns);
-            this.m_pwTarget = pwTarget;
+            this.reversiWindow = reversiWindow;
         }
 
         public int getRowCount() {
@@ -73,10 +73,10 @@ class GameSelectionGrid extends Grid {
          * but before the main window's PostQuitMessage() has been sent? Not sure about the relative
          * message priorities.
          */
-        public void MouseDataClick(int modelRow) {
+        public void selectGame(int modelRow) {
             if (modelRow < getRowCount() && modelRow >= 0) {
-                m_pwTarget.reversiData.Update(m_gts.get(modelRow).m_text, true);
-                m_pwTarget.BringToTop();
+                reversiWindow.reversiData.setGameText(m_gts.get(modelRow).m_text, true);
+                reversiWindow.BringToTop();
             }
         }
 
@@ -88,7 +88,7 @@ class GameSelectionGrid extends Grid {
         void Load(final File fn, IndeterminateProgressTracker tracker) {
             m_gts = GgfGameText.Load(fn, tracker);
             fireTableDataChanged();
-            m_pwTarget.repaint();
+            reversiWindow.repaint();
         }
     }
 }

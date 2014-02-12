@@ -80,11 +80,13 @@ public class MoveGrid extends Grid {
         return ((MoveGridTableModel) getTable().getModel());
     }
 
-
     /**
-     * The mouseclick implementation sends the move as a message to the desktop window.
+     * When the selection changes
      */
-    public void MouseDataClick(int row, int col) {
+    public void selectionChanged(int row, int col) {
+    }
+
+    @Override protected void onMouseClick(int row, int col) {
         MoveGridTableModel model = getModel();
         OsMove mv = model.getMove(row);
         m_pd.Update(new OsMoveListItem(mv), true);

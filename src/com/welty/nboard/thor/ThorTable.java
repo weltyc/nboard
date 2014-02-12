@@ -18,7 +18,7 @@ class ThorTable extends Grid {
     private final ReversiData m_pd;            //!< Pointer to reversi data
     private final DatabaseData dd;
 
-    private final ReversiWindow m_pwTarget;    //!< When a game is clicked, update this window with the new game
+    private final ReversiWindow reversiWindow;    //!< When a game is clicked, update this window with the new game
 
     /**
      * Construct the table; create columns and sizer
@@ -27,7 +27,7 @@ class ThorTable extends Grid {
      */
     ThorTable(ReversiWindow pwTarget, ReversiData pd, DatabaseData dd) {
         super(dd, new JTable(dd), true, false, true);
-        m_pwTarget = pwTarget;
+        reversiWindow = pwTarget;
         m_pd = pd;
         this.dd = dd;
         final JTable table = getTable();
@@ -44,11 +44,10 @@ class ThorTable extends Grid {
     /**
      * Send the selected game to the ReversiWindow
      */
-    public void MouseDataClick(int modelRow, int modelCol) {
+    public void selectionChanged(int modelRow, int modelCol) {
         if (modelRow < PD().NGames()) {
-            m_pd.Update(dd.GameFromFilteredRow(modelRow), false);
-            m_pwTarget.BringToTop();
+            m_pd.setGame(dd.GameFromFilteredRow(modelRow), false);
+            reversiWindow.BringToTop();
         }
     }
-
 }

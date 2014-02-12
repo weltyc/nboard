@@ -225,7 +225,7 @@ public class ReversiData implements BoardSource {
      * <p/>
      * If the string does not contain a valid game, nothing happens.
      */
-    void Update(final String sGame, boolean fResetMove) {
+    void setGameText(final String sGame, boolean fResetMove) {
         CReader is = new CReader(sGame);
         Update(is, fResetMove);
     }
@@ -238,7 +238,7 @@ public class ReversiData implements BoardSource {
     void Update(CReader is, boolean fResetMove) {
         COsGame game = new COsGame();
         game.In(is);
-        Update(game, fResetMove);
+        setGame(game, fResetMove);
         // todo if is doesn't contain a valid game, make sure nothing happens
     }
 
@@ -249,7 +249,7 @@ public class ReversiData implements BoardSource {
      *                   The user experience is best if this is true unless you can guarantee that the position on
      *                   the board will not change. (e.g. In Thor lookups, the position on the board shouldn't change).
      */
-    public void Update(final COsGame game, boolean fResetMove) {
+    public void setGame(final COsGame game, boolean fResetMove) {
         this.game = game;
         if (fResetMove || IMove() >= game.nMoves())
             m_iMove = 0;

@@ -10,8 +10,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
@@ -68,12 +66,20 @@ public class MoveList extends Grid {
     /**
      * Switch the displayed position to the one that the user clicked on.
      */
-    public void MouseDataClick(int row, int col) {
-        tableModel.switchToPositionAt(row, col);
+    public void selectionChanged(int row, int col) {
     }
 
-    private static int IMove(int item, int field) {
-        return item * 2 + (field > 2 ? 1 : 0);
+    @Override protected void onMouseClick(int row, int col) {
+        System.out.println("mouse clicked at " + row + ", " + col);
+        if (col >= 1) {
+            final int iMove;
+            if (row >= 0) {
+                iMove = Math.min(boardSource.nMoves(), row * 2 + (col > 2 ? 1 : 0));
+            } else {
+                iMove = boardSource.nMoves();
+            }
+            boardSource.SetIMove(iMove);
+        }
     }
 
     private static int item(int iMove) {
@@ -116,16 +122,6 @@ public class MoveList extends Grid {
             }
             return null;
         }
-
-        private void switchToPositionAt(int row, int col) {
-            // row < 0 is header row? maybe
-            if (row >= 0 && col >= 1) {
-                int iMove = IMove(row, col);
-                if (iMove <= boardSource.nMoves()) {
-                    boardSource.SetIMove(iMove);
-                }
-            }
-        }
     }
 
     private static class MoveListTable extends JTable {
@@ -134,16 +130,13 @@ public class MoveList extends Grid {
         public MoveListTable(MoveListTableModel tableModel) {
             super(tableModel);
 
-            // disable mouse selection
+            // disable standard mouse selection
             for (MouseListener l : getMouseListeners()) {
                 removeMouseListener(l);
             }
             for (MouseMotionListener l : getMouseMotionListeners()) {
                 removeMouseMotionListener(l);
             }
-
-            // add my own mouse listener
-            addMouseListener(new MyMouseAdapter(tableModel, this));
         }
 
         @Override public TableCellRenderer getCellRenderer(int row, int column) {
@@ -154,23 +147,6 @@ public class MoveList extends Grid {
             }
         }
     }
-
-    private static class MyMouseAdapter extends MouseAdapter {
-        private final MoveListTableModel model;
-        private final JTable jTable;
-
-        public MyMouseAdapter(MoveListTableModel model, JTable jTable) {
-            this.model = model;
-            this.jTable = jTable;
-        }
-
-        @Override public void mousePressed(MouseEvent e) {
-            final int row = jTable.rowAtPoint(e.getPoint());
-            final int col = jTable.columnAtPoint(e.getPoint());
-            model.switchToPositionAt(row, col);
-        }
-    }
-
 
     private static class EvalRenderer extends DefaultTableCellRenderer {
         private static final DecimalFormat numberFormat = new DecimalFormat("#.0");
@@ -190,4 +166,6 @@ public class MoveList extends Grid {
             setForeground(v < 0 ? Color.RED : Color.BLACK);
         }
     }
+
+
 }

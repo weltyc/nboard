@@ -5,6 +5,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Comparator;
 
 /**
@@ -58,6 +60,7 @@ public abstract class Grid extends JScrollPane {
         if (columnSelectionAllowed) {
             columns.getSelectionModel().addListSelectionListener(listener);
         }
+        table.addMouseListener(new MyMouseAdapter(table));
 
         final JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setReorderingAllowed(false);
@@ -86,16 +89,18 @@ public abstract class Grid extends JScrollPane {
         }
     }
 
-    protected void setSelectedCell(int row, int col) {
-        setSelectedRange(row, row, col, col);
-    }
-
     protected void setSelectedRange(int row0, int row1, int col0, int col1) {
         table.getColumnModel().getSelectionModel().setSelectionInterval(col0, col1);
         table.getSelectionModel().setSelectionInterval(row0, row1);
     }
 
-    protected abstract void MouseDataClick(int modelRow, int modelCol);
+    /**
+     * The grid selection has changed.
+     *
+     * @param modelRow selection row
+     * @param modelCol selection column
+     */
+    protected abstract void selectionChanged(int modelRow, int modelCol);
 
     protected JTable getTable() {
         return table;
@@ -116,7 +121,7 @@ public abstract class Grid extends JScrollPane {
             if (viewRow >= 0 && viewCol >= 0) {
                 final int modelRow = table.convertRowIndexToModel(viewRow);
                 final int modelCol = table.convertColumnIndexToModel(viewCol);
-                MouseDataClick(modelRow, modelCol);
+                selectionChanged(modelRow, modelCol);
             }
         }
     }
@@ -136,4 +141,30 @@ public abstract class Grid extends JScrollPane {
             }
         }
     }
+
+    /**
+     * The mouse was clicked in the given grid location
+     *
+     * @param row table row the mouse was clicked in, or -1 if the user clicked outside the row range.
+     * @param col table column the mouse was clicked in, or -1 if the user clicked outside the col range.
+     */
+    protected void onMouseClick(int row, int col) {
+    }
+
+    private class MyMouseAdapter extends MouseAdapter {
+        private final JTable jTable;
+
+        public MyMouseAdapter(JTable jTable) {
+            this.jTable = jTable;
+        }
+
+        @Override public void mousePressed(MouseEvent e) {
+            final int row = jTable.rowAtPoint(e.getPoint());
+            final int col = jTable.columnAtPoint(e.getPoint());
+            onMouseClick(row, col);
+        }
+    }
+
+
+
 }
