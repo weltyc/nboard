@@ -5,10 +5,7 @@ import com.welty.nboard.gui.SignalEvent;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.novello.core.Position;
 import com.welty.othello.c.CReader;
-import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsPosition;
-import com.welty.othello.gdk.OsMove;
-import com.welty.othello.gdk.OsMoveListItem;
+import com.welty.othello.gdk.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +31,7 @@ public class ReversiData implements BoardSource {
      * don't raise this directly, raise via fireBoardChanged()
      */
     private final SignalEvent<OsMoveListItem> m_seBoardChanged = new SignalEvent<>();
-
+    private @NotNull OsClock gameStartClock = new OsClock(15 * 60);
 
     /**
      * Initialize fields and create a new DatabaseData
@@ -265,7 +262,7 @@ public class ReversiData implements BoardSource {
      */
     void StartNewGame(@NotNull Position startPosition) {
         game.Clear();
-        game.Initialize("8");
+        game.Initialize("8", getGameStartClock(), getGameStartClock());
         final String sBoardText = startPosition.boardString("");
         game.SetToPosition(sBoardText, startPosition.blackToMove);
         game.SetTime(System.currentTimeMillis());
@@ -286,5 +283,9 @@ public class ReversiData implements BoardSource {
         if (updateUsers) {
             m_seBoardChanged.Raise();
         }
+    }
+
+    public @NotNull OsClock getGameStartClock() {
+        return gameStartClock;
     }
 }

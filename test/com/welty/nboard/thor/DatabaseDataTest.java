@@ -4,10 +4,7 @@ import com.orbanova.common.misc.ArrayTestCase;
 import com.welty.nboard.nboard.BoardSource;
 import com.welty.nboard.nboard.OptionSource;
 import com.welty.othello.c.CReader;
-import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsPosition;
-import com.welty.othello.gdk.OsMove;
-import com.welty.othello.gdk.OsMoveListItem;
+import com.welty.othello.gdk.*;
 import org.easymock.EasyMock;
 import org.mockito.Mockito;
 
@@ -66,7 +63,7 @@ public class DatabaseDataTest extends ArrayTestCase {
         testGameItemText(dd);
 
         COsGame osg = new COsGame();
-        osg.SetDefaultStartPos();
+        osg.setToDefaultStartPosition(OsClock.DEFAULT, OsClock.DEFAULT);
 
         dd.LookUpPosition(osg.pos.board);
         assertEquals(dd.m_summary.size(), 2);

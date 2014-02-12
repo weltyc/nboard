@@ -6,6 +6,7 @@ import com.welty.othello.api.OpponentSelection;
 import com.welty.othello.api.OpponentSelector;
 import com.welty.othello.api.SearchState;
 import com.welty.othello.gdk.COsGame;
+import com.welty.othello.gdk.OsClock;
 import com.welty.othello.gdk.OsMoveListItem;
 import com.welty.othello.gui.selector.EngineSelector;
 import junit.framework.TestCase;
@@ -77,7 +78,7 @@ public class EngineSynchronizerTest extends TestCase {
 
     private static SearchState createState() {
         final COsGame game = new COsGame();
-        game.Initialize("8");
+        game.Initialize("8", OsClock.DEFAULT, OsClock.DEFAULT);
         return new SearchState(game, 1, 0);
     }
 }

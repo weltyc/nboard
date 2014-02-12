@@ -5,6 +5,7 @@ import com.welty.othello.core.CMinimalReflection;
 import com.welty.othello.core.CMove;
 import com.welty.othello.core.CQPosition;
 import com.welty.othello.gdk.COsGame;
+import com.welty.othello.gdk.OsClock;
 import com.welty.othello.gdk.OsMove;
 import com.welty.othello.gdk.OsMoveListItem;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -130,7 +131,7 @@ public class ThorTest extends TestCase {
     public static void testThorFindMatchingPositions() {
         ArrayList<ThorGameInternal> games = new ArrayList<ThorGameInternal>();
         COsGame match = new COsGame();
-        match.SetDefaultStartPos();
+        match.setToDefaultStartPosition(OsClock.DEFAULT, OsClock.DEFAULT);
 
         // no positions in thor game list
         Thor.MatchingPositions matchingPositions = Thor.ThorFindMatchingPositions(games, match.pos.board);
@@ -183,7 +184,7 @@ public class ThorTest extends TestCase {
 
         // no games, summary should be empty
         COsGame osGame = new COsGame();
-        osGame.SetDefaultStartPos();
+        osGame.setToDefaultStartPosition(OsClock.DEFAULT, OsClock.DEFAULT);
         Thor.MatchingPositions matchingPositions = Thor.ThorFindMatchingPositions(games, osGame.pos.board);
         TIntObjectHashMap<ThorSummaryData> summary = Thor.ThorSummarize(games, osGame.pos.board, matchingPositions.index, matchingPositions.iReflections);
         assertEquals(0, summary.size());
@@ -225,7 +226,7 @@ public class ThorTest extends TestCase {
 
         // summary should contain a Pass when the mover must pass
         games.add(passGame);
-        osGame.SetDefaultStartPos();
+        osGame.setToDefaultStartPosition(OsClock.DEFAULT, OsClock.DEFAULT);
         for (int i = 0; i < 37; i++) {
             CMove mv = new CMove(passGame.moves[i]);
             osGame.append(new OsMoveListItem(mv.toOsMove()));
@@ -253,9 +254,9 @@ public class ThorTest extends TestCase {
     public void testReflection() {
         final int sq = 1;
         for (int iReflection = 0; iReflection < 8; iReflection++) {
-            final OsMove m = new CMove((byte)sq).toOsMove();
+            final OsMove m = new CMove((byte) sq).toOsMove();
             final int sqr = Thor.MoveFromIReflection(sq, iReflection);
-            final OsMove mr = new CMove((byte)sqr).toOsMove();
+            final OsMove mr = new CMove((byte) sqr).toOsMove();
             assertEquals(mr, m.reflect(iReflection));
         }
     }

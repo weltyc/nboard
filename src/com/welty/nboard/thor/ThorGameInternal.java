@@ -2,10 +2,7 @@ package com.welty.nboard.thor;
 
 import com.welty.othello.c.CBinaryReader;
 import com.welty.othello.core.Utils;
-import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.OsResult;
-import com.welty.othello.gdk.OsMove;
-import com.welty.othello.gdk.OsMoveListItem;
+import com.welty.othello.gdk.*;
 
 import java.util.List;
 
@@ -42,7 +39,7 @@ class ThorGameInternal extends ThorGame8 {
 
     public COsGame toOsGame(List<String> tournaments, List<String> players) {
         final COsGame game = new COsGame();
-        game.Initialize("8");
+        game.Initialize("8", OsClock.DEFAULT, OsClock.DEFAULT);
         game.pis[1].sName = players.get(iBlackPlayer);
         game.pis[0].sName = players.get(iWhitePlayer);
         game.sPlace = tournaments.get(iTournament);

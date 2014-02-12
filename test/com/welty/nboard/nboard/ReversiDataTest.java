@@ -3,6 +3,7 @@ package com.welty.nboard.nboard;
 import com.welty.nboard.thor.ThorTest;
 import com.welty.novello.core.Position;
 import com.welty.othello.gdk.COsGame;
+import com.welty.othello.gdk.OsClock;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.mockito.Mockito;
@@ -28,7 +29,7 @@ public class ReversiDataTest extends TestCase {
         final EngineTalker engineTalker = Mockito.mock(EngineTalker.class);
         final ReversiData data = new ReversiData(optionSource, engineTalker);
         final COsGame game = data.Game();
-        game.SetDefaultStartPos();
+        game.setToDefaultStartPosition(OsClock.DEFAULT, OsClock.DEFAULT);
         game.append(ThorTest.mli("F5"));
         data.ReflectGame(iReflection);
         assertEquals(1, game.nMoves());

@@ -18,6 +18,7 @@ import com.welty.othello.core.Engineering;
 import com.welty.othello.core.OperatingSystem;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsPosition;
+import com.welty.othello.gdk.OsClock;
 import com.welty.othello.gdk.OsMoveListItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -127,11 +128,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         reversiData.addListener(m_hints);
 
-        final JPanel enginePanel = new JPanel();
-        enginePanel.setLayout(new BorderLayout());
-        enginePanel.add(engineStatus, BorderLayout.LINE_START);
-        enginePanel.add(engineNodeCount, BorderLayout.LINE_END);
-        enginePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        final JPanel enginePanel = createEnginePanel();
 
         final JComponent leftPanel = vBox(
                 new StatusBar(reversiData),
@@ -168,6 +165,15 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         // the responses to be displayed in
         needsLove = true;
         TellEngineWhatToDo();
+    }
+
+    private JPanel createEnginePanel() {
+        final JPanel enginePanel = new JPanel();
+        enginePanel.setLayout(new BorderLayout());
+        enginePanel.add(engineStatus, BorderLayout.LINE_START);
+        enginePanel.add(engineNodeCount, BorderLayout.LINE_END);
+        enginePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        return enginePanel;
     }
 
     /**
@@ -322,7 +328,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 String s = GetClipboardText();
                 if (s != null) {
                     COsGame game = new COsGame();
-                    game.SetDefaultStartPos();
+                    game.setToDefaultStartPosition(getGameStartClock(), getGameStartClock());
                     game.SetMoveList(s);
                     reversiData.setGame(game, true);
                 }
@@ -338,7 +344,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                     try {
                         COsGame game = new COsGame();
                         game.Clear();
-                        game.SetDefaultStartPos();
+                        game.setToDefaultStartPosition(getGameStartClock(), getGameStartClock());
                         game.posStart.board.in(is);
                         game.CalcCurrentPos();
                         reversiData.setGame(game, true);
@@ -954,5 +960,9 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
     public void repaint() {
         frame.repaint();
+    }
+
+    public @NotNull OsClock getGameStartClock() {
+        return reversiData.getGameStartClock();
     }
 }

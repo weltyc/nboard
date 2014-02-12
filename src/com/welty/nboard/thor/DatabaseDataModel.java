@@ -144,7 +144,7 @@ class DatabaseDataModel {
         if (iGame < m_nThorGames) {
             final ThorGameInternal tg = m_tgis.get(iGame);
 
-            game.SetDefaultStartPos();
+            game.setToDefaultStartPosition(OsClock.DEFAULT, OsClock.DEFAULT);
             game.pis[0].sName = playerFromPlayerNumber(tg.iWhitePlayer);
             game.pis[1].sName = playerFromPlayerNumber(tg.iBlackPlayer);
             game.pis[0].dRating = game.pis[1].dRating = 0;
