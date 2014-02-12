@@ -1,5 +1,6 @@
 package com.welty.nboard.nboard.engine;
 
+import com.orbanova.common.misc.Utils;
 import com.welty.nboard.nboard.selector.GuiOpponentSelector;
 import com.welty.othello.api.OpponentSelection;
 import com.welty.othello.api.OpponentSelector;
@@ -10,60 +11,68 @@ import com.welty.othello.gui.selector.EngineSelector;
 import junit.framework.TestCase;
 import org.mockito.Mockito;
 
-import java.io.IOException;
+import javax.swing.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class EngineSynchronizerTest extends TestCase {
     private static final List<EngineSelector> selectors = GuiOpponentSelector.internalOpponentSelectors();
 
-    public void testSingleEngine() throws IOException {
-        // set the game with the first engine
-        OpponentSelector selector = Mockito.mock(OpponentSelector.class);
-        stubSelector(selector, 0, 1);
-
+    public void testSingleEngine() throws Throwable {
         final ReversiWindowEngine.Listener rwl = Mockito.mock(ReversiWindowEngine.Listener.class);
 
-        final EngineSynchronizer sync = new EngineSynchronizer(selector, rwl);
+        // Request a move from the Engine Synchronizer.
+        testInEdt(new Runnable() {
+            @Override public void run() {
+                // set the game with the first engine
+                OpponentSelector selector = Mockito.mock(OpponentSelector.class);
+                stubSelector(selector, 0, 1);
 
-        // now request a move.
-        sync.requestMove(createState());
 
-        // this test assumes that the engine returned its move in the same thread this method is
-        // running in. This is not required by the EngineSynchronizer spec, it's just something
-        // that currently happens for internal engines.
-        //
-        // If this behaviour changes, stub a Listener and use wait/notify to verify that we received the message.
-        Mockito.verify(rwl).engineMove(Mockito.any(OsMoveListItem.class));
+                final EngineSynchronizer sync = new EngineSynchronizer(selector, rwl);
+
+                // now request a move.
+                sync.requestMove(createState());
+            }
+        });
+
+        checkMoveReceived(rwl);
+    }
+
+    private static void checkMoveReceived(final ReversiWindowEngine.Listener rwl) throws Throwable {
+        // Wait 50 ms, this should be plenty of time for the Engine to respond
+        Utils.sleep(50);
+
+        // make sure that the engine responded.
+        testInEdt(new Runnable() {
+            @Override public void run() {
+                Mockito.verify(rwl).engineMove(Mockito.any(OsMoveListItem.class));
+
+            }
+        });
+    }
+
+    private static void testInEdt(final Runnable runnable) throws Throwable {
+        final AtomicReference<Throwable> failed = new AtomicReference<>();
+
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override public void run() {
+                try {
+                    runnable.run();
+                } catch (Throwable e) {
+                    failed.set(e);
+                }
+            }
+        });
+
+        final Throwable t = failed.get();
+        if (t != null) {
+            throw t;
+        }
     }
 
     private static void stubSelector(OpponentSelector selector, int engineSelectorIndex, int maxDepth) {
         Mockito.stub(selector.getOpponent()).toReturn(new OpponentSelection(selectors.get(engineSelectorIndex), maxDepth));
-    }
-
-    public void testSwitchingEngines() throws IOException {
-        if (selectors.size() < 2) {
-            throw new IllegalStateException("Need at least two opponents for this test");
-        }
-        final OpponentSelector stub = Mockito.mock(OpponentSelector.class);
-        stubSelector(stub, 0, 1);
-
-        final ReversiWindowEngine.Listener rwl = Mockito.mock(ReversiWindowEngine.Listener.class);
-
-        // set the game with the first engine
-        final EngineSynchronizer sync = new EngineSynchronizer(stub, rwl);
-
-        // now switch engines and request a move. The second engine should have received a position.
-        stubSelector(stub, 1, 2);
-        sync.opponentChanged();
-        final EngineSynchronizer.Listener listener = Mockito.mock(EngineSynchronizer.Listener.class);
-        sync.requestMove(createState());
-
-        // this test assumes that the engine returned its move in the same thread this method is
-        // running in. This is not required by the EngineSynchronizer spec, it's just something
-        // that currently happens for internal engines.
-        //
-        // If this behaviour changes, stub a Listener and use wait/notify to verify that we received the message.
-        Mockito.verify(listener).engineMove(Mockito.any(OsMoveListItem.class));
     }
 
     private static SearchState createState() {
