@@ -540,14 +540,14 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         }
         // set up the Flip menu
         JMenu m_flipMenu = new JMenu();
-        m_flipMenu.add(menuItem("F5/C4 Turn 180�").build(new BoardFlipper(3)));
-        m_flipMenu.add(menuItem("F5/E6 Flop").build(new BoardFlipper(4)));
-        m_flipMenu.add(menuItem("F5/D3 Flop").build(new BoardFlipper(7)));
+        m_flipMenu.add(menuItem("").icon("flip3.png").build(new BoardFlipper(3)));
+        m_flipMenu.add(menuItem("").icon("flip4.png").build(new BoardFlipper(4)));
+        m_flipMenu.add(menuItem("").icon("flip7.png").build(new BoardFlipper(7)));
         m_flipMenu.addSeparator();
-        m_flipMenu.add(menuItem("Flip Horizontally").build(new BoardFlipper(2)));
-        m_flipMenu.add(menuItem("Flip Vertically").build(new BoardFlipper(1)));
-        m_flipMenu.add(menuItem("Turn 90� Right").build(new BoardFlipper(6)));
-        m_flipMenu.add(menuItem("Turn 90� Left").build(new BoardFlipper(5)));
+        m_flipMenu.add(menuItem("").icon("flip2.png").build(new BoardFlipper(2)));
+        m_flipMenu.add(menuItem("").icon("flip1.png").build(new BoardFlipper(1)));
+        m_flipMenu.add(menuItem("").icon("flip6.png").build(new BoardFlipper(6)));
+        m_flipMenu.add(menuItem("").icon("flip5.png").build(new BoardFlipper(5)));
         return m_flipMenu;
     }
 

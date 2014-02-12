@@ -60,6 +60,12 @@ public class NBoard {
         p.put(sRegKey + key, s);
     }
 
+    /**
+     * Load an ImageIcon from a resource.
+     *
+     * @param path Image name within com.welty.nboard.nboard.images.
+     * @return the ImageIcon.
+     */
     public static ImageIcon getImage(String path) {
         java.net.URL imgURL = NBoard.class.getResource("images/" + path);
         Require.notNull(imgURL, "image url for " + path);
