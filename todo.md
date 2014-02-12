@@ -56,8 +56,8 @@ F3   X   Internal engines should support NBoard protocol
 F4   X   Symmetry menu items should display first move and icon
 F5       More convenient external engine add window
 F6   X   Display node count
-F7       Display clock
-F8       Timed matches
+F7   X   Display clock
+F8   X   Timed matches
 F9       Single Paste
 F10      Copy should copy move list, not game
 F11      Filter database by player, tournament, etc.
