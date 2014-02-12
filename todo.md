@@ -34,7 +34,7 @@ L14  X   Abigail's Engine Status is never updated
 L15  X   Hints are displayed on the first move of the game when switching users' color
 L16  X   "Engine communication error" dialog not displaying reason.
 L17  X   Document 'set contempt' request.
-L18      NaN displayed in Move Grid for eval sometimes, should be blank
+L18  X   NaN displayed in Move Grid for eval sometimes, should be blank
 L19  X   "pa" displayed in Move Grid at end of game (and other times?)
 L20  X   Display "Engine Loading" when external engine is starting up.
 L21  X   Don't allow reordering of move table columns - it results in exceptions and is horrible

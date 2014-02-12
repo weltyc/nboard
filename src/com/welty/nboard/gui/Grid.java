@@ -95,12 +95,13 @@ public abstract class Grid extends JScrollPane {
     }
 
     /**
-     * The grid selection has changed.
+     * The grid selection has changed. Handle it.
      *
      * @param modelRow selection row
      * @param modelCol selection column
      */
-    protected abstract void selectionChanged(int modelRow, int modelCol);
+    protected void selectionChanged(int modelRow, int modelCol){
+    }
 
     protected JTable getTable() {
         return table;

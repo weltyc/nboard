@@ -63,12 +63,6 @@ public class MoveList extends Grid {
         });
     }
 
-    /**
-     * Switch the displayed position to the one that the user clicked on.
-     */
-    public void selectionChanged(int row, int col) {
-    }
-
     @Override protected void onMouseClick(int row, int col) {
         System.out.println("mouse clicked at " + row + ", " + col);
         if (col >= 1) {

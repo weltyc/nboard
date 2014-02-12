@@ -51,18 +51,14 @@ class MoveGridTableModel extends GridTableModel implements TableModelListener {
     }
 
     public Object getValueAt(int item, int field) {
-        StringBuilder os = new StringBuilder();
-
         final int sq = m_moves.get(item);
 
         if (field == 0)
-            os.append(new CMove((byte) sq).toString());
+            return new CMove((byte) sq).toString();
         else if (field < 6)
-            OutputHintText(sq, field, os);
+            return OutputHintText(sq, field);
         else
-            OutputSummaryText(sq, field, os);
-
-        return os.toString();
+            return OutputSummaryText(sq, field);
 
 
     }
@@ -74,51 +70,52 @@ class MoveGridTableModel extends GridTableModel implements TableModelListener {
     }
 
     /**
-     * Write the text of the square's hint to the ostream
+     * get the hint text for the move
      */
-    void OutputHintText(int sq, int field, StringBuilder os) {
+    String OutputHintText(int sq, int col) {
         Hint hint = m_hints.Map().get((byte) sq);
-        if (hint != null) {
-            switch (field) {
-                case 1:
-                case 2:
-                case 3:
-                    if (field == 1) {
-                        os.append(String.format("%+.2f", hint.VNeutral()));
-                    } else if (field == 2) {
-                        os.append(String.format("%+.2f", hint.vBlack));
-                    } else {
-                        os.append(String.format("%+.2f", hint.vWhite));
-                    }
-                    break;
-                case 4:
-                    os.append(hint.nGames);
-                    break;
-                case 5:
-                    os.append(hint.sPly);
-                    break;
-                default:
-                    throw new IllegalArgumentException("illegal field : " + field);
-            }
+        if (hint == null) {
+            return "";
+        }
+        switch (col) {
+            case 1:
+                return formatEval(hint.VNeutral());
+            case 2:
+                return formatEval(hint.vBlack);
+            case 3:
+                return formatEval(hint.vWhite);
+            case 4:
+                return "" + hint.nGames;
+            case 5:
+                return hint.sPly;
+            default:
+                throw new IllegalArgumentException("illegal field : " + col);
+        }
+    }
+
+    private static String formatEval(float value) {
+        if (Float.isNaN(value)) {
+            return "";
+        } else {
+            return String.format("%+.2f", value);
         }
     }
 
     /**
-     * Write the text of the summary field to the ostream
+     * Write the text of the summary field to the StringBuilder
      */
-    void OutputSummaryText(int sq, int field, StringBuilder os) {
+    String OutputSummaryText(int sq, int field) {
         ThorSummaryData it = pdd.m_summary.get(sq);
-        if (it != null) {
-            switch (field) {
-                case 6:
-                    os.append(it.getNPlayed());
-                    break;
-                case 7:
-                    os.append((int) (it.getScore() * 100)).append("%");
-                    break;
-                default:
-                    throw new IllegalArgumentException("Can't have field id = " + field);
-            }
+        if (it == null) {
+            return "";
+        }
+        switch (field) {
+            case 6:
+                return "" + it.getNPlayed();
+            case 7:
+                return ((int) (it.getScore() * 100)) + "%";
+            default:
+                throw new IllegalArgumentException("Can't have field id = " + field);
         }
     }
 

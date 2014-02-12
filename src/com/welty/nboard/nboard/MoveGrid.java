@@ -80,12 +80,6 @@ public class MoveGrid extends Grid {
         return ((MoveGridTableModel) getTable().getModel());
     }
 
-    /**
-     * When the selection changes
-     */
-    public void selectionChanged(int row, int col) {
-    }
-
     @Override protected void onMouseClick(int row, int col) {
         MoveGridTableModel model = getModel();
         OsMove mv = model.getMove(row);

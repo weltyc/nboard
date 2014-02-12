@@ -48,9 +48,12 @@ public class Hint {
     }
 
     /**
-     * @return the value with contempt=0
+     * @return the value with contempt=0, or Float.NaN if the value does not exist.
      */
     float VNeutral() {
+        if (Float.isNaN(vBlack)) {
+            return vBlack;
+        }
         float vLow, vHigh;
         if (vBlack < vWhite) {
             vLow = vBlack;
