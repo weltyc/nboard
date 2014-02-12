@@ -121,7 +121,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         Grid m_pml = new MoveList(reversiData);
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
-            m_engine = new EngineSynchronizer(GuiOpponentSelector.getInstance(), this);
+        m_engine = new EngineSynchronizer(GuiOpponentSelector.getInstance(), this);
 
         final JMenuBar menuBar = createMenus(startPositionManager);
 
@@ -278,7 +278,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         m_editMenu.add(menuItem("Copy &Move List").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SetClipboardText(reversiData.Game().GetMoveList().toMoveListString());
+                SetClipboardText(reversiData.Game().getMoveList().toMoveListString());
             }
         }));
 
