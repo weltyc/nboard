@@ -6,6 +6,8 @@ import com.welty.othello.gdk.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static com.welty.nboard.nboard.GraphicsUtils.setPlainFont;
 
@@ -19,34 +21,31 @@ import static com.welty.nboard.nboard.GraphicsUtils.setPlainFont;
  * To change this template use File | Settings | File Templates.
  */
 class ScoreWindow extends JPanel {
-    private final ReversiData m_pd;
+    private final ReversiData reversiData;
     private static final int height = 24;
+    private final PlayerPanel blackPanel;
+    private final PlayerPanel whitePanel;
 
-    //     \todo time remaining
-    ScoreWindow(ReversiData pd) {
-        m_pd = pd;
+    ScoreWindow(ReversiData reversiData) {
+        this.reversiData = reversiData;
         setLayout(new BorderLayout());
-        final COsPosition pos = pd.getGame().getPos();
-        final PlayerPanel blackPanel = new PlayerPanel(height, "2", "smallBlack.GIF", pos.getBlackClock());
+        final COsPosition pos = reversiData.getGame().getPos();
+        blackPanel = new PlayerPanel(height, "2", "smallBlack.GIF", pos.getBlackClock());
         add(blackPanel, BorderLayout.LINE_START);
-        final PlayerPanel whitePanel = new PlayerPanel(height, "2", "smallWhite.GIF", pos.getWhiteClock());
+        whitePanel = new PlayerPanel(height, "2", "smallWhite.GIF", pos.getWhiteClock());
         add(whitePanel, BorderLayout.LINE_END);
         final EmptiesPanel emptiesPanel = new EmptiesPanel(height);
         add(emptiesPanel, BorderLayout.CENTER);
         setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
-//        final Dimension size = new Dimension(ReversiWindow.boardFrameSize, height);
-//        setPreferredSize(size);
-//        setMaximumSize(size);
-//        setMinimumSize(size);
-        m_pd.addListener(new SignalListener<OsMoveListItem>() {
+        this.reversiData.addListener(new SignalListener<OsMoveListItem>() {
             public void handleSignal(OsMoveListItem data) {
-                final COsPosition pos = m_pd.DisplayedPosition();
+                final COsPosition pos = ScoreWindow.this.reversiData.DisplayedPosition();
                 OsBoard board = pos.board;
                 final PieceCounts pieceCounts = board.getPieceCounts();
-                blackPanel.player.setText(m_pd.getGame().pis[1].sName);
+                blackPanel.player.setText(ScoreWindow.this.reversiData.getGame().pis[1].sName);
                 blackPanel.score.setText(Integer.toString(pieceCounts.nBlack));
-                whitePanel.player.setText(m_pd.getGame().pis[0].sName);
+                whitePanel.player.setText(ScoreWindow.this.reversiData.getGame().pis[0].sName);
                 whitePanel.score.setText(Integer.toString(pieceCounts.nWhite));
                 emptiesPanel.score.setText(Integer.toString(pieceCounts.nEmpty));
                 if (board.isGameOver()) {
@@ -64,6 +63,24 @@ class ScoreWindow extends JPanel {
                 repaint();
             }
         });
+
+        new Timer(1000, new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                updateClocks();
+            }
+        }).start();
+    }
+
+    private void updateClocks() {
+        if (!reversiData.isReviewing() && !reversiData.getGame().isOver()) {
+            final double tElapsed = reversiData.secondsSinceLastMove();
+            final COsPosition pos = reversiData.getGame().getPos();
+            if (pos.board.isBlackMove()) {
+                blackPanel.setClock(pos.getBlackClock().update(tElapsed));
+            } else {
+                whitePanel.setClock(pos.getWhiteClock().update(tElapsed));
+            }
+        }
     }
 
     private static JLabel createScoreLabel(int height, String scoreText) {
