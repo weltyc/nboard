@@ -26,9 +26,10 @@ class ScoreWindow extends JPanel {
     ScoreWindow(ReversiData pd) {
         m_pd = pd;
         setLayout(new BorderLayout());
-        final PlayerPanel blackPanel = new PlayerPanel(height, "2", "smallBlack.GIF");
+        final COsPosition pos = pd.getGame().getPos();
+        final PlayerPanel blackPanel = new PlayerPanel(height, "2", "smallBlack.GIF", pos.getBlackClock());
         add(blackPanel, BorderLayout.LINE_START);
-        final PlayerPanel whitePanel = new PlayerPanel(height, "2", "smallWhite.GIF");
+        final PlayerPanel whitePanel = new PlayerPanel(height, "2", "smallWhite.GIF", pos.getWhiteClock());
         add(whitePanel, BorderLayout.LINE_END);
         final EmptiesPanel emptiesPanel = new EmptiesPanel(height);
         add(emptiesPanel, BorderLayout.CENTER);
@@ -43,9 +44,9 @@ class ScoreWindow extends JPanel {
                 final COsPosition pos = m_pd.DisplayedPosition();
                 OsBoard board = pos.board;
                 final PieceCounts pieceCounts = board.getPieceCounts();
-                blackPanel.player.setText(m_pd.Game().pis[1].sName);
+                blackPanel.player.setText(m_pd.getGame().pis[1].sName);
                 blackPanel.score.setText(Integer.toString(pieceCounts.nBlack));
-                whitePanel.player.setText(m_pd.Game().pis[0].sName);
+                whitePanel.player.setText(m_pd.getGame().pis[0].sName);
                 whitePanel.score.setText(Integer.toString(pieceCounts.nWhite));
                 emptiesPanel.score.setText(Integer.toString(pieceCounts.nEmpty));
                 if (board.isGameOver()) {
@@ -95,9 +96,9 @@ class ScoreWindow extends JPanel {
     private class PlayerPanel extends Grid<JComponent> {
         final JLabel score;
         final JLabel player;
-        final JLabel clock = new JLabel("0:00");
+        final JLabel clock;
 
-        PlayerPanel(int height, String scoreText, String iconName) {
+        PlayerPanel(int height, String scoreText, String iconName, OsClock clock) {
             super(2);
             this.score = createScoreLabel(height, scoreText);
             add(score);
@@ -105,8 +106,11 @@ class ScoreWindow extends JPanel {
             this.player = createPlayerNameLabel(height, iconName);
             add(player);
 
+            // spacer
             add(new JLabel(""));
-            add(clock);
+
+            this.clock = new JLabel(clock.toString());
+            add(this.clock);
 
             setVisible(true);
         }

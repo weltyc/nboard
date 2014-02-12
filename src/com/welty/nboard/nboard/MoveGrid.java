@@ -83,7 +83,7 @@ public class MoveGrid extends Grid {
     @Override protected void onMouseClick(int row, int col) {
         MoveGridTableModel model = getModel();
         OsMove mv = model.getMove(row);
-        m_pd.Update(new OsMoveListItem(mv), true);
+        m_pd.update(new OsMoveListItem(mv), true);
     }
 
     public void UpdateHints() {

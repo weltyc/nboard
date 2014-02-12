@@ -32,7 +32,7 @@ class StatusBar extends JPanel {
         m_pd.addListener(new SignalListener<OsMoveListItem>() {
 
             public void handleSignal(OsMoveListItem data) {
-                final String sGgfGame = m_pd.Game().toString();
+                final String sGgfGame = m_pd.getGame().toString();
                 final int openingCode = OpeningCodeFromGgf(sGgfGame);
                 openingField.setText(OpeningName(openingCode));
             }

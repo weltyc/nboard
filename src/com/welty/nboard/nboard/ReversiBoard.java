@@ -25,7 +25,7 @@ import java.awt.event.MouseEvent;
  * To change this template use File | Settings | File Templates.
  */
 class ReversiBoard extends JPanel {
-    private final BoardSource m_pd;
+    private final BoardSource boardSource;
     private final OptionSource optionSource;
 
     private static final int n = 8;
@@ -41,7 +41,7 @@ class ReversiBoard extends JPanel {
     private final Hints m_hints;
 
     ReversiBoard(@NotNull ReversiData pd, @NotNull OptionSource optionSource, @NotNull Hints hints) {
-        m_pd = pd;
+        boardSource = pd;
         this.optionSource = optionSource;
         // add an event handler so when the hints change we draw them
         m_hints = hints;
@@ -51,7 +51,7 @@ class ReversiBoard extends JPanel {
             }
         };
         m_hints.m_seUpdate.Add(repainter);
-        m_pd.addListener(repainter);
+        boardSource.addListener(repainter);
 
         setPreferredSize(new Dimension(boardFrameSize, boardFrameSize));
         addMouseListener(new MouseAdapter() {
@@ -60,7 +60,7 @@ class ReversiBoard extends JPanel {
                 if (e.isMetaDown()) {
                     OnRightButtonDown();
                 } else {
-                    OnButtonDown(point);
+                    onButtonDown(point);
                 }
             }
         });
@@ -222,13 +222,13 @@ class ReversiBoard extends JPanel {
      * <p/>
      * Can't move if it's the engine's move and we're not reviewing.
      */
-    void OnButtonDown(Point loc) {
-        if (optionSource.UsersMove() || m_pd.Reviewing()) {
+    void onButtonDown(Point loc) {
+        if (optionSource.UsersMove() || boardSource.isReviewing()) {
             final int ix = (loc.x - boardArea.x) * n / boardArea.width;
             final int iy = (loc.y - boardArea.y) * n / boardArea.height;
 
             if (ix >= 0 && ix < n && iy >= 0 && iy < n) {
-                final COsPosition displayedPosition = m_pd.DisplayedPosition();
+                final COsPosition displayedPosition = boardSource.DisplayedPosition();
                 final OsMove mv;
                 if (displayedPosition.board.hasLegalMove()) {
                     mv = new OsMove(iy, ix);
@@ -238,7 +238,8 @@ class ReversiBoard extends JPanel {
 
                 if (displayedPosition.board.isMoveLegal(mv)) {
                     // legal move, make the move and send to the engine.
-                    m_pd.Update(new OsMoveListItem(mv), true);
+                    final double tElapsed = boardSource.secondsSinceLastMove();
+                    boardSource.update(new OsMoveListItem(mv, Double.NaN, tElapsed), true);
                 }
             }
         }
@@ -250,14 +251,15 @@ class ReversiBoard extends JPanel {
      * @see ReversiData#Undo
      */
     void OnRightButtonDown() {
-        m_pd.Undo();
+        boardSource.Undo();
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     public void paint(Graphics gd) {
 //        System.out.println("I am at " + this.getBounds() + " relative to my parent; "
 //                + this.getLocationOnScreen() + " on the screen");
 
-        COsPosition pos = m_pd.DisplayedPosition();
+        COsPosition pos = boardSource.DisplayedPosition();
         gd.setColor(new Color(0xFF, 0xCC, 0x88));
         final Dimension size = getSize();
         gd.fillRect(0, 0, size.width, size.height);
@@ -329,7 +331,7 @@ class ReversiBoard extends JPanel {
      */
     void PaintNextMove(Graphics gd, final OsMove mv) {
         if (!mv.isPass()) {
-            boolean fBlackMove = m_pd.DisplayedPosition().board.fBlackMove;
+            boolean fBlackMove = boardSource.DisplayedPosition().board.fBlackMove;
             Rectangle rect = SquareRect(mv.col(), mv.row(), n, boardArea);
             rect = GraphicsUtils.FractionalInflate(rect, -.1);
             final Color pieceColor = fBlackMove ? Color.black : Color.white;
@@ -402,7 +404,7 @@ class ReversiBoard extends JPanel {
      * Paint a square including background, next move symbol, and eval
      */
     void PaintSquare(Graphics gd, int ix, int iy, COsPosition pos, int iHighlight) {
-        final OsMove mv = m_pd.NextMove();
+        final OsMove mv = boardSource.NextMove();
 
         PaintPiece(gd, ix, iy, pos, iHighlight, mv);
 

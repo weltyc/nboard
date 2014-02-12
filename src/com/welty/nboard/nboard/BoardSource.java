@@ -44,18 +44,18 @@ public interface BoardSource {
     /**
      * @return the current game
      */
-    COsGame Game();
+    COsGame getGame();
 
     /**
      * @return true if the user is reviewing the game, i.e. is not at the last move
      */
-    boolean Reviewing();
+    boolean isReviewing();
 
     /**
      * Update the board with a move list item; update the engine; tell the engine what to do
      * todo engine talker should be a listener and tell the engine itself
      */
-    void Update(OsMoveListItem mli, boolean fUserMove);
+    void update(OsMoveListItem mli, boolean fUserMove);
 
     /**
      * In study mode, move back one move and review. In game mode, remove moves from the game back to the last user move.
@@ -73,4 +73,11 @@ public interface BoardSource {
      *         return pass otherwise
      */
     OsMove NextMove();
+
+    /**
+     * @return time since the last move was made on the board.
+     *         <p/>
+     *         If no moves have been made yet, return the number of seconds since the game started.
+     */
+    double secondsSinceLastMove();
 }

@@ -1,5 +1,7 @@
 package com.welty.nboard.nboard;
 
+import com.orbanova.common.clock.Clock;
+import com.orbanova.common.clock.SystemClock;
 import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.SignalEvent;
 import com.welty.nboard.gui.SignalListener;
@@ -21,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 public class ReversiData implements BoardSource {
     private final OptionSource optionSource;    // The app's main window, so we can tell if View menu items are checked
     private final EngineTalker engineTalker;
+    private final @NotNull Clock clock;
 
     //    SignalEvent m_seClearHints;            //*< Event that is fired when the hints are cleared
     //    SignalEvent m_seAddHint;            //*< Event that is fired when a new hint is added
@@ -34,13 +37,24 @@ public class ReversiData implements BoardSource {
     private @NotNull OsClock gameStartClock = new OsClock(15 * 60);
 
     /**
+     * Time of the last move, or if no moves have been made, time since the game started.
+     */
+    private long lastMoveMillis;
+
+    /**
      * Initialize fields and create a new DatabaseData
      */
     ReversiData(@NotNull OptionSource optionSource, @NotNull EngineTalker engineTalker) {
+        this(optionSource, engineTalker, new SystemClock());
+    }
+
+    ReversiData(@NotNull OptionSource optionSource, @NotNull EngineTalker engineTalker, @NotNull Clock clock) {
+        this.clock = clock;
         m_iMove = 0;
         this.optionSource = optionSource;
         this.engineTalker = engineTalker;
         StartNewGame(optionSource.getStartPosition());
+        this.lastMoveMillis = clock.getMillis();
     }
 
     public int nMoves() {
@@ -55,7 +69,7 @@ public class ReversiData implements BoardSource {
         m_seBoardChanged.Add(signalListener);
     }
 
-    public COsGame Game() {
+    public COsGame getGame() {
         return game;
     }
 
@@ -63,7 +77,7 @@ public class ReversiData implements BoardSource {
         return m_iMove;
     }
 
-    public boolean Reviewing() {
+    public boolean isReviewing() {
         return m_iMove != game.nMoves();
     }
 
@@ -78,7 +92,11 @@ public class ReversiData implements BoardSource {
     private int m_iMove;    // currently displayed move
 
     public OsMove NextMove() {
-        return Reviewing() ? game.getMli(m_iMove).move : OsMove.PASS;
+        return isReviewing() ? game.getMli(m_iMove).move : OsMove.PASS;
+    }
+
+    @Override public double secondsSinceLastMove() {
+        return 0.001 * (clock.getMillis() - lastMoveMillis);
     }
 
     /**
@@ -153,7 +171,7 @@ public class ReversiData implements BoardSource {
         if (optionSource.IsStudying()) {
             Back();
         } else {
-            int nUndo = optionSource.UserPlays(!Game().pos.board.fBlackMove) ? 1 : 2;
+            int nUndo = optionSource.UserPlays(!getGame().pos.board.fBlackMove) ? 1 : 2;
             Undo(nUndo);
         }
     }
@@ -192,7 +210,7 @@ public class ReversiData implements BoardSource {
         }
     }
 
-    public void Update(final OsMoveListItem mli, boolean fUserMove) {
+    public void update(final OsMoveListItem mli, boolean fUserMove) {
         final int nMoves = nMoves();
         final int iMove = IMove();
 
@@ -217,7 +235,12 @@ public class ReversiData implements BoardSource {
         }
 
         m_iMove++;
+        resetTimer();
         fireBoardChanged(mli);
+    }
+
+    private void resetTimer() {
+        lastMoveMillis = clock.getMillis();
     }
 
     /**
@@ -251,8 +274,10 @@ public class ReversiData implements BoardSource {
      */
     public void setGame(final COsGame game, boolean fResetMove) {
         this.game = game;
-        if (fResetMove || IMove() >= game.nMoves())
+        if (fResetMove || IMove() >= game.nMoves()) {
             m_iMove = 0;
+        }
+        resetTimer();
         fireBoardChanged();
         engineTalker.MayLearn();
     }
@@ -268,6 +293,7 @@ public class ReversiData implements BoardSource {
         game.SetTime(System.currentTimeMillis());
         game.SetPlace("NBoard");
         m_iMove = 0;
+        resetTimer();
         fireBoardChanged();
     }
 
@@ -278,8 +304,8 @@ public class ReversiData implements BoardSource {
     }
 
     public void SetNames(String name0, String name1, boolean updateUsers) {
-        Game().pis[0].sName = name0;
-        Game().pis[1].sName = name1;
+        getGame().pis[0].sName = name0;
+        getGame().pis[1].sName = name1;
         if (updateUsers) {
             m_seBoardChanged.Raise();
         }

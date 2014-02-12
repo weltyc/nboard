@@ -1,17 +1,20 @@
 package com.welty.nboard.nboard;
 
+import com.orbanova.common.clock.MockClock;
 import com.welty.nboard.thor.ThorTest;
 import com.welty.novello.core.Position;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsClock;
+import com.welty.othello.gdk.OsMoveListItem;
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
+import org.jetbrains.annotations.NotNull;
 import org.mockito.Mockito;
 
 /**
  * Test accessing the ReversiGame
  */
 public class ReversiDataTest extends TestCase {
+    private @NotNull MockClock clock;
 
     public void testReflectGame() {
         testReflectGame(0, "F5");
@@ -24,11 +27,9 @@ public class ReversiDataTest extends TestCase {
         testReflectGame(7, "D3");
     }
 
-    private static void testReflectGame(int iReflection, String expected) {
-        final OptionSource optionSource = mockOptionSource();
-        final EngineTalker engineTalker = Mockito.mock(EngineTalker.class);
-        final ReversiData data = new ReversiData(optionSource, engineTalker);
-        final COsGame game = data.Game();
+    private void testReflectGame(int iReflection, String expected) {
+        final ReversiData data = createRd();
+        final COsGame game = data.getGame();
         game.setToDefaultStartPosition(OsClock.DEFAULT, OsClock.DEFAULT);
         game.append(ThorTest.mli("F5"));
         data.ReflectGame(iReflection);
@@ -44,22 +45,41 @@ public class ReversiDataTest extends TestCase {
     }
 
     public void testUpdate() {
-        final OptionSource optionSource = mockOptionSource();
-        final EngineTalker engineTalker = EasyMock.createMock(EngineTalker.class);
+        final ReversiData data = createRd();
 
-        final ReversiData data = new ReversiData(optionSource, engineTalker);
-
-        data.Update(ThorTest.mli("F5"), true);
-        data.Update(ThorTest.mli("D6"), true);
+        data.update(ThorTest.mli("F5"), true);
+        data.update(ThorTest.mli("D6"), true);
 
         // move matches game; game should not be broken
         data.SetIMove(0);
-        data.Update(ThorTest.mli("F5"), true);
+        data.update(ThorTest.mli("F5"), true);
         assertEquals(2, data.nMoves());
 
         // move does not match game; game should be broken
         data.SetIMove(0);
-        data.Update(ThorTest.mli("D3"), true);
+        data.update(ThorTest.mli("D3"), true);
         assertEquals(1, data.nMoves());
+    }
+
+    private ReversiData createRd() {
+        final OptionSource optionSource = mockOptionSource();
+        final EngineTalker engineTalker = Mockito.mock(EngineTalker.class);
+        clock = new MockClock();
+        clock.setMillis(37);
+        return new ReversiData(optionSource, engineTalker, clock);
+    }
+
+    public void testTiming() {
+        final BoardSource data = createRd();
+
+        assertEquals(0., data.secondsSinceLastMove());
+
+        clock.setMillis(1037);
+        assertEquals(1., data.secondsSinceLastMove());
+
+        data.update(new OsMoveListItem("F5"), true);
+        assertEquals(0., data.secondsSinceLastMove());
+        clock.setMillis(2037);
+        assertEquals(1., data.secondsSinceLastMove());
     }
 }

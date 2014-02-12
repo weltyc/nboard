@@ -103,7 +103,7 @@ public class MoveList extends Grid {
                 field -= 2;
             }
             if (iMove < boardSource.nMoves()) {
-                final OsMoveListItem mli = boardSource.Game().getMli(iMove);
+                final OsMoveListItem mli = boardSource.getGame().getMli(iMove);
                 if (field == 1) {
                     return mli.move.toString();
                 } else {

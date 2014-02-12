@@ -57,7 +57,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private final MoveGrid m_pmg;
     private final ReversiBoard m_prb;
 
-    private final GameSelectionWindow m_pgsw;    //< Used in File/Open... dialog when there are multiple games in a file
+    private final GameSelectionWindow gameSelectionWindow;    //< Used in File/Open... dialog when there are multiple games in a file
     private final Hints m_hints;
     private final DatabaseData dd;
 
@@ -75,9 +75,6 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private final int n = 8;
 
 
-    private static final int boardSize = 400;
-    private static final int boardFrameWidth = 15;
-    static final int boardFrameSize = boardSize + 2 * boardFrameWidth;
     private JMenuItem viewAlwaysShowEvals;
     private JMenuItem viewD2;
     private JMenuItem viewPhotoStyle;
@@ -100,7 +97,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         startPositionManager = new StartPositionManagerImpl();
 
         reversiData = new ReversiData(this, this);
-        m_pgsw = new GameSelectionWindow(this);
+        gameSelectionWindow = new GameSelectionWindow(this);
         dd = new DatabaseData(this, reversiData);
         m_pwThor = new ThorWindow(this, reversiData, dd);
         reversiData.addListener(new SignalListener<OsMoveListItem>() {
@@ -287,13 +284,13 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         m_editMenu.addSeparator();
         m_editMenu.add(menuItem("&Copy Game\tCtrl+C").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SetClipboardText(reversiData.Game().toString());
+                SetClipboardText(reversiData.getGame().toString());
             }
         }));
 
         m_editMenu.add(menuItem("Copy &Move List").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SetClipboardText(reversiData.Game().getMoveList().toMoveListString());
+                SetClipboardText(reversiData.getGame().getMoveList().toMoveListString());
             }
         }));
 
@@ -307,7 +304,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                     }
                     os.append("\n");
                 }
-                os.append(reversiData.Game().pos.board.getMoverChar());
+                os.append(reversiData.getGame().pos.board.getMoverChar());
                 SetClipboardText(os.toString());
 
             }
@@ -466,7 +463,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 file = new File(file.getAbsolutePath() + ".ggf");
             }
             final CWriter out = new CWriter(file, append);
-            out.println(reversiData.Game());
+            out.println(reversiData.getGame());
             out.close();
         }
     }
@@ -553,7 +550,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             }
 
             public String getMenuText() {
-                final COsGame game = reversiData.Game();
+                final COsGame game = reversiData.getGame();
                 if (game.nMoves() == 0) {
                     return "";
                 } else {
@@ -643,7 +640,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             game.In(is);
             // check if this file has multiple games
             if (is.ignoreTo('(')) {
-                m_pgsw.LoadAndShow(file);
+                gameSelectionWindow.LoadAndShow(file);
             } else {
                 reversiData.setGame(game, true);
             }
@@ -658,7 +655,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      * EngineLearnAll is true
      */
     public void MayLearn() {
-        if (reversiData.Game().pos.board.isGameOver()) {
+        if (reversiData.getGame().pos.board.isGameOver()) {
             if (engineLearnAll.isSelected()) {
                 TellEngineToLearn();
             }
@@ -672,7 +669,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      */
     public boolean IsStudying() {
         final int nMode = mode.getIndex();
-        return reversiData.Reviewing() || (nMode == 0 || nMode == 3);
+        return reversiData.isReviewing() || (nMode == 0 || nMode == 3);
     }
 
     /**
@@ -765,7 +762,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      */
     public void TellEngineToLearn() {
         // Tell the engine to learn the game
-        m_engine.learn(new SearchState(reversiData.Game(), getMaxDepth(), getContempt()));
+        m_engine.learn(new SearchState(reversiData.getGame(), getMaxDepth(), getContempt()));
 
         // reset the stored review point. The engine will update hints as a result.
         TellEngineWhatToDo();
@@ -792,7 +789,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 return;
             }
             // If the user is reviewing the game, the computer gives hints
-            else if (reversiData.Reviewing()) {
+            else if (reversiData.isReviewing()) {
                 isHint = true;
             }
             // If it's the engine's move, he should move.
@@ -812,11 +809,11 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             m_hints.Clear();
             if (isHint) {
                 // hints always relate to the displayed position.
-                final SearchState searchState = new SearchState(reversiData.Game(), reversiData.IMove(), getMaxDepth(), getContempt());
+                final SearchState searchState = new SearchState(reversiData.getGame(), reversiData.IMove(), getMaxDepth(), getContempt());
                 m_engine.requestHints(searchState, engineTops[engineTop.getIndex()]);
             } else {
                 // a move request relates to the final position in the game
-                final SearchState searchState = new SearchState(reversiData.Game(), getMaxDepth(), getContempt());
+                final SearchState searchState = new SearchState(reversiData.getGame(), getMaxDepth(), getContempt());
                 m_engine.requestMove(searchState);
             }
         }
@@ -937,7 +934,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         // switched modes while the computer was thinking.
         if (!UsersMove()) {
             try {
-                reversiData.Update(mli, false);
+                reversiData.update(mli, false);
             } catch (IllegalArgumentException e) {
                 warn("Illegal move from engine: " + mli, "Engine Error");
             }
@@ -949,7 +946,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     }
 
     @Override public void hint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText) {
-        boolean fBlackMove = reversiData.Game().pos.board.fBlackMove;
+        boolean fBlackMove = reversiData.getGame().pos.board.fBlackMove;
         final Hint hint = new Hint(eval, nGames, depth, fromBook, fBlackMove);
         m_hints.Add(move, hint);
     }
