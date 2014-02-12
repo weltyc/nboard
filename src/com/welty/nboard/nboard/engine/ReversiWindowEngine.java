@@ -24,8 +24,18 @@ public interface ReversiWindowEngine {
     void requestMove(@NotNull SearchState state);
 
     public interface Listener {
+        /**
+         * The engine has updated its status
+         *
+         * @param status text of status message
+         */
         void status(String status);
 
+        /**
+         * The engine has chosen a move
+         *
+         * @param mli engine's move
+         */
         void engineMove(OsMoveListItem mli);
 
         /**
@@ -36,6 +46,17 @@ public interface ReversiWindowEngine {
          */
         void engineReady();
 
+        /**
+         * The engine is giving a move hint (in analysis mode)
+         *
+         * @param fromBook     if true, the hint comes from book; otherwise it comes from a search
+         * @param pv           principal variation analyzed
+         * @param move         move that is hinted
+         * @param eval         evaluation
+         * @param nGames       number of games in book, or 0 for searches
+         * @param depth        depth searched to
+         * @param freeformText engine comment
+         */
         void hint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText);
 
         /**
@@ -47,14 +68,14 @@ public interface ReversiWindowEngine {
         void engineError(String message, String comment);
 
         /**
-         * Notify the ReversiWindow that the engine's name has changed
+         * The engine's name has changed
          *
          * @param name new engine name
          */
         void nameChanged(String name);
 
         /**
-         * Notify the ReversiWindow that the engine's node stats are updated
+         * The engine's node stats are updated
          *
          * @param nNodes   number of nodes searched
          * @param tElapsed time taken to search
