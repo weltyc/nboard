@@ -41,6 +41,7 @@ L21  X   Don't allow reordering of move table columns - it results in exceptions
 L22  X   Use NTestJ for eval, it's the only one that works on all machines
 L23  X   second-to-last move displayed in move grid when clicking on end-of-game after clicking on last move.
 L24  X   NullPointerException when trying to run a nonexistent executable.
+L25  X   MoveGrid database columns should have a blue background.
 
 CC1      Make CMove immutable?
 CC2      Make HintResponse.eval into a parsed class rather than an unparsed string

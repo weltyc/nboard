@@ -56,9 +56,9 @@ public class MoveGrid extends Grid {
 
         // make move column orange and Thor area grey
         final TableColumnModel columnModel = table.getColumnModel();
-        setColorColumn(columnModel, new Color(0xFF, 0xEF, 0xDF), 0);
-        setColorColumn(columnModel, new Color(0xEF, 0xEF, 0xEF), 6);
-        setColorColumn(columnModel, new Color(0xEF, 0xEF, 0xEF), 7);
+        setColorColumn(columnModel, new Color(0xFF, 0xDF, 0xBF), 0);
+        setColorColumn(columnModel, new Color(0xDF, 0xDF, 0xDF), 6);
+        setColorColumn(columnModel, new Color(0xDF, 0xDF, 0xDF), 7);
 
         // register for the signal event when a new hint is added
         hints.m_seUpdate.Add(new SignalListener<ArrayList<Byte>>() {
