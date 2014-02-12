@@ -176,6 +176,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         menuBar.add(createMenuItem("&Edit", createEditMenu()));
         menuBar.add(createMenuItem("&View", createViewMenu()));
         menuBar.add(createMenuItem("E&ngine", createEngineMenu()));
+        menuBar.add(createMenuItem("&Analysis", createAnalysisMenu()));
         menuBar.add(createMenuItem("&Games", createGamesMenu(startPositionManager)));
 
         // set up the Thor menu
@@ -467,7 +468,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         };
 
         mode = new RadioGroup(menu, "Engine/Mode", 1, shutdownHooks,
-                menuItem("&User plays both").buildRadioButton(modeSetter),
+                menuItem("&Analysis mode").buildRadioButton(modeSetter),
                 menuItem("User plays &Black").buildRadioButton(modeSetter),
                 menuItem("User plays &White").buildRadioButton(modeSetter),
                 menuItem("&Engine plays both").buildRadioButton(modeSetter)
@@ -481,7 +482,13 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         };
 
         menu.addSeparator();
+        menu.add(menuItem("&Select Opponent...").build(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                GuiOpponentSelector.getInstance().show();
+            }
+        }));
 
+        menu.addSeparator();
         menu.add(engineLearnAll = createCheckBoxMenuItem("Learn &all completed games", "Engine/LearnAll", false));
         menu.add(menuItem("Learn &this game").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -501,22 +508,20 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 menuItem("Draws to White").buildRadioButton(contemptSetter)
         );
 
-        // top n list
-        menu.addSeparator();
+        return menu;
+    }
 
+    private JMenu createAnalysisMenu() {
+        // set up the Engine menu
+        JMenu menu = new JMenu();
+
+        // top n list
         engineTop = new RadioGroup(menu, "Engine/Top", 2, shutdownHooks,
                 menuItem("Value >=1 move").buildRadioButton(engineUpdater),
                 menuItem("Value >=2 moves").buildRadioButton(engineUpdater),
                 menuItem("Value >=4 moves").buildRadioButton(engineUpdater),
                 menuItem("Value all moves").buildRadioButton(engineUpdater)
         );
-
-        menu.addSeparator();
-        menu.add(menuItem("&Select Opponent...").build(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                GuiOpponentSelector.getInstance().show();
-            }
-        }));
 
         return menu;
     }
