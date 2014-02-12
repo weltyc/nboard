@@ -214,6 +214,7 @@ public class ReversiData implements BoardSource {
         final int nMoves = nMoves();
         final int iMove = IMove();
 
+        //noinspection StatementWithEmptyBody
         if (iMove >= nMoves || !(mli.move.equals(game.getMli(iMove).move))) {
             // if the user played a different move while reviewing, break the game
             // (eliminate subsequent moves which now make no sense)
@@ -248,15 +249,19 @@ public class ReversiData implements BoardSource {
      * <p/>
      * If the string does not contain a valid game, nothing happens.
      */
-    void setGameText(final String sGame, boolean fResetMove) {
+    void setGameText(final String sGame) {
         CReader is = new CReader(sGame);
-        Update(is, fResetMove);
+        Update(is, true);
     }
 
     /**
      * Update the game and windows by reading the game from the istream.
      * <p/>
      * If the istream does not contain a valid game, nothing happens
+     *
+     * @param fResetMove true if we should reset the position to move 0.
+     *                   The user experience is best if this is true unless you can guarantee that the position on
+     *                   the board will not change. (e.g. In Thor lookups, the position on the board shouldn't change).
      */
     void Update(CReader is, boolean fResetMove) {
         COsGame game = new COsGame();

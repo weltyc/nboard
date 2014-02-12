@@ -75,7 +75,7 @@ class GameSelectionGrid extends Grid {
          */
         public void selectGame(int modelRow) {
             if (modelRow < getRowCount() && modelRow >= 0) {
-                reversiWindow.reversiData.setGameText(m_gts.get(modelRow).m_text, true);
+                reversiWindow.reversiData.setGameText(m_gts.get(modelRow).m_text);
                 reversiWindow.BringToTop();
             }
         }

@@ -58,15 +58,13 @@ F5       More convenient external engine add window
 F6   X   Display node count
 F7   X   Display clock
 F8   X   Timed matches
-F9       Single Paste
-F10      Copy should copy move list, not game
+F9       Paste command should paste any format (move list, game, board)
+F10  X   Ctrl-C should copy move list, Ctrl-Shift-C should copy game
 F11      Filter database by player, tournament, etc.
 F12      Score graph
 F13      Remove overly verbose external engine communication
 F14      Display node stats
 F15      XOT start position should include moves
-F16      Ctrl-C should copy move list, Ctrl-Shift-C should copy board
-F17      Paste command should paste any format (move list, game, board)
 F18      Set up board command
 F19      Time graph
 F20      Lost disks graph

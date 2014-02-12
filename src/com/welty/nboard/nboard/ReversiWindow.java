@@ -282,15 +282,15 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             }
         }));
         m_editMenu.addSeparator();
-        m_editMenu.add(menuItem("&Copy Game\tCtrl+C").build(new ActionListener() {
+        m_editMenu.add(menuItem("Copy &Move List\tCtrl+C").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SetClipboardText(reversiData.getGame().toString());
+                SetClipboardText(reversiData.getGame().getMoveList().toMoveListString());
             }
         }));
 
-        m_editMenu.add(menuItem("Copy &Move List").build(new ActionListener() {
+        m_editMenu.add(menuItem("&Copy Game\tCtrl+Shift+C").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                SetClipboardText(reversiData.getGame().getMoveList().toMoveListString());
+                SetClipboardText(reversiData.getGame().toString());
             }
         }));
 
@@ -314,7 +314,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             public void actionPerformed(ActionEvent e) {
                 String s = GetClipboardText();
                 if (s != null) {
-                    reversiData.setGameText(s, true);
+                    reversiData.setGameText(s);
                 }
             }
         }));

@@ -64,9 +64,22 @@ public class MenuItemBuilder {
             menuItem.setMnemonic(mnemonic);
         }
         if (accelerator != null) {
-            if (accelerator.startsWith("Ctrl+")) {
-                final char accChar = Character.toUpperCase(accelerator.charAt(5));
-                menuItem.setAccelerator(KeyStroke.getKeyStroke(accChar, shortcutKeyMask));
+            if (accelerator.contains("+")) {
+                final String[] parts = accelerator.split("\\+");
+
+                int mask = 0;
+                for (int i = 0; i < parts.length - 1; i++) {
+                    switch (parts[i].toLowerCase()) {
+                        case "ctrl":
+                            mask |= shortcutKeyMask;
+                            break;
+                        case "shift":
+                            mask |= Event.SHIFT_MASK;
+                    }
+                }
+                final char accChar = Character.toUpperCase(parts[parts.length - 1].charAt(0));
+                //noinspection MagicConstant
+                menuItem.setAccelerator(KeyStroke.getKeyStroke(accChar, mask));
             } else if (accelerator.equals("up arrow")) {
                 menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
             } else if (accelerator.equals("down arrow")) {
