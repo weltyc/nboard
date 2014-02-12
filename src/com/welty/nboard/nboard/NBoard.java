@@ -4,6 +4,7 @@ import com.orbanova.common.misc.Require;
 import com.welty.othello.util.CheckThreadViolationRepaintManager;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.util.prefs.Preferences;
 
@@ -72,5 +73,13 @@ public class NBoard {
         final ImageIcon icon = new ImageIcon(imgURL);
         Require.notNull(icon, "icon");
         return icon;
+    }
+
+    static JLabel createLabel(int width, int alignment) {
+        final JLabel label = new JLabel();
+        label.setPreferredSize(new Dimension(width, 18));
+        label.setFont(label.getFont().deriveFont(0));
+        label.setHorizontalAlignment(alignment);
+        return label;
     }
 }

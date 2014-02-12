@@ -80,6 +80,6 @@ public interface ReversiWindowEngine {
          * @param nNodes   number of nodes searched
          * @param tElapsed time taken to search
          */
-        void nodeStats(double nNodes, double tElapsed);
+        void nodeStats(long nNodes, double tElapsed);
     }
 }

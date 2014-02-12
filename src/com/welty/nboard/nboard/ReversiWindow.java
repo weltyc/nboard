@@ -1,6 +1,5 @@
 package com.welty.nboard.nboard;
 
-import com.orbanova.common.jsb.JSwingBuilder;
 import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.RadioGroup;
@@ -15,6 +14,7 @@ import com.welty.othello.api.SearchState;
 import com.welty.othello.c.CReader;
 import com.welty.othello.c.CWriter;
 import com.welty.othello.core.CMove;
+import com.welty.othello.core.Engineering;
 import com.welty.othello.core.OperatingSystem;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsPosition;
@@ -34,8 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.orbanova.common.jsb.JSwingBuilder.hBox;
-import static com.orbanova.common.jsb.JSwingBuilder.vBox;
+import static com.orbanova.common.jsb.JSwingBuilder.*;
 import static com.welty.nboard.gui.MenuItemBuilder.menuItem;
 
 /**
@@ -51,7 +50,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     public final ReversiData reversiData;
 
     private final ThorWindow m_pwThor;    //< Window where thor games are displayed
-    private final StatusBar m_statusBar;
+    private final JLabel engineStatus = NBoard.createLabel(200, SwingConstants.LEFT);
+    private final JLabel engineNodeCount = NBoard.createLabel(200, SwingConstants.RIGHT);
 
     private final MoveGrid m_pmg;
     private final ReversiBoard m_prb;
@@ -118,7 +118,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         // and show the move grid
         m_pmg = new MoveGrid(reversiData, PD(), m_hints);
 
-        Grid m_pml = new MoveList(reversiData);
+        Grid moveList = new MoveList(reversiData);
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
         m_engine = new EngineSynchronizer(GuiOpponentSelector.getInstance(), this);
@@ -127,16 +127,22 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         reversiData.addListener(m_hints);
 
-        frame = JSwingBuilder.frame("NBoard", WindowConstants.EXIT_ON_CLOSE, menuBar,
-                hBox(
-                        vBox(
-                                m_statusBar = new StatusBar(reversiData),
-                                new ScoreWindow(reversiData),
-                                m_prb = new ReversiBoard(reversiData, this, m_hints),
-                                m_pmg
-                        )
-                        , m_pml
-                )
+        final JPanel enginePanel = new JPanel();
+        enginePanel.setLayout(new BorderLayout());
+        enginePanel.add(engineStatus, BorderLayout.LINE_START);
+        enginePanel.add(engineNodeCount, BorderLayout.LINE_END);
+        enginePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+
+        final JComponent leftPanel = vBox(
+                new StatusBar(reversiData),
+                new ScoreWindow(reversiData),
+                m_prb = new ReversiBoard(reversiData, this, m_hints),
+                enginePanel,
+                m_pmg
+        );
+
+        frame = frame("NBoard", WindowConstants.EXIT_ON_CLOSE, menuBar,
+                hBox(leftPanel, moveList)
 
         );
 
@@ -872,7 +878,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     }
 
     void SetStatus(String status) {
-        m_statusBar.SetStatus(status);
+        engineStatus.setText(status);
     }
 
     public void BringToTop() {
@@ -908,8 +914,16 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         // do nothing right now. The game currently reads the player name from this window.
     }
 
-    @Override public void nodeStats(double nNodes, double tElapsed) {
-        // todo ??
+    @Override public void nodeStats(long nNodes, double tElapsed) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(Engineering.formatLong(nNodes));
+        sb.append("n / ");
+        sb.append(Engineering.engineeringDouble(tElapsed));
+        sb.append("s");
+        if (tElapsed != 0) {
+            sb.append(" = ").append(Engineering.engineeringDouble(nNodes / tElapsed));
+        }
+        engineNodeCount.setText(sb.toString());
     }
 
     @Override public void engineMove(OsMoveListItem mli) {

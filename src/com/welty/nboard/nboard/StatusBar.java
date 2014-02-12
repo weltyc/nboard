@@ -22,12 +22,10 @@ import static com.welty.nboard.thor.ThorOpeningMap.OpeningName;
  */
 class StatusBar extends JPanel {
     private final ReversiData m_pd;
-    private final JLabel statusField = new JLabel();
     private final JLabel openingField = new JLabel();
 
     private static final int preferredHeight = 24;
     private static final int openingWidth = 120;
-    private static final int statusWidth = 100;
 
     StatusBar(ReversiData d) {
         m_pd = d;
@@ -46,14 +44,6 @@ class StatusBar extends JPanel {
 
         createOpeningField();
         add(openingField, BorderLayout.LINE_END);
-
-        createStatusField();
-        add(statusField, BorderLayout.CENTER);
-    }
-
-    private void createStatusField() {
-        statusField.setPreferredSize(new Dimension(statusWidth, preferredHeight));
-        setPlainFont(statusField);
     }
 
     private void createOpeningField() {
@@ -96,9 +86,5 @@ class StatusBar extends JPanel {
         button.addActionListener(listener);
         button.setPreferredSize(new Dimension(20, 20));
         buttonPanel.add(button);
-    }
-
-    void SetStatus(String status) {
-        statusField.setText(status);
     }
 }
