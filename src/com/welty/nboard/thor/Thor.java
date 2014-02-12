@@ -259,11 +259,13 @@ public class Thor {
     }
 
     /**
+     * Transform a move via reflection.
+     * <p/>
+     * This function really INVERTS the reflection, to go from the reflected move to the original move
+     * passes (and any move code<0) are returned unchanged
+     *
      * @param move        move from the reflected position
      * @param iReflection reflection index that takes the original position to the reflected position
-     *                    <p/>
-     *                    \note This function really INVERTS the reflection, to go from the reflected move to the original move
-     *                    passes (and any move code<0) are returned unchanged
      * @return the move from the original position.
      */
     public static int MoveFromIReflection(int move, int iReflection) {
@@ -281,6 +283,13 @@ public class Thor {
     }
 
     /**
+     * Summarize statistics of games played from the current position, by move.
+     *
+     * @param games        list of all games, including those not matching pos.
+     * @param pos          current board position
+     * @param index        list of games that contain a position matching pos. These are given as an index into games.
+     * @param iReflections list of reflection indices for each game in index. For each game, iReflections[i]
+     *                     is the reflection that maps a move in the game to a move in pos
      * @return summary data for the various moves from a position
      */
     static TThorSummary ThorSummarize(final ArrayList<ThorGameInternal> games, final OsBoard pos, final TIntArrayList index, final TIntArrayList iReflections) {

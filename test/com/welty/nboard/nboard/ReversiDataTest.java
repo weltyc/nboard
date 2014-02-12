@@ -31,8 +31,8 @@ public class ReversiDataTest extends TestCase {
         game.SetDefaultStartPos();
         game.Update(ThorTest.mli("F5"));
         data.ReflectGame(iReflection);
-        assertEquals(1, game.ml.size());
-        assertEquals(expected, game.ml.get(0).move.toString());
+        assertEquals(1, game.nMoves());
+        assertEquals(expected, game.getMli(0).move.toString());
         data.ReflectGame(iReflection);
     }
 
@@ -54,11 +54,11 @@ public class ReversiDataTest extends TestCase {
         // move matches game; game should not be broken
         data.SetIMove(0);
         data.Update(ThorTest.mli("F5"), true);
-        assertEquals(2, data.NMoves());
+        assertEquals(2, data.nMoves());
 
         // move does not match game; game should be broken
         data.SetIMove(0);
         data.Update(ThorTest.mli("D3"), true);
-        assertEquals(1, data.NMoves());
+        assertEquals(1, data.nMoves());
     }
 }

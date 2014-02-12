@@ -47,12 +47,12 @@ public class ReversiData implements BoardSource {
         StartNewGame(optionSource.getStartPosition());
     }
 
-    public int NMoves() {
-        return m_game.ml.size();
+    public int nMoves() {
+        return game.nMoves();
     }
 
     @NotNull public COsPosition DisplayedPosition() {
-        return m_game.PosAtMove(m_iMove);
+        return game.PosAtMove(m_iMove);
     }
 
     public void AddListener(SignalListener<OsMoveListItem> signalListener) {
@@ -60,7 +60,7 @@ public class ReversiData implements BoardSource {
     }
 
     public COsGame Game() {
-        return m_game;
+        return game;
     }
 
     public int IMove() {
@@ -68,21 +68,21 @@ public class ReversiData implements BoardSource {
     }
 
     public boolean Reviewing() {
-        return m_iMove != m_game.ml.size();
+        return m_iMove != game.nMoves();
     }
 
     private void BoardChanged() {
         BoardChanged(null);
     }
 
-    private COsGame m_game = new COsGame();    // game data
+    private COsGame game = new COsGame();    // game data
     private int m_iMove;    // currently displayed move
 
 
     private static final int n = 8;
 
     public OsMove NextMove() {
-        return Reviewing() ? m_game.ml.get(m_iMove).move : OsMove.PASS;
+        return Reviewing() ? game.getMli(m_iMove).move : OsMove.PASS;
     }
 
     /**
@@ -111,7 +111,7 @@ public class ReversiData implements BoardSource {
      * @return false on failure (we were already at the end of the game) and true otherwise.
      */
     boolean Fore() {
-        if (m_iMove < m_game.ml.size()) {
+        if (m_iMove < game.nMoves()) {
             SetIMove(m_iMove + 1);
             return true;
         } else
@@ -129,7 +129,7 @@ public class ReversiData implements BoardSource {
      * Move to the end of the game
      */
     void Last() {
-        SetIMove(m_game.ml.size());
+        SetIMove(game.nMoves());
     }
 
     /**
@@ -142,9 +142,9 @@ public class ReversiData implements BoardSource {
      * @return false on failure
      */
     boolean Undo(int nUndo) {
-        if (nUndo <= m_game.ml.size()) {
-            m_game.Undo(nUndo);
-            final int nMoves = m_game.ml.size();
+        if (nUndo <= game.nMoves()) {
+            game.Undo(nUndo);
+            final int nMoves = game.nMoves();
             if (m_iMove > nMoves)
                 SetIMove(nMoves);
             m_seBoardChanged.Raise();
@@ -166,29 +166,7 @@ public class ReversiData implements BoardSource {
      * Reflect the game (start pos, moves, current pos) using the given reflection
      */
     void ReflectGame(int iReflection) {
-        // reflect start pos
-        OsBoard newStart = new OsBoard(m_game.posStart.board);
-        for (int col = 0; col < n; col++) {
-            for (int row = 0; row < n; row++) {
-                int oldSquare = Square(row, col);
-                int newSquare = Thor.MoveFromIReflection(oldSquare, iReflection);
-                int newCol = Col(newSquare);
-                int newRow = Row(newSquare);
-                newStart.setPiece(newRow, newCol, m_game.posStart.board.getPiece(row, col));
-            }
-        }
-        m_game.posStart.board.copy(newStart);
-
-        for (int i = 0; i < m_game.ml.size(); i++) {
-            OsMoveListItem mli = m_game.ml.get(i);
-            CMove mv = new CMove(mli.move);
-            int sq = mv.Square();
-            final OsMove rMv = new CMove((byte) Thor.MoveFromIReflection(sq, iReflection)).toOsMove();
-            m_game.ml.set(i, new OsMoveListItem(rMv, mli.getEval(), mli.getElapsedTime()));
-        }
-
-        m_game.pos = m_game.PosAtMove(10000);
-
+        game.reflect(iReflection);
         BoardChanged();
     }
 
@@ -202,14 +180,14 @@ public class ReversiData implements BoardSource {
 
     public void SetIMove(int iMove) {
         Require.geq(iMove, "iMove", 0);
-        final int nMoves = NMoves();
+        final int nMoves = nMoves();
         if (iMove > nMoves) {
             iMove = nMoves;
         }
         if (iMove != m_iMove) {
             if (iMove == m_iMove + 1) {
                 m_iMove = iMove;
-                OsMoveListItem mli = m_game.ml.get(m_iMove - 1);
+                OsMoveListItem mli = game.getMli(m_iMove - 1);
                 BoardChanged(mli);
             } else {
                 m_iMove = iMove;
@@ -219,21 +197,21 @@ public class ReversiData implements BoardSource {
     }
 
     public void Update(final OsMoveListItem mli, boolean fUserMove) {
-        final int nMoves = NMoves();
+        final int nMoves = nMoves();
         final int iMove = IMove();
 
-        if (iMove >= nMoves || !(mli.move.equals(m_game.ml.get(iMove).move))) {
+        if (iMove >= nMoves || !(mli.move.equals(game.getMli(iMove).move))) {
             // if the user played a different move while reviewing, break the game
             // (eliminate subsequent moves which now make no sense)
             if (iMove < nMoves)
-                m_game.Undo(nMoves - iMove);
+                game.Undo(nMoves - iMove);
 
             // update the player name
-            m_game.pis[m_game.pos.board.fBlackMove ? 1 : 0].sName = fUserMove ? System.getProperty("user.name") : engineTalker.getEngineName();
+            game.pis[game.pos.board.fBlackMove ? 1 : 0].sName = fUserMove ? System.getProperty("user.name") : engineTalker.getEngineName();
 
 
-            m_game.Update(mli);
-            if (m_game.pos.board.isGameOver()) {
+            game.Update(mli);
+            if (game.pos.board.isGameOver()) {
                 if (optionSource.EngineLearnAll()) {
                     engineTalker.TellEngineToLearn();
                 }
@@ -276,8 +254,8 @@ public class ReversiData implements BoardSource {
      *                   the board will not change. (e.g. In Thor lookups, the position on the board shouldn't change).
      */
     public void Update(final COsGame game, boolean fResetMove) {
-        m_game = game;
-        if (fResetMove || IMove() >= game.ml.size())
+        this.game = game;
+        if (fResetMove || IMove() >= game.nMoves())
             m_iMove = 0;
         BoardChanged();
         engineTalker.MayLearn();
@@ -287,18 +265,18 @@ public class ReversiData implements BoardSource {
      * Clear the game and switch back to the standard start position
      */
     void StartNewGame(@NotNull Position startPosition) {
-        m_game.Clear();
-        m_game.Initialize("8");
+        game.Clear();
+        game.Initialize("8");
         final String sBoardText = startPosition.boardString("");
-        m_game.SetToPosition(sBoardText, startPosition.blackToMove);
-        m_game.SetTime(System.currentTimeMillis());
-        m_game.SetPlace("NBoard");
+        game.SetToPosition(sBoardText, startPosition.blackToMove);
+        game.SetTime(System.currentTimeMillis());
+        game.SetPlace("NBoard");
         m_iMove = 0;
         BoardChanged();
     }
 
     public void Redo() {
-        if (m_iMove < m_game.ml.size()) {
+        if (m_iMove < game.nMoves()) {
             SetIMove(m_iMove + 1);
         }
     }

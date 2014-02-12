@@ -51,7 +51,7 @@ class ThorGameInternal extends ThorGame8 {
         game.SetTimeYear(year);
         for (byte move : moves) {
             final OsMove osMove = new OsMove(Utils.Row(move), Utils.Col(move));
-            game.ml.add(new OsMoveListItem(osMove));
+            game.addMove(new OsMoveListItem(osMove));
         }
         return game;
     }

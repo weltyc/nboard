@@ -30,14 +30,14 @@ public interface BoardSource {
     /**
      * @return the number of moves played so far in the game.
      */
-    int NMoves();
+    int nMoves();
 
     /**
      * Change the displayed position of the game to the one before the given move. Raise the update method
      * <p/>
      * Raises a single-move update if the game moved forward by 1, otherwise a full-game update
      *
-     * @param iMove move number, starting at 0. Move to the end of the game if iMove>NMoves().
+     * @param iMove move number, starting at 0. Move to the end of the game if iMove>nMoves().
      */
     void SetIMove(int iMove);
 

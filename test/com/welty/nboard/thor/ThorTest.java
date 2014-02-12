@@ -249,4 +249,14 @@ public class ThorTest extends TestCase {
         assertEquals(nBlackWins, data.nBlackWins);
         assertEquals(nWhiteWins, data.nWhiteWins);
     }
+
+    public void testReflection() {
+        final int sq = 1;
+        for (int iReflection = 0; iReflection < 8; iReflection++) {
+            final OsMove m = new CMove((byte)sq).toOsMove();
+            final int sqr = Thor.MoveFromIReflection(sq, iReflection);
+            final OsMove mr = new CMove((byte)sqr).toOsMove();
+            assertEquals(mr, m.reflect(iReflection));
+        }
+    }
 }

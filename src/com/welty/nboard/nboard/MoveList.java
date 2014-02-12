@@ -93,7 +93,7 @@ public class MoveList extends Grid {
         }
 
         public int getRowCount() {
-            return (boardSource.NMoves() + 2) / 2;
+            return (boardSource.nMoves() + 2) / 2;
         }
 
         public Object getValueAt(int item, int field) {
@@ -105,8 +105,8 @@ public class MoveList extends Grid {
                 iMove++;
                 field -= 2;
             }
-            if (iMove < boardSource.NMoves()) {
-                OsMoveListItem mli = boardSource.Game().ml.get(iMove);
+            if (iMove < boardSource.nMoves()) {
+                final OsMoveListItem mli = boardSource.Game().getMli(iMove);
                 if (field == 1) {
                     return mli.move.toString();
                 } else {
@@ -121,7 +121,7 @@ public class MoveList extends Grid {
             // row < 0 is header row? maybe
             if (row >= 0 && col >= 1) {
                 int iMove = IMove(row, col);
-                if (iMove <= boardSource.NMoves()) {
+                if (iMove <= boardSource.nMoves()) {
                     boardSource.SetIMove(iMove);
                 }
             }
