@@ -145,7 +145,7 @@ public class ThorTest extends TestCase {
         assertEquals(0, matchingPositions.index.get(0));
 
         // Now update the match position to be the position after 1.F5
-        match.Update(mli("F5"));
+        match.append(mli("F5"));
 
         matchingPositions = Thor.ThorFindMatchingPositions(games, match.pos.board);
         assertEquals(1, matchingPositions.index.size());
@@ -198,7 +198,7 @@ public class ThorTest extends TestCase {
 
         // one white win, one black win, one draw.
         // position is after F5, all games should be there.
-        osGame.Update(mli("F5"));
+        osGame.append(mli("F5"));
         games.add(new ThorGameInternal(32, F5, D6, C3, STOP));
         games.add(new ThorGameInternal(0, F5, D6, C3, STOP));
         matchingPositions = Thor.ThorFindMatchingPositions(games, osGame.pos.board);
@@ -216,8 +216,8 @@ public class ThorTest extends TestCase {
         checkMove(summary, F6, 1, 1, 0);
 
         // No summary information for games which have terminated.
-        osGame.Update(mli("D6"));
-        osGame.Update(mli("C3"));
+        osGame.append(mli("D6"));
+        osGame.append(mli("C3"));
         matchingPositions = Thor.ThorFindMatchingPositions(games, osGame.pos.board);
         assertEquals(3, matchingPositions.index.size());
         summary = Thor.ThorSummarize(games, osGame.pos.board, matchingPositions.index, matchingPositions.iReflections);
@@ -228,7 +228,7 @@ public class ThorTest extends TestCase {
         osGame.SetDefaultStartPos();
         for (int i = 0; i < 37; i++) {
             CMove mv = new CMove(passGame.moves[i]);
-            osGame.Update(new OsMoveListItem(mv.toOsMove()));
+            osGame.append(new OsMoveListItem(mv.toOsMove()));
         }
         matchingPositions = Thor.ThorFindMatchingPositions(games, osGame.pos.board);
         assertEquals(1, matchingPositions.index.size());

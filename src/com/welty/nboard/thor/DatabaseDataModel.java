@@ -157,16 +157,14 @@ class DatabaseDataModel {
                 if (!game.pos.board.isMoveLegal(mli.move)) {
                     break;
                 }
-                game.Update(mli);
+                game.append(mli);
 
                 if (!game.pos.board.hasLegalMove() && !game.pos.board.isGameOver()) {
-                    game.Update(OsMoveListItem.PASS);
+                    game.append(OsMoveListItem.PASS);
                 }
             }
             if (!game.pos.board.isGameOver()) {
-                COsResult osResult = new COsResult();
-                osResult.status = COsResult.TStatus.kTimeout;
-                osResult.dResult = tg.nBlackDiscs * 2 - 64;
+                final OsResult osResult = new OsResult(OsResult.TStatus.kTimeout, tg.nBlackDiscs * 2 - 64);
                 game.SetResult(osResult);
             }
         } else {

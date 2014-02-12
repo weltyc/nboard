@@ -3,15 +3,11 @@ package com.welty.nboard.nboard;
 import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.SignalEvent;
 import com.welty.nboard.gui.SignalListener;
-import com.welty.nboard.thor.Thor;
 import com.welty.novello.core.Position;
 import com.welty.othello.c.CReader;
-import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import static com.welty.othello.core.Utils.*;
 
 /**
  * Data displayed by ReversiWindow and its helper windows
@@ -210,7 +206,7 @@ public class ReversiData implements BoardSource {
             game.pis[game.pos.board.fBlackMove ? 1 : 0].sName = fUserMove ? System.getProperty("user.name") : engineTalker.getEngineName();
 
 
-            game.Update(mli);
+            game.append(mli);
             if (game.pos.board.isGameOver()) {
                 if (optionSource.EngineLearnAll()) {
                     engineTalker.TellEngineToLearn();

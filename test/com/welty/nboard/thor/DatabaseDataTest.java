@@ -71,11 +71,11 @@ public class DatabaseDataTest extends ArrayTestCase {
         dd.LookUpPosition(osg.pos.board);
         assertEquals(dd.m_summary.size(), 2);
 
-        osg.Update(new OsMoveListItem(new OsMove("F5")));
+        osg.append(new OsMoveListItem(new OsMove("F5")));
         dd.LookUpPosition(osg.pos.board);
         assertEquals(dd.m_summary.size(), 2);
 
-        osg.Update(new OsMoveListItem(new OsMove("D6")));
+        osg.append(new OsMoveListItem(new OsMove("D6")));
         dd.LookUpPosition(osg.pos.board);
         assertEquals(dd.m_summary.size(), 1);
     }

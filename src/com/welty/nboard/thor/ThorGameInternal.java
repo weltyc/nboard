@@ -3,7 +3,7 @@ package com.welty.nboard.thor;
 import com.welty.othello.c.CBinaryReader;
 import com.welty.othello.core.Utils;
 import com.welty.othello.gdk.COsGame;
-import com.welty.othello.gdk.COsResult;
+import com.welty.othello.gdk.OsResult;
 import com.welty.othello.gdk.OsMove;
 import com.welty.othello.gdk.OsMoveListItem;
 
@@ -46,12 +46,11 @@ class ThorGameInternal extends ThorGame8 {
         game.pis[1].sName = players.get(iBlackPlayer);
         game.pis[0].sName = players.get(iWhitePlayer);
         game.sPlace = tournaments.get(iTournament);
-        game.result.dResult = nBlackDiscs - (64 - nBlackDiscs);
-        game.result.status = COsResult.TStatus.kNormalEnd;
+        game.SetResult(new OsResult(nBlackDiscs - (64 - nBlackDiscs)));
         game.SetTimeYear(year);
         for (byte move : moves) {
             final OsMove osMove = new OsMove(Utils.Row(move), Utils.Col(move));
-            game.addMove(new OsMoveListItem(osMove));
+            game.append(new OsMoveListItem(osMove));
         }
         return game;
     }

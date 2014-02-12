@@ -29,7 +29,7 @@ public class ReversiDataTest extends TestCase {
         final ReversiData data = new ReversiData(optionSource, engineTalker);
         final COsGame game = data.Game();
         game.SetDefaultStartPos();
-        game.Update(ThorTest.mli("F5"));
+        game.append(ThorTest.mli("F5"));
         data.ReflectGame(iReflection);
         assertEquals(1, game.nMoves());
         assertEquals(expected, game.getMli(0).move.toString());
