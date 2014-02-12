@@ -9,7 +9,6 @@ import com.welty.othello.gdk.OsMoveListItem;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
-import java.awt.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
@@ -27,7 +26,6 @@ import java.text.DecimalFormat;
  */
 public class MoveList extends Grid {
     private final BoardSource boardSource;
-    private final MoveListTableModel tableModel;
 
     private static final GridColumn[] columns = {
             new GridColumn(30, "#"),
@@ -45,7 +43,6 @@ public class MoveList extends Grid {
     private MoveList(ReversiData pd, MoveListTableModel tableModel) {
         super(tableModel, new MoveListTable(tableModel), true, true, false);
         boardSource = pd;
-        this.tableModel = tableModel;
         final JTable table = getTable();
         table.setRowSelectionAllowed(true);
         table.setColumnSelectionAllowed(true);
@@ -151,13 +148,17 @@ public class MoveList extends Grid {
                 return;
             }
             final double v = (Double) value;
-            if (v == 0) {
+            if (value == 0) {
+                System.out.println("breakpoint!");
+            }
+            if (Double.isNaN(v)) {
                 super.setValue("");
             } else {
                 super.setValue(numberFormat.format(v));
             }
             setHorizontalAlignment(JLabel.RIGHT);
-            setForeground(v < 0 ? Color.RED : Color.BLACK);
+            // I don't think I like this.
+//            setForeground(v < 0 ? Color.RED : Color.BLACK);
         }
     }
 

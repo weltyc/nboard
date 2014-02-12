@@ -42,6 +42,7 @@ L22  X   Use NTestJ for eval, it's the only one that works on all machines
 L23  X   second-to-last move displayed in move grid when clicking on end-of-game after clicking on last move.
 L24  X   NullPointerException when trying to run a nonexistent executable.
 L25  X   MoveGrid database columns should have a blue background.
+L26  X   Eval of 0 should show as 0 in move list [Note, GGF games have an empty eval for both eval=0 and eval=missing].
 
 CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
