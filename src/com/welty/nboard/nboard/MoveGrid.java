@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class MoveGrid extends Grid {
 
-    private final ReversiData m_pd;
+    private final ReversiData reversiData;
 
     static final GridColumn[] columns = {
             new GridColumn(37, "Move", Object.class, Align.CENTER),
@@ -29,9 +29,9 @@ public class MoveGrid extends Grid {
 
     };
 
-    MoveGrid(ReversiData m_pd, DatabaseTableModel m_pdd, Hints hints) {
+    MoveGrid(ReversiData reversiData, DatabaseTableModel m_pdd, Hints hints) {
         super(new MoveGridTableModel(m_pdd, hints));
-        this.m_pd = m_pd;
+        this.reversiData = reversiData;
         final JTable table = getTable();
 
         setPreferredSize(new Dimension(96, 200));
@@ -77,7 +77,7 @@ public class MoveGrid extends Grid {
     @Override protected void onMouseClick(int row, int col) {
         MoveGridTableModel model = getModel();
         OsMove mv = model.getMove(row);
-        m_pd.update(new OsMoveListItem(mv), true);
+        reversiData.update(new OsMoveListItem(mv), true);
     }
 
     public void UpdateHints() {

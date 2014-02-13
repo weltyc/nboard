@@ -1,5 +1,6 @@
 package com.welty.nboard.thor;
 
+import com.orbanova.common.misc.ListenerManager;
 import com.welty.nboard.nboard.GgfGameText;
 import com.welty.othello.c.CReader;
 import com.welty.othello.gdk.*;
@@ -18,7 +19,7 @@ import static com.welty.othello.core.Utils.Row;
 /**
  * Database game storage.
  */
-class DatabaseData {
+class DatabaseData extends ListenerManager<DatabaseData.Listener> {
     /**
      * Thor games followed by converted GGF games
      */
@@ -51,6 +52,8 @@ class DatabaseData {
         // Reclaim memory
         m_ggfGames.trimToSize();
         m_tgis.trimToSize();
+
+        fireDatabaseChanged();
     }
 
     String getGgfText(int iGame) {
@@ -178,8 +181,17 @@ class DatabaseData {
         return ThorFindMatchingPositions(m_tgis, pos);
     }
 
-    public TThorSummary summarize(OsBoard pos, TIntArrayList fi, TIntArrayList fir) {
-        return ThorSummarize(m_tgis, pos, fi, fir);
+    /**
+     * Summarize statistics of games played from the current position, by move.
+     *
+     * @param pos          current board position
+     * @param index        list of games that contain a position matching pos. These are given as an index into games.
+     * @param iReflections list of reflection indices for each game in index. For each game, iReflections[i]
+     *                     is the reflection that maps a move in the game to a move in pos
+     * @return summary data for the various moves from a position
+     */
+    public TThorSummary summarize(OsBoard pos, TIntArrayList index, TIntArrayList iReflections) {
+        return ThorSummarize(m_tgis, pos, index, iReflections);
     }
 
     String playerFromPlayerNumber(char iPlayer) {
@@ -215,18 +227,25 @@ class DatabaseData {
             m_tgis.add(tgi);
         }
 
+        fireDatabaseChanged();
     }
 
     public void addGgfGames(ArrayList<GgfGameText> ggfGameTexts) {
         m_ggfGames.addAll(ggfGameTexts);
+
+        fireDatabaseChanged();
     }
 
     public void setPlayers(ArrayList<String> strings) {
         m_players = strings;
+
+        fireDatabaseChanged();
     }
 
     public void setTournaments(ArrayList<String> strings) {
         m_tournaments = strings;
+
+        fireDatabaseChanged();
     }
 
     /**
@@ -243,5 +262,21 @@ class DatabaseData {
 
     public int getGameYear(int iGame) {
         return m_tgis.get(iGame).year;
+    }
+
+    /**
+     * Notify all listeners that the contents of the database have changed
+     */
+    private void fireDatabaseChanged() {
+        for (Listener listener : getListeners()) {
+            listener.databaseChanged();
+        }
+    }
+
+    public interface Listener {
+        /**
+         * Notify the listener that the contents of the database have changed
+         */
+        void databaseChanged();
     }
 }

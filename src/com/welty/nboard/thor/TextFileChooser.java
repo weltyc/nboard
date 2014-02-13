@@ -7,11 +7,7 @@ import javax.swing.filechooser.FileFilter;
 import java.io.File;
 
 /**
- * Created by IntelliJ IDEA.
- * User: HP_Administrator
- * Date: Jun 23, 2009
- * Time: 9:25:27 PM
- * To change this template use File | Settings | File Templates.
+ * A file chooser window that allows the user to choose a text file
  */
 class TextFileChooser {
     private final JFileChooser chooser;

@@ -1,15 +1,11 @@
 package com.welty.nboard.thor;
 
-import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.Align;
 import com.welty.nboard.gui.GridColumn;
 import com.welty.nboard.gui.GridTableModel;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.nboard.BoardSource;
-import com.welty.nboard.nboard.GgfGameText;
-import com.welty.nboard.nboard.NBoard;
 import com.welty.nboard.nboard.OptionSource;
-import com.welty.othello.c.CReader;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsPosition;
 import com.welty.othello.gdk.OsBoard;
@@ -17,27 +13,12 @@ import com.welty.othello.gdk.OsMoveListItem;
 import gnu.trove.list.array.TIntArrayList;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
-import static com.welty.nboard.thor.Thor.*;
-import static com.welty.nboard.thor.ThorOpeningMap.NOpenings;
-import static com.welty.nboard.thor.ThorOpeningMap.OpeningName;
+import static com.welty.nboard.thor.Thor.MatchingPositions;
 
 /**
  * Encapsulate all data needed by the database window
  */
 public class DatabaseTableModel extends GridTableModel {
-    private final TextFileChooser textFileChooser = new TextFileChooser();
-    private final ThorFileChooser thorFileChooser = new ThorFileChooser();
-
     private final DatabaseData databaseData = new DatabaseData();
 
     private static final GridColumn[] m_columns = {
@@ -63,6 +44,12 @@ public class DatabaseTableModel extends GridTableModel {
                 OnBoardChanged();
             }
         });
+        databaseData.addListener(new DatabaseData.Listener() {
+            @Override public void databaseChanged() {
+                refilter();
+            }
+        });
+
     }
 
     int NPlayers() {
@@ -85,16 +72,12 @@ public class DatabaseTableModel extends GridTableModel {
     // Filtering
     public TThorSummary m_summary = new TThorSummary();
 
-    private String m_fnThorTournaments;    //*< Currently loaded Thor tournaments file
-    private String m_fnThorPlayers;        //*< Currently loaded Thor players file
-    private final HashSet<String> m_fnThorGames = new HashSet<>();        //*< Currently loaded Thor games files
-
     /**
      * List of games that match the displayed position.
      * <p/>
      * The int is an index into m_tgis.
      */
-    private TIntArrayList m_index = new TIntArrayList();
+    private TIntArrayList matchingIndices = new TIntArrayList();
     private final static int nFields = 6;
 
     /**
@@ -122,49 +105,7 @@ public class DatabaseTableModel extends GridTableModel {
      * @return a game in GGS/os format.
      */
     public COsGame GameFromFilteredRow(int iFiltered) {
-        return databaseData.GameFromIndex(m_index.get(iFiltered));
-    }
-
-    /**
-     * Save the current thor player/tournament/games files to the registry
-     */
-    public void SaveConfig() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(m_fnThorPlayers).append("\n").append(m_fnThorTournaments).append("\n");
-        for (String it : m_fnThorGames) {
-            sb.append(it).append("\n");
-        }
-        NBoard.RegistryWriteString("Thor/Config", sb.toString());
-    }
-
-    /**
-     * Load database files. Filenames are stored in the Registry by SaveConfig()
-     *
-     * @return true if there was a saved config
-     */
-    public boolean LoadConfig() {
-        String sConfig = NBoard.RegistryReadString("Thor/Config", "");
-        if (sConfig.isEmpty()) {
-            return false;
-        } else {
-            try {
-                CReader config = new CReader(sConfig);
-                LoadPlayers(config.readLine());
-                LoadTournaments(config.readLine());
-                ArrayList<String> fns = new ArrayList<>();
-                String fn;
-                while (null != (fn = config.readLine())) {
-                    fns.add(fn);
-                }
-                LoadGames(fns);
-                return true;
-            } catch (IllegalArgumentException e) {
-                // probably an EOF exception.
-                // todo should we stop translating EOF exceptions?
-            }
-            return false;
-        }
+        return databaseData.GameFromIndex(matchingIndices.get(iFiltered));
     }
 
     public void LookUpPosition() {
@@ -179,15 +120,15 @@ public class DatabaseTableModel extends GridTableModel {
         if (pos.nEmpty() > 3) {
             // look up position
             final MatchingPositions matchingPositions = databaseData.findMatchingPositions(pos);
-            m_index = matchingPositions.index;
+            matchingIndices = matchingPositions.index;
             final TIntArrayList iReflections = matchingPositions.iReflections;
 
             // filter
-            final int n = m_index.size();
+            final int n = matchingIndices.size();
             TIntArrayList fi = new TIntArrayList();
             TIntArrayList fir = new TIntArrayList();
             for (int i = 0; i < n; i++) {
-                final int j = m_index.get(i);
+                final int j = matchingIndices.get(i);
                 if (FilterOk(j)) {
                     fi.add(j);
                     fir.add(iReflections.get(i));
@@ -197,7 +138,8 @@ public class DatabaseTableModel extends GridTableModel {
             // set summary
             m_summary = databaseData.summarize(pos, fi, fir);
         } else {
-            m_index.clear();
+            // for performance reasons, don't look up games with very small number of empties.
+            matchingIndices.clear();
             m_summary.clear();
         }
         fireTableDataChanged();
@@ -222,9 +164,9 @@ public class DatabaseTableModel extends GridTableModel {
      */
     TIntArrayList FilteredIndex() {
         TIntArrayList fi = new TIntArrayList();
-        int n = m_index.size();
+        int n = matchingIndices.size();
         for (int i = 0; i < n; i++) {
-            final int j = m_index.get(i);
+            final int j = matchingIndices.get(i);
             if (FilterOk(j))
                 fi.add(j);
         }
@@ -243,182 +185,6 @@ public class DatabaseTableModel extends GridTableModel {
         return true;
     }
 
-
-    /**
-     * Get the user's choice of thor games files and load them
-     */
-    public boolean LoadGames() {
-        String fn = NBoard.RegistryReadString("Thor/GamesFiles", "");
-        if (!fn.isEmpty()) {
-            thorFileChooser.setSelectedFile(fn);
-        }
-        File[] files = thorFileChooser.opens("Thor and GGF games databases", ".wtb;.ggf");
-        final boolean fOK = files != null;
-        if (fOK) {
-            if (files.length != 0) {
-                NBoard.RegistryWriteString("Thor/GamesFiles", files[0].getAbsolutePath());
-            }
-            final ArrayList<String> filenames = new ArrayList<>();
-            for (File file : files) {
-                filenames.add(file.getAbsolutePath());
-            }
-            LoadGames(filenames);
-        }
-        return fOK;
-    }
-
-    /**
-     * @return true if the file ends with ".wtb", with any capitalization accepted
-     */
-    static boolean IsWtbFilename(String fn) {
-        return fn.toUpperCase().endsWith(".WTB");
-    }
-
-    /**
-     * Unload games database to restore memory
-     */
-    public void UnloadGames() {
-        m_fnThorGames.clear();
-        databaseData.clearGames();
-    }
-
-    /**
-     * Unload existing games files and load a new set, creating and updating a GUI to do so.
-     * <p/>
-     * Since this creates and updates a GUI, it must run on the EDT.
-     * <p/>
-     * Does nothing if fns is empty.
-     */
-    void LoadGames(final List<String> fns) {
-        Require.isTrue(SwingUtilities.isEventDispatchThread(), "must run on EDT");
-        final ErrorDisplayer errorDisplayer = new DialogErrorDisplayer();
-        try (final IndeterminateProgressMonitor monitor = new IndeterminateProgressMonitor(" games loaded")) {
-            reloadGames(fns, errorDisplayer, monitor);
-        }
-    }
-
-    /**
-     * Reloads the database games (but not players or tournaments) while updating the errorDisplayer and the tracker
-     * <p/>
-     * If the list of files is empty, this does nothing (on the assumption that this was called in error).
-     * Otherwise it unloads all existing games files and loads all games from the file.
-     *
-     * @param fns            list of files to load
-     * @param errorDisplayer location to display error messages
-     * @param tracker        location to display progress tracking
-     */
-    void reloadGames(List<String> fns, ErrorDisplayer errorDisplayer, IndeterminateProgressTracker tracker) {
-        if (!fns.isEmpty()) {
-            ArrayList<ThorGameInternal> games = new ArrayList<>();
-            UnloadGames();
-            for (String it : fns) {
-                try {
-                    if (IsWtbFilename(it)) {
-                        games.addAll(Thor.ThorLoadGames(it, tracker));
-                    } else {
-                        final ArrayList<GgfGameText> ggfGameTexts = GgfGameText.Load(new File(it), tracker);
-                        databaseData.addGgfGames(ggfGameTexts);
-                    }
-                    m_fnThorGames.add(it);
-                } catch (IllegalArgumentException e) {
-                    errorDisplayer.notify("loading games file", e.getMessage());
-                }
-            }
-            databaseData.setGames(games);
-
-            m_index.clear();
-            for (int i = 0; i < NGames(); i++)
-                m_index.add(i);
-
-
-            LookUpPosition();
-            fireTableDataChanged();
-        }
-    }
-
-    /**
-     * Get the user's choice of thor player file and load it
-     *
-     * @return true if a file was selected by the user (even if it didn't load)
-     */
-    public boolean LoadPlayers() {
-        File file = thorFileChooser.open("Thor/PlayersFile", "Thor players database", ".jou");
-        if (file != null) {
-            LoadPlayers(file.getAbsolutePath());
-        }
-        return file != null;
-    }
-
-    /**
-     * Load a Thor players file
-     */
-    void LoadPlayers(final String fn) {
-        try {
-            databaseData.setPlayers(ThorLoadPlayers(fn));
-            m_fnThorPlayers = fn;
-            fireTableDataChanged();
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error loading players file", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    /**
-     * Get the user's choice of thor tournament file and load it
-     */
-    public boolean LoadTournaments() {
-        final String regKey = "Thor/TournamentsFile";
-        File file = thorFileChooser.open(regKey, "Thor Tournaments database", ".trn");
-        if (file != null) {
-            LoadTournaments(file.getAbsolutePath());
-        }
-        return file != null;
-    }
-
-    /**
-     * Load a tournament file
-     */
-    void LoadTournaments(final String fn) {
-        try {
-            databaseData.setTournaments(ThorLoadTournaments(fn));
-            m_fnThorTournaments = fn;
-            NBoard.RegistryWriteString("Thor/TournamentsFile", fn);
-            fireTableDataChanged();
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Error loading tournament file", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    /**
-     * Save opening frequencies to a file.
-     * <p/>
-     * The user chooses a filename and then the DatabaseData's opening frequencies are stored to that file.
-     */
-    public boolean SaveOpeningFrequencies() {
-        final File file = textFileChooser.save();
-        if (file != null) {
-            // count opening frequencies
-            final int nOpenings = NOpenings();
-            final int[] counts = databaseData.getOpeningCounts(nOpenings);
-            double nGames = databaseData.NGames();
-
-            // write to file
-            StringBuilder os = new StringBuilder();
-            os.append("freq.\tOpening Name\n");
-            for (char openingCode = 0; openingCode < nOpenings; openingCode++) {
-                if (openingCode != 0 || counts[openingCode] != 0) {
-                    final double freq = counts[openingCode] / nGames;
-                    os.append(String.format("%5.2f", freq * 100)).append("%\t").append(OpeningName(openingCode)).append("\n");
-                }
-            }
-            try (final BufferedWriter out = Files.newBufferedWriter(file.toPath(), Charset.defaultCharset())) {
-                out.write(os.toString());
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "Can't write to file " + file + ": " + e, "Error writing to file", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        return file != null;
-    }
-
     /**
      * @return result of the game, #black discs - #white discs, for Thor games only
      */
@@ -434,11 +200,11 @@ public class DatabaseTableModel extends GridTableModel {
     }
 
     public int getRowCount() {
-        return m_index.size();
+        return matchingIndices.size();
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return databaseData.GameItemText(m_index.get(rowIndex), columnIndex);
+        return databaseData.GameItemText(matchingIndices.get(rowIndex), columnIndex);
     }
 
     public String getStatusString() {
@@ -447,5 +213,19 @@ public class DatabaseTableModel extends GridTableModel {
 
     public String GameItemText(int item, int field) {
         return databaseData.GameItemText(item, field);
+    }
+
+    private void refilter() {
+        matchingIndices.clear();
+        for (int i = 0; i < NGames(); i++)
+            matchingIndices.add(i);
+
+
+        LookUpPosition();
+        fireTableDataChanged();
+    }
+
+    public DatabaseData getDatabase() {
+        return databaseData;
     }
 }

@@ -7,6 +7,7 @@ import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.nboard.engine.EngineSynchronizer;
 import com.welty.nboard.nboard.engine.ReversiWindowEngine;
 import com.welty.nboard.nboard.selector.GuiOpponentSelector;
+import com.welty.nboard.thor.DatabaseLoader;
 import com.welty.nboard.thor.DatabaseTableModel;
 import com.welty.nboard.thor.ThorWindow;
 import com.welty.novello.core.Position;
@@ -46,11 +47,12 @@ import static com.welty.nboard.gui.MenuItemBuilder.menuItem;
  */
 public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowEngine.Listener {
     private final JFrame frame;
+    private final DatabaseLoader databaseLoader;
     private ReversiWindowEngine m_engine;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData reversiData;
 
-    private final ThorWindow m_pwThor;    //< Window where thor games are displayed
+    private final ThorWindow thorWindow;    //< Window where thor games are displayed
     private final JLabel engineStatus = NBoard.createLabel(200, SwingConstants.LEFT);
     private final JLabel engineNodeCount = NBoard.createLabel(200, SwingConstants.RIGHT);
 
@@ -59,17 +61,13 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
     private final GameSelectionWindow gameSelectionWindow;    //< Used in File/Open... dialog when there are multiple games in a file
     private final Hints m_hints;
-    private final DatabaseTableModel dd;
+    private final DatabaseTableModel databaseTableModel;
 
     /**
      * If this is true, the window needs to request an update from the engine.
      * It hasn't already done it because the engine was not ready.
      */
     private boolean needsLove;
-
-    DatabaseTableModel PD() {
-        return m_pwThor.PD();
-    }
 
     // size of the board
     private final int n = 8;
@@ -98,8 +96,9 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         reversiData = new ReversiData(this, this);
         gameSelectionWindow = new GameSelectionWindow(this);
-        dd = new DatabaseTableModel(this, reversiData);
-        m_pwThor = new ThorWindow(this, reversiData, dd);
+        databaseTableModel = new DatabaseTableModel(this, reversiData);
+        databaseLoader = new DatabaseLoader(databaseTableModel);
+        thorWindow = new ThorWindow(this, reversiData, databaseTableModel);
         reversiData.addListener(new SignalListener<OsMoveListItem>() {
 
             public void handleSignal(OsMoveListItem data) {
@@ -114,7 +113,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         m_hints = new Hints();
 
         // and show the move grid
-        m_pmg = new MoveGrid(reversiData, PD(), m_hints);
+        m_pmg = new MoveGrid(reversiData, thorWindow.PD(), m_hints);
 
         Grid moveList = new MoveList(reversiData);
 
@@ -197,33 +196,33 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         JMenu thorMenu = new JMenu();
         thorMenu.add(menuItem("Load &games").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                PDD().LoadGames();
+                databaseLoader.LoadGames();
             }
         }));
         thorMenu.add(menuItem("&Unload games").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                PDD().UnloadGames();
+                databaseLoader.UnloadGames();
             }
         }));
         thorMenu.add(menuItem("Load &players").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                PDD().LoadPlayers();
+                databaseLoader.LoadPlayers();
             }
         }));
         thorMenu.add(menuItem("Load &tournaments").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                PDD().LoadTournaments();
+                databaseLoader.LoadTournaments();
             }
         }));
         thorMenu.addSeparator();
         thorMenu.add(menuItem("Load &config").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                PDD().LoadConfig();
+                databaseLoader.LoadConfig();
             }
         }));
         thorMenu.add(menuItem("&Save config").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                PDD().SaveConfig();
+                databaseLoader.SaveConfig();
             }
         }));
         thorMenu.addSeparator();
@@ -237,7 +236,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         thorMenu.addSeparator();
         thorMenu.add(menuItem("Save Opening &Frequencies").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                PDD().SaveOpeningFrequencies();
+                databaseLoader.SaveOpeningFrequencies();
             }
         }));
         return thorMenu;
@@ -403,7 +402,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     }
 
     private DatabaseTableModel PDD() {
-        return m_pwThor.PDD();
+        return thorWindow.PDD();
     }
 
     private static void SetClipboardText(String s) {
@@ -792,7 +791,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      * Look up the displayed position in the currently loaded thor database
      */
     void ThorLookUpPosition() {
-        dd.LookUpPosition();
+        databaseTableModel.LookUpPosition();
         m_pmg.UpdateHints();
     }
 
