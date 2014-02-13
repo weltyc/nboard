@@ -247,27 +247,30 @@ public class ReversiData implements BoardSource {
     /**
      * Update the game and windows when the game is being set based on the given string
      * <p/>
-     * If the string does not contain a valid game, nothing happens.
+     * If the sGame does not contain a valid game, this data is not modified and the method throws an exception.
+     *
+     * @param sGame GGF format text of the game.
+     * @throws IllegalArgumentException if this can't be parsed as a game.
      */
     void setGameText(final String sGame) {
         CReader is = new CReader(sGame);
-        Update(is, true);
+        setGame(is, true);
     }
 
     /**
      * Update the game and windows by reading the game from the istream.
      * <p/>
-     * If the istream does not contain a valid game, nothing happens
+     * If the istream does not contain a valid game, this data is not modified and the method throws an exception.
      *
      * @param fResetMove true if we should reset the position to move 0.
      *                   The user experience is best if this is true unless you can guarantee that the position on
      *                   the board will not change. (e.g. In Thor lookups, the position on the board shouldn't change).
+     * @throws IllegalArgumentException if this can't be parsed as a game.
      */
-    void Update(CReader is, boolean fResetMove) {
+    void setGame(CReader is, boolean fResetMove) {
         COsGame game = new COsGame();
         game.In(is);
         setGame(game, fResetMove);
-        // todo if is doesn't contain a valid game, make sure nothing happens
     }
 
     /**
@@ -318,5 +321,24 @@ public class ReversiData implements BoardSource {
 
     public @NotNull OsClock getGameStartClock() {
         return gameStartClock;
+    }
+
+    /**
+     * Handles a Paste command.
+     * <p/>
+     * This tries to interpret s as a move list (from the current start position),
+     * as a board (filled squares and player-to-move only), or as a GGF game. If any of these
+     * succeed, it updates the current game. If none succeed, it throws an IllegalArgumentException
+     * containing a helpful error message.
+     *
+     * @param s text to paste
+     * @throws IllegalArgumentException if s can't be interpreted.
+     */
+    public void paste(String s) {
+        if (s.startsWith("(;GM[Othello]")) {
+            setGameText(s);
+        } else {
+            throw new IllegalArgumentException("Can't interpret as a move list, board, or game: \"" + s + "\"");
+        }
     }
 }

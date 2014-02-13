@@ -309,12 +309,12 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
             }
         }));
-        m_editMenu.add(menuItem("&Paste Game\tCtrl+V").build(new ActionListener() {
+        m_editMenu.add(menuItem("&Paste\tCtrl+V").build(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 String s = GetClipboardText();
                 if (s != null) {
-                    reversiData.setGameText(s);
+                    reversiData.paste(s);
                 }
             }
         }));

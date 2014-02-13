@@ -82,4 +82,26 @@ public class ReversiDataTest extends TestCase {
         clock.setMillis(2037);
         assertEquals(1., data.secondsSinceLastMove());
     }
+
+    public void testPaste() {
+        final ReversiData data = createRd();
+        final COsGame game = new COsGame();
+        game.Initialize("8", OsClock.DEFAULT, OsClock.DEFAULT);
+        game.append(new OsMoveListItem("F5/1/2"));
+
+        data.paste(game.toString());
+        assertEquals(game.toString(), data.getGame().toString());
+
+        testPasteFails(data, "foo bar", "Can't interpret as a move list, board, or game");
+    }
+
+    private static void testPasteFails(ReversiData data, String pasteText, String message) {
+        try {
+            data.paste(pasteText);
+            fail("should throw");
+        } catch (IllegalArgumentException e) {
+            final String expected = message + ": \"" + pasteText + "\"";
+            assertEquals(expected, e.getMessage());
+        }
+    }
 }
