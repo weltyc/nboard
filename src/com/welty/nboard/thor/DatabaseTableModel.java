@@ -46,7 +46,7 @@ public class DatabaseTableModel extends GridTableModel {
         });
         databaseData.addListener(new DatabaseData.Listener() {
             @Override public void databaseChanged() {
-                refilter();
+                LookUpPosition();
             }
         });
 
@@ -82,13 +82,13 @@ public class DatabaseTableModel extends GridTableModel {
      * @return true if the database window should be displayed.
      */
     public boolean IsReady() {
-        return NGames() != 0;
+        return nGamesInDatabase() != 0;
     }
 
     /**
      * @return the total number of games loaded (both Thor and GGF)
      */
-    public int NGames() {
+    public int nGamesInDatabase() {
         return databaseData.NGames();
     }
 
@@ -100,6 +100,9 @@ public class DatabaseTableModel extends GridTableModel {
         return databaseData.GameFromIndex(matchingIndices.get(iFiltered));
     }
 
+    /**
+     * Look up the position and notify listeners that the table data has changed.
+     */
     public void LookUpPosition() {
         final COsPosition position = boardSource.DisplayedPosition();
         LookUpPosition(position.board);
@@ -143,26 +146,12 @@ public class DatabaseTableModel extends GridTableModel {
      *
      * @param field column index. Must be in the range [0,5]
      */
-    void SetFilter(String text, int field, final OsBoard pos) {
+    void SetFilter(String text, int field) {
         assert (field < 6);
         if (field < 6) {
             filters[field] = text;
-            LookUpPosition(pos);
+            LookUpPosition();
         }
-    }
-
-    /**
-     * @return the index, filtered by the filter
-     */
-    TIntArrayList FilteredIndex() {
-        TIntArrayList fi = new TIntArrayList();
-        int n = matchingIndices.size();
-        for (int i = 0; i < n; i++) {
-            final int j = matchingIndices.get(i);
-            if (FilterOk(j))
-                fi.add(j);
-        }
-        return fi;
     }
 
     /**
@@ -200,19 +189,14 @@ public class DatabaseTableModel extends GridTableModel {
     }
 
     public String getStatusString() {
-        return getRowCount() + "/" + NGames() + " games selected";
+        return getRowCount() + "/" + nGamesInDatabase() + " games selected";
     }
 
     public String GameItemText(int item, int field) {
         return databaseData.GameItemText(item, field);
     }
 
-    private void refilter() {
-        LookUpPosition();
-        fireTableDataChanged();
-    }
-
-    public DatabaseData getDatabase() {
+    DatabaseData getDatabase() {
         return databaseData;
     }
 }

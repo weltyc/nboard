@@ -45,7 +45,7 @@ class DatabaseTable extends Grid {
      * Send the selected game to the ReversiWindow
      */
     public void selectionChanged(int modelRow, int modelCol) {
-        if (modelRow < PD().NGames()) {
+        if (modelRow < PD().getRowCount()) {
             reversiData.setGame(dtm.GameFromFilteredRow(modelRow), false);
             reversiWindow.BringToTop();
         }

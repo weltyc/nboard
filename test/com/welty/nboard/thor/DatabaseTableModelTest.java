@@ -103,7 +103,7 @@ public class DatabaseTableModelTest extends ArrayTestCase {
     }
 
     /**
-     * Call dd.reloadGames() with mock progress tracker and error displayer
+     * Call dtm.reloadGames() with mock progress tracker and error displayer
      *
      * @param dtm database data to do the loading
      * @param fns files to load
@@ -126,16 +126,16 @@ public class DatabaseTableModelTest extends ArrayTestCase {
         reloadGames(dd, Arrays.asList(createTempFile(".ggf", "test.ggf")));
 
         // we should have exactly one game, the game at index 0
-        assertEquals(new int[]{0}, dd.FilteredIndex().toArray());
+        assertEquals(1, dd.getRowCount());
 
         //after playing one move we should still have exactly one game
         boardSource.append(new OsMoveListItem("F5"));
-        assertEquals(new int[]{0}, dd.FilteredIndex().toArray());
+        assertEquals(1, dd.getRowCount());
 
-        //after two moves we should have no games, since the displayed position is the diagonal
+        //after two moves we should have no matching games, since the displayed position is the diagonal
         // but the database game is perpendicular.
         boardSource.append(new OsMoveListItem("F6"));
-        assertEquals(new int[0], dd.FilteredIndex().toArray());
+        assertEquals(0, dd.getRowCount());
     }
 
     /**
