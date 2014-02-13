@@ -99,6 +99,21 @@ public class ReversiDataTest extends TestCase {
         assertEquals("F5D6", data.getGame().getMoveList().toMoveListString());
     }
 
+    public void testPasteBoard() {
+        final ReversiData data = createRd();
+        data.paste("F5 D6");
+
+
+        final String text = Position.ALTERNATE_START_POSITION.play("F6").positionString();
+        System.out.println(text);
+        data.paste(text);
+
+        assertEquals(0, data.getGame().nMoves());
+        final String expected = "8" + text.replaceAll(" ", "");
+        assertEquals(expected, data.getGame().getPos().board.toString().replaceAll(" ", ""));
+        assertEquals(expected, data.getGame().getStartPosition().board.toString().replaceAll(" ", ""));
+    }
+
     public void testPasteFails() {
         final ReversiData data = createRd();
         testPasteFails(data, "foo bar", "Can't interpret as a move list, board, or game: \"foo bar\"");

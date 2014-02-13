@@ -58,7 +58,7 @@ F5       More convenient external engine add window
 F6   X   Display node count
 F7   X   Display clock
 F8   X   Timed matches
-F9       Paste command should paste any format (move list, game, board)
+F9   X   Paste command should paste any format (move list, game, board)
 F10  X   Ctrl-C should copy move list, Ctrl-Shift-C should copy game
 F11      Filter database by player, tournament, etc.
 F12      Score graph

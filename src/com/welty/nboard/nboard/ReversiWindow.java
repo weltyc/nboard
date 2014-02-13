@@ -314,41 +314,10 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             public void actionPerformed(ActionEvent e) {
                 String s = GetClipboardText();
                 if (s != null) {
-                    reversiData.paste(s);
-                }
-            }
-        }));
-
-        m_editMenu.add(menuItem("Paste Move &List").build(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                String s = GetClipboardText();
-                if (s != null) {
-                    COsGame game = new COsGame();
-                    game.setToDefaultStartPosition(getGameStartClock(), getGameStartClock());
-                    game.SetMoveList(s);
-                    reversiData.setGame(game, true);
-                }
-            }
-        }));
-
-        m_editMenu.add(menuItem("Paste Board").build(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                String s = GetClipboardText();
-                if (s != null) {
-                    CReader is = new CReader("8 " + s);
                     try {
-                        COsGame game = new COsGame();
-                        game.Clear();
-                        game.setToDefaultStartPosition(getGameStartClock(), getGameStartClock());
-                        game.posStart.board.in(is);
-                        game.CalcCurrentPos();
-                        reversiData.setGame(game, true);
+                        reversiData.paste(s);
                     } catch (IllegalArgumentException ex) {
-                        final String msg = (s.length() < 200 ? s + " is not a legal board" : "Not a legal board");
-                        final String title = "Paste Board error";
-                        warn(msg, title);
+                        warn("Paste error", ex.getMessage());
                     }
                 }
             }

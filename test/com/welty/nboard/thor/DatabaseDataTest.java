@@ -101,7 +101,7 @@ public class DatabaseDataTest extends ArrayTestCase {
         final OptionSource optionSource = EasyMock.createNiceMock(OptionSource.class);
         final BoardSource boardSource = EasyMock.createNiceMock(BoardSource.class);
         final COsGame game = new COsGame(new CReader(diagonalGame));
-        EasyMock.expect(boardSource.DisplayedPosition()).andReturn(game.GetPosStart());
+        EasyMock.expect(boardSource.DisplayedPosition()).andReturn(game.getStartPosition());
         EasyMock.replay(boardSource);
 
         DatabaseData dd = new DatabaseData(optionSource, boardSource);
@@ -130,7 +130,7 @@ public class DatabaseDataTest extends ArrayTestCase {
         final OptionSource optionSource = EasyMock.createNiceMock(OptionSource.class);
         final BoardSource boardSource = EasyMock.createNiceMock(BoardSource.class);
         final COsGame game = new COsGame(new CReader(diagonalGame));
-        EasyMock.expect(boardSource.DisplayedPosition()).andReturn(game.GetPosStart());
+        EasyMock.expect(boardSource.DisplayedPosition()).andReturn(game.getStartPosition());
         EasyMock.replay(boardSource);
         EasyMock.expect(optionSource.ThorLookUpAll()).andReturn(true).times(2);
         EasyMock.replay(optionSource);

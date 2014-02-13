@@ -349,10 +349,21 @@ public class ReversiData implements BoardSource {
                     throw new IllegalArgumentException("Invalid move list: " + e.getMessage(), e);
                 }
                 setGame(game, true);
+            } else if (looksLikeBoard(compressed)) {
+                // try it as a board
+                COsGame game = new COsGame();
+                game.Initialize("8", getGameStartClock(), getGameStartClock());
+                game.getStartPosition().board.in(new CReader("8 " + s));
+                game.CalcCurrentPos();
+                setGame(game, true);
             } else {
                 throw new IllegalArgumentException("Can't interpret as a move list, board, or game: \"" + s + "\"");
             }
         }
+    }
+
+    private boolean looksLikeBoard(String compressed) {
+        return "OX*0-._".contains(compressed.substring(0, 1));
     }
 
     private static boolean looksLikeMoveList(String compressed) {
