@@ -17,18 +17,18 @@ import javax.swing.table.TableModel;
  * Time: 3:03:09 PM
  * </PRE>
  */
-public class ThorWindow extends JFrame implements TableModelListener {
-    private final ThorTable thorTable;
+public class DatabaseWindow extends JFrame implements TableModelListener {
+    private final DatabaseTable databaseTable;
     private @NotNull final DatabaseTableModel databaseTableModel;
 
-    public ThorWindow(ReversiWindow reversiWindow, ReversiData reversiData, @NotNull DatabaseTableModel dd) {
+    public DatabaseWindow(ReversiWindow reversiWindow, ReversiData reversiData, @NotNull DatabaseTableModel dd) {
         super("Database");
         databaseTableModel = dd;
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        thorTable = new ThorTable(reversiWindow, reversiData, dd);
-        add(thorTable);
+        databaseTable = new DatabaseTable(reversiWindow, reversiData, dd);
+        add(databaseTable);
         pack();
-        final TableModel tableModel = thorTable.getTableModel();
+        final TableModel tableModel = databaseTable.getTableModel();
         tableModel.addTableModelListener(this);
     }
 
@@ -36,14 +36,14 @@ public class ThorWindow extends JFrame implements TableModelListener {
      * @return a pointer to the database data
      */
     public DatabaseTableModel PD() {
-        return thorTable.PD();
+        return databaseTable.PD();
     }
 
     /**
      * Invalidate the data area. If all data files have been loaded, show the window
      */
     void ShowIfReady() {
-        thorTable.repaint();
+        databaseTable.repaint();
         final boolean isReady = PD().IsReady();
         if (isReady && !isVisible()) {
             pack();

@@ -13,23 +13,23 @@ import javax.swing.*;
  * Time: 7:31:36 PM
  * </PRE>
  */
-class ThorTable extends Grid {
+class DatabaseTable extends Grid {
 
     private final ReversiData reversiData;
-    private final DatabaseTableModel dd;
+    private final DatabaseTableModel dtm;
 
     private final ReversiWindow reversiWindow;    //!< When a game is clicked, update this window with the new game
 
     /**
      * Construct the table; create columns and sizer
      *
-     * @param pwTarget When the user selects a game it is sent to this window
+     * @param reversiWindow When the user selects a game it is sent to this window
      */
-    ThorTable(ReversiWindow pwTarget, ReversiData reversiData, DatabaseTableModel dd) {
-        super(dd, new JTable(dd), true, false, true);
-        reversiWindow = pwTarget;
+    DatabaseTable(ReversiWindow reversiWindow, ReversiData reversiData, DatabaseTableModel dtm) {
+        super(dtm, new JTable(dtm), true, false, true);
+        this.reversiWindow = reversiWindow;
         this.reversiData = reversiData;
-        this.dd = dd;
+        this.dtm = dtm;
         final JTable table = getTable();
         table.setAutoCreateRowSorter(true);
         final DefaultRowSorter rowSorter = (DefaultRowSorter) table.getRowSorter();
@@ -38,7 +38,7 @@ class ThorTable extends Grid {
     }
 
     DatabaseTableModel PD() {
-        return dd;
+        return dtm;
     }
 
     /**
@@ -46,7 +46,7 @@ class ThorTable extends Grid {
      */
     public void selectionChanged(int modelRow, int modelCol) {
         if (modelRow < PD().NGames()) {
-            reversiData.setGame(dd.GameFromFilteredRow(modelRow), false);
+            reversiData.setGame(dtm.GameFromFilteredRow(modelRow), false);
             reversiWindow.BringToTop();
         }
     }

@@ -22,9 +22,6 @@ import java.util.List;
  * </PRE>
  */
 public class DatabaseTableModelTest extends ArrayTestCase {
-    private static final String diagonalGame = "(;GM[Othello]PC[NBoard]DT[2004-11-24 13:47:34 GMT]PB[Chris]PW[Ntest2]RE[-12]TI[0]TY[8]BO[8 ---------------------------O*------*O--------------------------- *]B[F5]W[F6];)";
-
-    //! test DatabaseTableModel.GameItemText()
     private static void testGameItemText(final DatabaseTableModel dd) {
         // Thor game
         assertTrue(dd.GameItemText(0, 0).equals("???"));
@@ -48,27 +45,25 @@ public class DatabaseTableModelTest extends ArrayTestCase {
         final String wtbFile = createTempFile(".WTB", "test.WTB");
         final List<String> fns = Arrays.asList(ggfFile, wtbFile);
 
-        DatabaseTableModel dd = createDtm(fns);
+        DatabaseTableModel dtm = createDtm(fns);
 
-        assertEquals(dd.NGames(), 2);
-        assertEquals(dd.NPlayers(), 0);
-        assertEquals(dd.NTournaments(), 0);
+        checkDatabase(dtm, 2, 0, 0);
 
-        testGameItemText(dd);
+        testGameItemText(dtm);
 
         COsGame osg = new COsGame();
         osg.setToDefaultStartPosition(OsClock.DEFAULT, OsClock.DEFAULT);
 
-        dd.LookUpPosition(osg.pos.board);
-        assertEquals(dd.m_summary.size(), 2);
+        dtm.LookUpPosition(osg.pos.board);
+        assertEquals(dtm.m_summary.size(), 2);
 
         osg.append(new OsMoveListItem(new OsMove("F5")));
-        dd.LookUpPosition(osg.pos.board);
-        assertEquals(dd.m_summary.size(), 2);
+        dtm.LookUpPosition(osg.pos.board);
+        assertEquals(dtm.m_summary.size(), 2);
 
         osg.append(new OsMoveListItem(new OsMove("D6")));
-        dd.LookUpPosition(osg.pos.board);
-        assertEquals(dd.m_summary.size(), 1);
+        dtm.LookUpPosition(osg.pos.board);
+        assertEquals(dtm.m_summary.size(), 1);
     }
 
     public void testReadingIrregularGames() throws IOException {
@@ -78,16 +73,14 @@ public class DatabaseTableModelTest extends ArrayTestCase {
         final String ggfFile = createTempFile(".ggf", "test2.ggf");
         final List<String> fns = Arrays.asList(ggfFile);
 
-        DatabaseTableModel dd = createDtm(fns);
+        DatabaseTableModel dtm = createDtm(fns);
 
-        assertEquals(1, dd.NGames());
-        assertEquals(0, dd.NPlayers());
-        assertEquals(0, dd.NTournaments());
+        checkDatabase(dtm, 1, 0, 0);
 
         // The DT field (date/time) normally contains a text string starting with the year, e.g. "2008-07-06".
         // the only game that works exhibits a bug found in early GGS games: the time is given in seconds since
         // 1970-01-01. Make sure that we can handle this anomaly
-        assertEquals(1999, dd.GameYear(0));
+        assertEquals(1999, dtm.GameYear(0));
     }
 
     private static DatabaseTableModel createDtm(List<String> fns) {
@@ -95,25 +88,30 @@ public class DatabaseTableModelTest extends ArrayTestCase {
         final OptionSource optionSource = EasyMock.createNiceMock(OptionSource.class);
         final BoardSource boardSource = new BoardSourceStub();
 
-        DatabaseTableModel dd = new DatabaseTableModel(optionSource, boardSource);
-        assertEquals(0, dd.NPlayers());
-        assertEquals(0, dd.NTournaments());
-        assertEquals(0, dd.NGames());
+        DatabaseTableModel dtm = new DatabaseTableModel(optionSource, boardSource);
+        checkDatabase(dtm, 0, 0, 0);
 
-        reloadGames(dd, fns);
-        return dd;
+        reloadGames(dtm, fns);
+        return dtm;
+    }
+
+    private static void checkDatabase(DatabaseTableModel dtm, int nGames, int nPlayers, int nTournaments) {
+        final DatabaseData database = dtm.getDatabase();
+        assertEquals(nPlayers, database.NPlayers());
+        assertEquals(nTournaments, database.NTournaments());
+        assertEquals(nGames, database.NGames());
     }
 
     /**
      * Call dd.reloadGames() with mock progress tracker and error displayer
      *
-     * @param dd  database data to do the loading
+     * @param dtm database data to do the loading
      * @param fns files to load
      */
-    private static void reloadGames(DatabaseTableModel dd, List<String> fns) {
+    private static void reloadGames(DatabaseTableModel dtm, List<String> fns) {
         final IndeterminateProgressTracker tracker = Mockito.mock(IndeterminateProgressTracker.class);
         final ErrorDisplayer errorDisplayer = Mockito.mock(ErrorDisplayer.class);
-        new DatabaseLoader(dd.getDatabase()).reloadGames(fns, errorDisplayer, tracker);
+        new DatabaseLoader(dtm.getDatabase()).reloadGames(fns, errorDisplayer, tracker);
     }
 
     public void testInitialLookup() throws IOException {

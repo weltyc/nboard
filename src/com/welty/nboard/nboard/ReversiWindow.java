@@ -9,7 +9,7 @@ import com.welty.nboard.nboard.engine.ReversiWindowEngine;
 import com.welty.nboard.nboard.selector.GuiOpponentSelector;
 import com.welty.nboard.thor.DatabaseLoader;
 import com.welty.nboard.thor.DatabaseTableModel;
-import com.welty.nboard.thor.ThorWindow;
+import com.welty.nboard.thor.DatabaseWindow;
 import com.welty.novello.core.Position;
 import com.welty.othello.api.SearchState;
 import com.welty.othello.c.CReader;
@@ -52,7 +52,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData reversiData;
 
-    private final ThorWindow thorWindow;    //< Window where thor games are displayed
+    private final DatabaseWindow databaseWindow;    //< Window where thor games are displayed
     private final JLabel engineStatus = NBoard.createLabel(200, SwingConstants.LEFT);
     private final JLabel engineNodeCount = NBoard.createLabel(200, SwingConstants.RIGHT);
 
@@ -98,7 +98,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         gameSelectionWindow = new GameSelectionWindow(this);
         databaseTableModel = new DatabaseTableModel(this, reversiData);
         databaseLoader = new DatabaseLoader(databaseTableModel);
-        thorWindow = new ThorWindow(this, reversiData, databaseTableModel);
+        databaseWindow = new DatabaseWindow(this, reversiData, databaseTableModel);
         reversiData.addListener(new SignalListener<OsMoveListItem>() {
 
             public void handleSignal(OsMoveListItem data) {
@@ -113,7 +113,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         m_hints = new Hints();
 
         // and show the move grid
-        m_pmg = new MoveGrid(reversiData, thorWindow.PD(), m_hints);
+        m_pmg = new MoveGrid(reversiData, databaseWindow.PD(), m_hints);
 
         Grid moveList = new MoveList(reversiData);
 
@@ -402,7 +402,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     }
 
     private DatabaseTableModel PDD() {
-        return thorWindow.PDD();
+        return databaseWindow.PDD();
     }
 
     private static void SetClipboardText(String s) {

@@ -52,14 +52,6 @@ public class DatabaseTableModel extends GridTableModel {
 
     }
 
-    int NPlayers() {
-        return databaseData.NPlayers();
-    }
-
-    int NTournaments() {
-        return databaseData.NTournaments();
-    }
-
     void OnBoardChanged() {
         if (optionSource.ThorLookUpAll()) {
             LookUpPosition();
@@ -90,7 +82,7 @@ public class DatabaseTableModel extends GridTableModel {
      * @return true if the database window should be displayed.
      */
     public boolean IsReady() {
-        return databaseData.NGames() != 0;
+        return NGames() != 0;
     }
 
     /**
@@ -216,11 +208,6 @@ public class DatabaseTableModel extends GridTableModel {
     }
 
     private void refilter() {
-        matchingIndices.clear();
-        for (int i = 0; i < NGames(); i++)
-            matchingIndices.add(i);
-
-
         LookUpPosition();
         fireTableDataChanged();
     }
