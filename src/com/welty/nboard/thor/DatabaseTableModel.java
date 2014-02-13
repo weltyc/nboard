@@ -19,7 +19,7 @@ import static com.welty.nboard.thor.Thor.MatchingPositions;
  * Encapsulate all data needed by the database window
  */
 public class DatabaseTableModel extends GridTableModel {
-    private final DatabaseData databaseData = new DatabaseData();
+    private final DatabaseData databaseData;
 
     private static final GridColumn[] m_columns = {
             new GridColumn(120, "Black", Align.LEFT),
@@ -32,10 +32,11 @@ public class DatabaseTableModel extends GridTableModel {
     private final @NotNull OptionSource optionSource;
     private final @NotNull BoardSource boardSource;
 
-    public DatabaseTableModel(@NotNull OptionSource optionSource, @NotNull BoardSource boardSource) {
+    DatabaseTableModel(@NotNull OptionSource optionSource, @NotNull BoardSource boardSource, @NotNull DatabaseData databaseData) {
         super(m_columns);
         this.optionSource = optionSource;
         this.boardSource = boardSource;
+        this.databaseData = databaseData;
         for (int i = 0; i < filters.length; i++) {
             filters[i] = "";
         }
@@ -167,13 +168,6 @@ public class DatabaseTableModel extends GridTableModel {
     }
 
     /**
-     * @return result of the game, #black discs - #white discs, for Thor games only
-     */
-    int GameResult(int iGame) {
-        return databaseData.GameResult(iGame);
-    }
-
-    /**
      * @return year in which the game was played
      */
     int GameYear(int iGame) {
@@ -194,9 +188,5 @@ public class DatabaseTableModel extends GridTableModel {
 
     public String GameItemText(int item, int field) {
         return databaseData.GameItemText(item, field);
-    }
-
-    DatabaseData getDatabase() {
-        return databaseData;
     }
 }

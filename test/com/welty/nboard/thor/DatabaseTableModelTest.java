@@ -47,7 +47,7 @@ public class DatabaseTableModelTest extends ArrayTestCase {
 
         DatabaseTableModel dtm = createDtm(fns);
 
-        checkDatabase(dtm, 2, 0, 0);
+        assertEquals(2, dtm.getRowCount());
 
         testGameItemText(dtm);
 
@@ -75,7 +75,7 @@ public class DatabaseTableModelTest extends ArrayTestCase {
 
         DatabaseTableModel dtm = createDtm(fns);
 
-        checkDatabase(dtm, 1, 0, 0);
+        assertEquals(1, dtm.getRowCount());
 
         // The DT field (date/time) normally contains a text string starting with the year, e.g. "2008-07-06".
         // the only game that works exhibits a bug found in early GGS games: the time is given in seconds since
@@ -88,30 +88,24 @@ public class DatabaseTableModelTest extends ArrayTestCase {
         final OptionSource optionSource = EasyMock.createNiceMock(OptionSource.class);
         final BoardSource boardSource = new BoardSourceStub();
 
-        DatabaseTableModel dtm = new DatabaseTableModel(optionSource, boardSource);
-        checkDatabase(dtm, 0, 0, 0);
+        final DatabaseData databaseData = new DatabaseData();
+        DatabaseTableModel dtm = new DatabaseTableModel(optionSource, boardSource, databaseData);
+        assertEquals(0, dtm.getRowCount());
 
-        reloadGames(dtm, fns);
+        reloadGames(databaseData, fns);
         return dtm;
     }
 
-    private static void checkDatabase(DatabaseTableModel dtm, int nGames, int nPlayers, int nTournaments) {
-        final DatabaseData database = dtm.getDatabase();
-        assertEquals(nPlayers, database.NPlayers());
-        assertEquals(nTournaments, database.NTournaments());
-        assertEquals(nGames, database.NGames());
-    }
-
     /**
-     * Call dtm.reloadGames() with mock progress tracker and error displayer
+     * Call databaseData.reloadGames() with mock progress tracker and error displayer
      *
-     * @param dtm database data to do the loading
-     * @param fns files to load
+     * @param databaseData database data to do the loading
+     * @param fns          files to load
      */
-    private static void reloadGames(DatabaseTableModel dtm, List<String> fns) {
+    private static void reloadGames(DatabaseData databaseData, List<String> fns) {
         final IndeterminateProgressTracker tracker = Mockito.mock(IndeterminateProgressTracker.class);
         final ErrorDisplayer errorDisplayer = Mockito.mock(ErrorDisplayer.class);
-        new DatabaseLoader(dtm.getDatabase()).reloadGames(fns, errorDisplayer, tracker);
+        new DatabaseLoader(databaseData).reloadGames(fns, errorDisplayer, tracker);
     }
 
     public void testInitialLookup() throws IOException {
@@ -121,9 +115,10 @@ public class DatabaseTableModelTest extends ArrayTestCase {
         EasyMock.expect(optionSource.ThorLookUpAll()).andReturn(true).times(2);
         EasyMock.replay(optionSource);
 
-        DatabaseTableModel dd = new DatabaseTableModel(optionSource, boardSource);
+        final DatabaseData databaseData = new DatabaseData();
+        DatabaseTableModel dd = new DatabaseTableModel(optionSource, boardSource, databaseData);
 
-        reloadGames(dd, Arrays.asList(createTempFile(".ggf", "test.ggf")));
+        reloadGames(databaseData, Arrays.asList(createTempFile(".ggf", "test.ggf")));
 
         // we should have exactly one game, the game at index 0
         assertEquals(1, dd.getRowCount());

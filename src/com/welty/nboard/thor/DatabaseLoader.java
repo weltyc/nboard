@@ -39,10 +39,6 @@ public class DatabaseLoader {
         this.databaseData = databaseData;
     }
 
-    public DatabaseLoader(DatabaseTableModel databaseTableModel) {
-        this(databaseTableModel.getDatabase());
-    }
-
     /**
      * Save the current thor player/tournament/games files to the registry
      */
