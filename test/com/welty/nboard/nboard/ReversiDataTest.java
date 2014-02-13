@@ -83,7 +83,7 @@ public class ReversiDataTest extends TestCase {
         assertEquals(1., data.secondsSinceLastMove());
     }
 
-    public void testPaste() {
+    public void testPasteGame() {
         final ReversiData data = createRd();
         final COsGame game = new COsGame();
         game.Initialize("8", OsClock.DEFAULT, OsClock.DEFAULT);
@@ -91,8 +91,18 @@ public class ReversiDataTest extends TestCase {
 
         data.paste(game.toString());
         assertEquals(game.toString(), data.getGame().toString());
+    }
 
-        testPasteFails(data, "foo bar", "Can't interpret as a move list, board, or game");
+    public void testPasteMoveList() {
+        final ReversiData data = createRd();
+        data.paste("F5 d6");
+        assertEquals("F5D6", data.getGame().getMoveList().toMoveListString());
+    }
+
+    public void testPasteFails() {
+        final ReversiData data = createRd();
+        testPasteFails(data, "foo bar", "Can't interpret as a move list, board, or game: \"foo bar\"");
+        testPasteFails(data, "D7", "Invalid move list: Move flips no disks: D7");
     }
 
     private static void testPasteFails(ReversiData data, String pasteText, String message) {
@@ -100,8 +110,7 @@ public class ReversiDataTest extends TestCase {
             data.paste(pasteText);
             fail("should throw");
         } catch (IllegalArgumentException e) {
-            final String expected = message + ": \"" + pasteText + "\"";
-            assertEquals(expected, e.getMessage());
+            assertEquals(message, e.getMessage());
         }
     }
 }

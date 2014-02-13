@@ -338,7 +338,33 @@ public class ReversiData implements BoardSource {
         if (s.startsWith("(;GM[Othello]")) {
             setGameText(s);
         } else {
-            throw new IllegalArgumentException("Can't interpret as a move list, board, or game: \"" + s + "\"");
+            String compressed = s.replaceAll("[ \t\r\n]", "");
+            if (looksLikeMoveList(compressed)) {
+                // looks like a move list
+                COsGame game = new COsGame();
+                game.setToDefaultStartPosition(getGameStartClock(), getGameStartClock());
+                try {
+                    game.SetMoveList(s);
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException("Invalid move list: " + e.getMessage(), e);
+                }
+                setGame(game, true);
+            } else {
+                throw new IllegalArgumentException("Can't interpret as a move list, board, or game: \"" + s + "\"");
+            }
         }
+    }
+
+    private static boolean looksLikeMoveList(String compressed) {
+        if (compressed.length() < 2) {
+            return false;
+        }
+        compressed = compressed.toUpperCase();
+        final char c = compressed.charAt(0);
+        if (c >= 'A' && c <= 'H') {
+            final char c1 = compressed.charAt(1);
+            return c1 <= '8' && c1 >= '1';
+        } else return compressed.startsWith("PA");
+
     }
 }
