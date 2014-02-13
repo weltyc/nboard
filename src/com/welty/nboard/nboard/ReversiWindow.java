@@ -7,7 +7,7 @@ import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.nboard.engine.EngineSynchronizer;
 import com.welty.nboard.nboard.engine.ReversiWindowEngine;
 import com.welty.nboard.nboard.selector.GuiOpponentSelector;
-import com.welty.nboard.thor.DatabaseData;
+import com.welty.nboard.thor.DatabaseTableModel;
 import com.welty.nboard.thor.ThorWindow;
 import com.welty.novello.core.Position;
 import com.welty.othello.api.SearchState;
@@ -59,7 +59,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
     private final GameSelectionWindow gameSelectionWindow;    //< Used in File/Open... dialog when there are multiple games in a file
     private final Hints m_hints;
-    private final DatabaseData dd;
+    private final DatabaseTableModel dd;
 
     /**
      * If this is true, the window needs to request an update from the engine.
@@ -67,7 +67,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      */
     private boolean needsLove;
 
-    DatabaseData PD() {
+    DatabaseTableModel PD() {
         return m_pwThor.PD();
     }
 
@@ -98,7 +98,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         reversiData = new ReversiData(this, this);
         gameSelectionWindow = new GameSelectionWindow(this);
-        dd = new DatabaseData(this, reversiData);
+        dd = new DatabaseTableModel(this, reversiData);
         m_pwThor = new ThorWindow(this, reversiData, dd);
         reversiData.addListener(new SignalListener<OsMoveListItem>() {
 
@@ -402,7 +402,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         return m_fileMenu;
     }
 
-    private DatabaseData PDD() {
+    private DatabaseTableModel PDD() {
         return m_pwThor.PDD();
     }
 

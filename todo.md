@@ -69,6 +69,8 @@ F18      Set up board command
 F19      Time graph
 F20      Lost disks graph
 F21      Separate programs for analysis and opponent
+F22      More than 1 hint from internal engines
+F23      Check timing on internal engines
 
 FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games
 FL2      GGF games should be stored in a more compact format

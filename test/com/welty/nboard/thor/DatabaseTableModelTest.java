@@ -19,19 +19,19 @@ import java.util.List;
  * Time: 7:50:25 PM
  * </PRE>
  */
-public class DatabaseDataTest extends ArrayTestCase {
+public class DatabaseTableModelTest extends ArrayTestCase {
     private static final String diagonalGame = "(;GM[Othello]PC[NBoard]DT[2004-11-24 13:47:34 GMT]PB[Chris]PW[Ntest2]RE[-12]TI[0]TY[8]BO[8 ---------------------------O*------*O--------------------------- *]B[F5]W[F6];)";
 
     public static void testIsWtbFilename() {
-        assertTrue(DatabaseData.IsWtbFilename("temp.wtb"));
-        assertTrue(!DatabaseData.IsWtbFilename("temp"));
-        assertTrue(!DatabaseData.IsWtbFilename("bla.wtba"));
-        assertTrue(DatabaseData.IsWtbFilename("foo.WTB"));
-        assertTrue(DatabaseData.IsWtbFilename("c:/devl/othello/foo.wtB"));
+        assertTrue(DatabaseTableModel.IsWtbFilename("temp.wtb"));
+        assertTrue(!DatabaseTableModel.IsWtbFilename("temp"));
+        assertTrue(!DatabaseTableModel.IsWtbFilename("bla.wtba"));
+        assertTrue(DatabaseTableModel.IsWtbFilename("foo.WTB"));
+        assertTrue(DatabaseTableModel.IsWtbFilename("c:/devl/othello/foo.wtB"));
     }
 
-    //! test DatabaseData.GameItemText()
-    private static void testGameItemText(final DatabaseData dd) {
+    //! test DatabaseTableModel.GameItemText()
+    private static void testGameItemText(final DatabaseTableModel dd) {
         // Thor game
         assertTrue(dd.GameItemText(0, 0).equals("???"));
         assertTrue(dd.GameItemText(0, 1).equals("???"));
@@ -54,7 +54,7 @@ public class DatabaseDataTest extends ArrayTestCase {
         final String wtbFile = createTempFile(".WTB", "test.WTB");
         final List<String> fns = Arrays.asList(ggfFile, wtbFile);
 
-        DatabaseData dd = createSampleDatabase(fns);
+        DatabaseTableModel dd = createSampleDatabase(fns);
 
         assertEquals(dd.NGames(), 2);
         assertEquals(dd.NPlayers(), 0);
@@ -84,7 +84,7 @@ public class DatabaseDataTest extends ArrayTestCase {
         final String ggfFile = createTempFile(".ggf", "test2.ggf");
         final List<String> fns = Arrays.asList(ggfFile);
 
-        DatabaseData dd = createSampleDatabase(fns);
+        DatabaseTableModel dd = createSampleDatabase(fns);
 
         assertEquals(1, dd.NGames());
         assertEquals(0, dd.NPlayers());
@@ -96,7 +96,7 @@ public class DatabaseDataTest extends ArrayTestCase {
         assertEquals(1999, dd.GameYear(0));
     }
 
-    private static DatabaseData createSampleDatabase(List<String> fns) {
+    private static DatabaseTableModel createSampleDatabase(List<String> fns) {
         // set up a sample database
         final OptionSource optionSource = EasyMock.createNiceMock(OptionSource.class);
         final BoardSource boardSource = EasyMock.createNiceMock(BoardSource.class);
@@ -104,7 +104,7 @@ public class DatabaseDataTest extends ArrayTestCase {
         EasyMock.expect(boardSource.DisplayedPosition()).andReturn(game.getStartPosition());
         EasyMock.replay(boardSource);
 
-        DatabaseData dd = new DatabaseData(optionSource, boardSource);
+        DatabaseTableModel dd = new DatabaseTableModel(optionSource, boardSource);
         assertEquals(0, dd.NPlayers());
         assertEquals(0, dd.NTournaments());
         assertEquals(0, dd.NGames());
@@ -119,7 +119,7 @@ public class DatabaseDataTest extends ArrayTestCase {
      * @param dd  database data to do the loading
      * @param fns files to load
      */
-    private static void reloadGames(DatabaseData dd, List<String> fns) {
+    private static void reloadGames(DatabaseTableModel dd, List<String> fns) {
         final IndeterminateProgressTracker tracker = Mockito.mock(IndeterminateProgressTracker.class);
         final ErrorDisplayer errorDisplayer = Mockito.mock(ErrorDisplayer.class);
         dd.reloadGames(fns, errorDisplayer, tracker);
@@ -135,7 +135,7 @@ public class DatabaseDataTest extends ArrayTestCase {
         EasyMock.expect(optionSource.ThorLookUpAll()).andReturn(true).times(2);
         EasyMock.replay(optionSource);
 
-        DatabaseData dd = new DatabaseData(optionSource, boardSource);
+        DatabaseTableModel dd = new DatabaseTableModel(optionSource, boardSource);
 
         reloadGames(dd, Arrays.asList(createTempFile(".ggf", "test.ggf")));
 

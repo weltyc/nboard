@@ -18,32 +18,32 @@ import javax.swing.table.TableModel;
  * </PRE>
  */
 public class ThorWindow extends JFrame implements TableModelListener {
-    private final ThorTable m_ptable;
-    private @NotNull final DatabaseData m_pdd;
+    private final ThorTable thorTable;
+    private @NotNull final DatabaseTableModel databaseTableModel;
 
-    public ThorWindow(ReversiWindow pwTarget, ReversiData pd, DatabaseData dd) {
+    public ThorWindow(ReversiWindow reversiWindow, ReversiData reversiData, @NotNull DatabaseTableModel dd) {
         super("Database");
-        m_pdd = dd;
+        databaseTableModel = dd;
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        m_ptable = new ThorTable(pwTarget, pd, dd);
-        add(m_ptable);
+        thorTable = new ThorTable(reversiWindow, reversiData, dd);
+        add(thorTable);
         pack();
-        final TableModel tableModel = m_ptable.getTableModel();
+        final TableModel tableModel = thorTable.getTableModel();
         tableModel.addTableModelListener(this);
     }
 
     /**
      * @return a pointer to the database data
      */
-    public DatabaseData PD() {
-        return m_ptable.PD();
+    public DatabaseTableModel PD() {
+        return thorTable.PD();
     }
 
     /**
      * Invalidate the data area. If all data files have been loaded, show the window
      */
     void ShowIfReady() {
-        m_ptable.repaint();
+        thorTable.repaint();
         final boolean isReady = PD().IsReady();
         if (isReady && !isVisible()) {
             pack();
@@ -51,12 +51,12 @@ public class ThorWindow extends JFrame implements TableModelListener {
         }
     }
 
-    public @NotNull DatabaseData PDD() {
-        return m_pdd;
+    public @NotNull DatabaseTableModel PDD() {
+        return databaseTableModel;
     }
 
     public void tableChanged(TableModelEvent e) {
-        setTitle("Database (" + m_pdd.getStatusString() + ")");
+        setTitle("Database (" + databaseTableModel.getStatusString() + ")");
         ShowIfReady();
     }
 }

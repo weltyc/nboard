@@ -1,7 +1,7 @@
 package com.welty.nboard.nboard;
 
 import com.welty.nboard.gui.*;
-import com.welty.nboard.thor.DatabaseData;
+import com.welty.nboard.thor.DatabaseTableModel;
 import com.welty.othello.gdk.OsMove;
 import com.welty.othello.gdk.OsMoveListItem;
 
@@ -12,12 +12,6 @@ import java.util.ArrayList;
 
 /**
  * Displays the available moves, their evaluation, and # of games or search depth.
- * <p/>
- * Created by IntelliJ IDEA.
- * User: HP_Administrator
- * Date: Jun 26, 2009
- * Time: 11:06:56 PM
- * To change this template use File | Settings | File Templates.
  */
 public class MoveGrid extends Grid {
 
@@ -35,7 +29,7 @@ public class MoveGrid extends Grid {
 
     };
 
-    MoveGrid(ReversiData m_pd, DatabaseData m_pdd, Hints hints) {
+    MoveGrid(ReversiData m_pd, DatabaseTableModel m_pdd, Hints hints) {
         super(new MoveGridTableModel(m_pdd, hints));
         this.m_pd = m_pd;
         final JTable table = getTable();
@@ -54,7 +48,7 @@ public class MoveGrid extends Grid {
         rowSorter.setSortKeys(sortKeys);
 
 
-        // make move column orange and Thor area grey
+        // make move column orange and Database area grey
         final TableColumnModel columnModel = table.getColumnModel();
         setColorColumn(columnModel, new Color(0xFF, 0xDF, 0xBF), 0);
         setColorColumn(columnModel, new Color(0xDF, 0xDF, 0xDF), 6);

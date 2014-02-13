@@ -15,8 +15,8 @@ import javax.swing.*;
  */
 class ThorTable extends Grid {
 
-    private final ReversiData m_pd;            //!< Pointer to reversi data
-    private final DatabaseData dd;
+    private final ReversiData reversiData;
+    private final DatabaseTableModel dd;
 
     private final ReversiWindow reversiWindow;    //!< When a game is clicked, update this window with the new game
 
@@ -25,10 +25,10 @@ class ThorTable extends Grid {
      *
      * @param pwTarget When the user selects a game it is sent to this window
      */
-    ThorTable(ReversiWindow pwTarget, ReversiData pd, DatabaseData dd) {
+    ThorTable(ReversiWindow pwTarget, ReversiData reversiData, DatabaseTableModel dd) {
         super(dd, new JTable(dd), true, false, true);
         reversiWindow = pwTarget;
-        m_pd = pd;
+        this.reversiData = reversiData;
         this.dd = dd;
         final JTable table = getTable();
         table.setAutoCreateRowSorter(true);
@@ -37,7 +37,7 @@ class ThorTable extends Grid {
         rowSorter.setComparator(4, new AsDoubleSort());
     }
 
-    DatabaseData PD() {
+    DatabaseTableModel PD() {
         return dd;
     }
 
@@ -46,7 +46,7 @@ class ThorTable extends Grid {
      */
     public void selectionChanged(int modelRow, int modelCol) {
         if (modelRow < PD().NGames()) {
-            m_pd.setGame(dd.GameFromFilteredRow(modelRow), false);
+            reversiData.setGame(dd.GameFromFilteredRow(modelRow), false);
             reversiWindow.BringToTop();
         }
     }
