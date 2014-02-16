@@ -1,7 +1,7 @@
 package com.welty.nboard.thor;
 
 import com.orbanova.common.misc.Require;
-import com.welty.othello.core.Engineering;
+import com.orbanova.common.misc.Engineering;
 
 import javax.swing.*;
 import java.awt.*;

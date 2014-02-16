@@ -14,7 +14,7 @@ import com.welty.othello.api.SearchState;
 import com.welty.othello.c.CReader;
 import com.welty.othello.c.CWriter;
 import com.welty.othello.core.CMove;
-import com.welty.othello.core.Engineering;
+import com.orbanova.common.misc.Engineering;
 import com.welty.othello.core.OperatingSystem;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsPosition;
