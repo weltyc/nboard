@@ -3,11 +3,6 @@ package com.welty.nboard.gui;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * Created by IntelliJ IDEA.
- * User: HP_Administrator
- * Date: Jun 26, 2009
- * Time: 5:38:15 PM
- * To change this template use File | Settings | File Templates.
  */
 abstract public class GridTableModel extends AbstractTableModel {
     private final GridColumn[] columns;

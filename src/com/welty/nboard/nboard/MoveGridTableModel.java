@@ -2,7 +2,7 @@ package com.welty.nboard.nboard;
 
 import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.GridTableModel;
-import com.welty.nboard.thor.DatabaseData;
+import com.welty.nboard.thor.DatabaseTableModel;
 import com.welty.nboard.thor.ThorSummaryData;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.OsMove;
@@ -21,10 +21,10 @@ import java.util.Map;
  */
 class MoveGridTableModel extends GridTableModel implements TableModelListener {
     private final TIntArrayList m_moves = new TIntArrayList();
-    private final DatabaseData pdd;
+    private final DatabaseTableModel pdd;
     private final Hints m_hints;
 
-    public MoveGridTableModel(DatabaseData pdd, Hints m_hints) {
+    public MoveGridTableModel(DatabaseTableModel pdd, Hints m_hints) {
         super(MoveGrid.columns);
         this.pdd = pdd;
         pdd.addTableModelListener(this);

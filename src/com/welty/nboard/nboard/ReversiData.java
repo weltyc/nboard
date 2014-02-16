@@ -42,7 +42,7 @@ public class ReversiData implements BoardSource {
     private long lastMoveMillis;
 
     /**
-     * Initialize fields and create a new DatabaseData
+     * Initialize fields and create a new DatabaseTableModel
      */
     ReversiData(@NotNull OptionSource optionSource, @NotNull EngineTalker engineTalker) {
         this(optionSource, engineTalker, new SystemClock());

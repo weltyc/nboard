@@ -1,7 +1,7 @@
 package com.welty.nboard.nboard;
 
 import com.welty.nboard.gui.*;
-import com.welty.nboard.thor.DatabaseData;
+import com.welty.nboard.thor.DatabaseTableModel;
 import com.welty.othello.gdk.OsMove;
 import com.welty.othello.gdk.OsMoveListItem;
 
@@ -12,16 +12,10 @@ import java.util.ArrayList;
 
 /**
  * Displays the available moves, their evaluation, and # of games or search depth.
- * <p/>
- * Created by IntelliJ IDEA.
- * User: HP_Administrator
- * Date: Jun 26, 2009
- * Time: 11:06:56 PM
- * To change this template use File | Settings | File Templates.
  */
 public class MoveGrid extends Grid {
 
-    private final ReversiData m_pd;
+    private final ReversiData reversiData;
 
     static final GridColumn[] columns = {
             new GridColumn(37, "Move", Object.class, Align.CENTER),
@@ -35,9 +29,9 @@ public class MoveGrid extends Grid {
 
     };
 
-    MoveGrid(ReversiData m_pd, DatabaseData m_pdd, Hints hints) {
+    MoveGrid(ReversiData reversiData, DatabaseTableModel m_pdd, Hints hints) {
         super(new MoveGridTableModel(m_pdd, hints));
-        this.m_pd = m_pd;
+        this.reversiData = reversiData;
         final JTable table = getTable();
 
         setPreferredSize(new Dimension(96, 200));
@@ -54,7 +48,7 @@ public class MoveGrid extends Grid {
         rowSorter.setSortKeys(sortKeys);
 
 
-        // make move column orange and Thor area grey
+        // make move column orange and Database area grey
         final TableColumnModel columnModel = table.getColumnModel();
         setColorColumn(columnModel, new Color(0xFF, 0xDF, 0xBF), 0);
         setColorColumn(columnModel, new Color(0xDF, 0xDF, 0xDF), 6);
@@ -83,7 +77,7 @@ public class MoveGrid extends Grid {
     @Override protected void onMouseClick(int row, int col) {
         MoveGridTableModel model = getModel();
         OsMove mv = model.getMove(row);
-        m_pd.update(new OsMoveListItem(mv), true);
+        reversiData.update(new OsMoveListItem(mv), true);
     }
 
     public void UpdateHints() {

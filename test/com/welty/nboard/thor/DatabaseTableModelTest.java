@@ -3,8 +3,10 @@ package com.welty.nboard.thor;
 import com.orbanova.common.misc.ArrayTestCase;
 import com.welty.nboard.nboard.BoardSource;
 import com.welty.nboard.nboard.OptionSource;
-import com.welty.othello.c.CReader;
-import com.welty.othello.gdk.*;
+import com.welty.othello.gdk.COsGame;
+import com.welty.othello.gdk.OsClock;
+import com.welty.othello.gdk.OsMove;
+import com.welty.othello.gdk.OsMoveListItem;
 import org.easymock.EasyMock;
 import org.mockito.Mockito;
 
@@ -19,19 +21,8 @@ import java.util.List;
  * Time: 7:50:25 PM
  * </PRE>
  */
-public class DatabaseDataTest extends ArrayTestCase {
-    private static final String diagonalGame = "(;GM[Othello]PC[NBoard]DT[2004-11-24 13:47:34 GMT]PB[Chris]PW[Ntest2]RE[-12]TI[0]TY[8]BO[8 ---------------------------O*------*O--------------------------- *]B[F5]W[F6];)";
-
-    public static void testIsWtbFilename() {
-        assertTrue(DatabaseData.IsWtbFilename("temp.wtb"));
-        assertTrue(!DatabaseData.IsWtbFilename("temp"));
-        assertTrue(!DatabaseData.IsWtbFilename("bla.wtba"));
-        assertTrue(DatabaseData.IsWtbFilename("foo.WTB"));
-        assertTrue(DatabaseData.IsWtbFilename("c:/devl/othello/foo.wtB"));
-    }
-
-    //! test DatabaseData.GameItemText()
-    private static void testGameItemText(final DatabaseData dd) {
+public class DatabaseTableModelTest extends ArrayTestCase {
+    private static void testGameItemText(final DatabaseTableModel dd) {
         // Thor game
         assertTrue(dd.GameItemText(0, 0).equals("???"));
         assertTrue(dd.GameItemText(0, 1).equals("???"));
@@ -54,27 +45,25 @@ public class DatabaseDataTest extends ArrayTestCase {
         final String wtbFile = createTempFile(".WTB", "test.WTB");
         final List<String> fns = Arrays.asList(ggfFile, wtbFile);
 
-        DatabaseData dd = createSampleDatabase(fns);
+        DatabaseTableModel dtm = createDtm(fns);
 
-        assertEquals(dd.NGames(), 2);
-        assertEquals(dd.NPlayers(), 0);
-        assertEquals(dd.NTournaments(), 0);
+        assertEquals(2, dtm.getRowCount());
 
-        testGameItemText(dd);
+        testGameItemText(dtm);
 
         COsGame osg = new COsGame();
         osg.setToDefaultStartPosition(OsClock.DEFAULT, OsClock.DEFAULT);
 
-        dd.LookUpPosition(osg.pos.board);
-        assertEquals(dd.m_summary.size(), 2);
+        dtm.LookUpPosition(osg.pos.board);
+        assertEquals(dtm.m_summary.size(), 2);
 
         osg.append(new OsMoveListItem(new OsMove("F5")));
-        dd.LookUpPosition(osg.pos.board);
-        assertEquals(dd.m_summary.size(), 2);
+        dtm.LookUpPosition(osg.pos.board);
+        assertEquals(dtm.m_summary.size(), 2);
 
         osg.append(new OsMoveListItem(new OsMove("D6")));
-        dd.LookUpPosition(osg.pos.board);
-        assertEquals(dd.m_summary.size(), 1);
+        dtm.LookUpPosition(osg.pos.board);
+        assertEquals(dtm.m_summary.size(), 1);
     }
 
     public void testReadingIrregularGames() throws IOException {
@@ -84,79 +73,64 @@ public class DatabaseDataTest extends ArrayTestCase {
         final String ggfFile = createTempFile(".ggf", "test2.ggf");
         final List<String> fns = Arrays.asList(ggfFile);
 
-        DatabaseData dd = createSampleDatabase(fns);
+        DatabaseTableModel dtm = createDtm(fns);
 
-        assertEquals(1, dd.NGames());
-        assertEquals(0, dd.NPlayers());
-        assertEquals(0, dd.NTournaments());
+        assertEquals(1, dtm.getRowCount());
 
         // The DT field (date/time) normally contains a text string starting with the year, e.g. "2008-07-06".
         // the only game that works exhibits a bug found in early GGS games: the time is given in seconds since
         // 1970-01-01. Make sure that we can handle this anomaly
-        assertEquals(1999, dd.GameYear(0));
+        assertEquals(1999, dtm.GameYear(0));
     }
 
-    private static DatabaseData createSampleDatabase(List<String> fns) {
+    private static DatabaseTableModel createDtm(List<String> fns) {
         // set up a sample database
         final OptionSource optionSource = EasyMock.createNiceMock(OptionSource.class);
-        final BoardSource boardSource = EasyMock.createNiceMock(BoardSource.class);
-        final COsGame game = new COsGame(new CReader(diagonalGame));
-        EasyMock.expect(boardSource.DisplayedPosition()).andReturn(game.getStartPosition());
-        EasyMock.replay(boardSource);
+        final BoardSource boardSource = new BoardSourceStub();
 
-        DatabaseData dd = new DatabaseData(optionSource, boardSource);
-        assertEquals(0, dd.NPlayers());
-        assertEquals(0, dd.NTournaments());
-        assertEquals(0, dd.NGames());
+        final DatabaseData databaseData = new DatabaseData();
+        DatabaseTableModel dtm = new DatabaseTableModel(optionSource, boardSource, databaseData);
+        assertEquals(0, dtm.getRowCount());
 
-        reloadGames(dd, fns);
-        return dd;
+        reloadGames(databaseData, fns);
+        return dtm;
     }
 
     /**
-     * Call dd.reloadGames() with mock progress tracker and error displayer
+     * Call databaseData.reloadGames() with mock progress tracker and error displayer
      *
-     * @param dd  database data to do the loading
-     * @param fns files to load
+     * @param databaseData database data to do the loading
+     * @param fns          files to load
      */
-    private static void reloadGames(DatabaseData dd, List<String> fns) {
+    private static void reloadGames(DatabaseData databaseData, List<String> fns) {
         final IndeterminateProgressTracker tracker = Mockito.mock(IndeterminateProgressTracker.class);
         final ErrorDisplayer errorDisplayer = Mockito.mock(ErrorDisplayer.class);
-        dd.reloadGames(fns, errorDisplayer, tracker);
+        new DatabaseLoader(databaseData).reloadGames(fns, errorDisplayer, tracker);
     }
 
     public void testInitialLookup() throws IOException {
         // set up a sample database
         final OptionSource optionSource = EasyMock.createNiceMock(OptionSource.class);
-        final BoardSource boardSource = EasyMock.createNiceMock(BoardSource.class);
-        final COsGame game = new COsGame(new CReader(diagonalGame));
-        EasyMock.expect(boardSource.DisplayedPosition()).andReturn(game.getStartPosition());
-        EasyMock.replay(boardSource);
+        final BoardSourceStub boardSource = new BoardSourceStub();
         EasyMock.expect(optionSource.ThorLookUpAll()).andReturn(true).times(2);
         EasyMock.replay(optionSource);
 
-        DatabaseData dd = new DatabaseData(optionSource, boardSource);
+        final DatabaseData databaseData = new DatabaseData();
+        DatabaseTableModel dd = new DatabaseTableModel(optionSource, boardSource, databaseData);
 
-        reloadGames(dd, Arrays.asList(createTempFile(".ggf", "test.ggf")));
+        reloadGames(databaseData, Arrays.asList(createTempFile(".ggf", "test.ggf")));
 
         // we should have exactly one game, the game at index 0
-        assertEquals(new int[]{0}, dd.FilteredIndex().toArray());
+        assertEquals(1, dd.getRowCount());
 
         //after playing one move we should still have exactly one game
-        EasyMock.reset(boardSource);
-        final COsPosition pos1 = game.PosAtMove(1);
-        EasyMock.expect(boardSource.DisplayedPosition()).andReturn(pos1);
-        EasyMock.replay(boardSource);
-        dd.OnBoardChanged();
-        assertEquals(new int[]{0}, dd.FilteredIndex().toArray());
+        boardSource.append(new OsMoveListItem("F5"));
+        assertEquals(1, dd.getRowCount());
 
-        //after two moves we should have no games, since the displayed position is the diagonal
+        //after two moves we should have no matching games, since the displayed position is the diagonal
         // but the database game is perpendicular.
-        EasyMock.reset(boardSource);
-        EasyMock.expect(boardSource.DisplayedPosition()).andReturn(game.PosAtMove(2));
-        EasyMock.replay(boardSource);
-        dd.OnBoardChanged();
-        assertEquals(new int[0], dd.FilteredIndex().toArray());
+        boardSource.append(new OsMoveListItem("F6"));
+        assertEquals(0, dd.getRowCount());
     }
 
     /**
@@ -180,4 +154,5 @@ public class DatabaseDataTest extends ArrayTestCase {
         file.deleteOnExit();
         return file.getAbsolutePath();
     }
+
 }
