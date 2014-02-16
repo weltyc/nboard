@@ -888,12 +888,12 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
     @Override public void nodeStats(long nNodes, double tElapsed) {
         final StringBuilder sb = new StringBuilder();
-        sb.append(Engineering.formatLong(nNodes));
+        sb.append(Engineering.compactFormat(nNodes));
         sb.append("n / ");
-        sb.append(Engineering.engineeringDouble(tElapsed));
+        sb.append(Engineering.compactFormat(tElapsed));
         sb.append("s");
         if (tElapsed != 0) {
-            sb.append(" = ").append(Engineering.engineeringDouble(nNodes / tElapsed));
+            sb.append(" = ").append(Engineering.compactFormat(nNodes / tElapsed));
         }
         engineNodeCount.setText(sb.toString());
     }

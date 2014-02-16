@@ -63,7 +63,6 @@ F10  X   Ctrl-C should copy move list, Ctrl-Shift-C should copy game
 F11      Filter database by player, tournament, etc.
 F12      Score graph
 F13      Remove overly verbose external engine communication
-F14      Display node stats
 F15      XOT start position should include moves
 F18      Set up board command
 F19      Time graph
