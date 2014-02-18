@@ -1,5 +1,6 @@
 package com.welty.nboard.nboard;
 
+import com.orbanova.common.misc.Engineering;
 import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.RadioGroup;
@@ -15,7 +16,6 @@ import com.welty.othello.api.SearchState;
 import com.welty.othello.c.CReader;
 import com.welty.othello.c.CWriter;
 import com.welty.othello.core.CMove;
-import com.orbanova.common.misc.Engineering;
 import com.welty.othello.core.OperatingSystem;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsPosition;
@@ -58,8 +58,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private final JLabel engineStatus = NBoard.createLabel(200, SwingConstants.LEFT);
     private final JLabel engineNodeCount = NBoard.createLabel(200, SwingConstants.RIGHT);
 
-    private final MoveGrid m_pmg;
-    private final ReversiBoard m_prb;
+    private final MoveGrid moveGrid;
+    private final ReversiBoard board;
 
     private final GameSelectionWindow gameSelectionWindow;    //< Used in File/Open... dialog when there are multiple games in a file
     private final Hints m_hints;
@@ -116,8 +116,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         m_hints = new Hints();
 
         // and show the move grid
-        m_pmg = new MoveGrid(reversiData, databaseTableModel, m_hints);
-
+        moveGrid = new MoveGrid(reversiData, databaseTableModel, m_hints);
+        EvalGraph evalGraph = new EvalGraph(reversiData);
         Grid moveList = new MoveList(reversiData);
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
@@ -129,12 +129,13 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         final JPanel enginePanel = createEnginePanel();
 
-        final JComponent leftPanel = vBox(
+        JComponent leftPanel = vBox(
                 new StatusBar(reversiData),
                 new ScoreWindow(reversiData),
-                m_prb = new ReversiBoard(reversiData, this, m_hints),
+                board = new ReversiBoard(reversiData, this, m_hints),
                 enginePanel,
-                m_pmg
+                moveGrid,
+                evalGraph
         );
 
         frame = frame("NBoard", WindowConstants.EXIT_ON_CLOSE, menuBar,
@@ -254,7 +255,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private JMenu createViewMenu() {
         final ActionListener repaintBoard = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                m_prb.repaint();
+                board.repaint();
             }
         };
         // set up the view menu
@@ -791,7 +792,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      */
     void ThorLookUpPosition() {
         databaseTableModel.LookUpPosition();
-        m_pmg.UpdateHints();
+        moveGrid.UpdateHints();
     }
 
 
@@ -864,7 +865,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         public void actionPerformed(ActionEvent e) {
             needsLove = true;
             TellEngineWhatToDo();
-            m_prb.repaint();
+            board.repaint();
         }
     };
 
