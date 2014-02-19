@@ -172,7 +172,6 @@ public class GuiOpponentSelector extends OpponentSelector {
         final JLabel jLabel = new JLabel(title);
         jLabel.setFont(UIManager.getFont("TitledBorder.font"));
         final int minWidth = 50 + Math.max(preferredSize.width, jLabel.getPreferredSize().width);
-        System.out.println("min width = " + minWidth);
         final JScrollPane scrollPane = scrollPane(list);
         scrollPane.setPreferredSize(new Dimension(minWidth, 50 + preferredSize.height));
         scrollPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.DARK_GRAY), title));

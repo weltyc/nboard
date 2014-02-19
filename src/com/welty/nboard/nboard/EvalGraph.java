@@ -24,6 +24,7 @@ class EvalGraph extends XYGraph {
         interior().setBackground(Color.GRAY);
         setSeriesColors(Color.BLACK, Color.WHITE);
         reversiData.addListener(new MyListener());
+        yAxis().setMinSegments(3);
     }
 
     private EvalGraph(ReversiData reversiData, XYGraphData graphData) {
