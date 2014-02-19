@@ -1,8 +1,8 @@
 package com.welty.nboard.nboard;
 
-import com.welty.graph.ListXYSeries;
-import com.welty.graph.XYGraph;
-import com.welty.graph.XYGraphData;
+import com.welty.graph.xy.ListXYSeries;
+import com.welty.graph.xy.XYGraph;
+import com.welty.graph.xy.XYGraphData;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMoveList;
