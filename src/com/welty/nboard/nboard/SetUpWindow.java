@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -20,6 +21,7 @@ public class SetUpWindow {
     private final JFrame window;
     private final Listener listener;
     private final JCheckBox moverSelector;
+    private final BoardSelectionPanel setUpPanel;
 
     SetUpWindow(final SetUpWindow.Listener listener) {
         this.listener = listener;
@@ -37,10 +39,15 @@ public class SetUpWindow {
         });
         moverSelector = new JCheckBox("Black to move");
         moverSelector.setSelected(true);
+        moverSelector.addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                setUpPanel.requestFocusInWindow();
+            }
+        });
 
         final Grid<Component> buttonBar = JSwingBuilder.buttonBar(true, ok, cancel);
 
-        final BoardSelectionPanel setUpPanel = new SetUpPanel(data, this);
+        setUpPanel = new SetUpPanel(data, this);
         window = JSwingBuilder.frame("Set Up Board", WindowConstants.HIDE_ON_CLOSE, false,
                 JSwingBuilder.vBox(
                         instructions,
@@ -65,6 +72,7 @@ public class SetUpWindow {
      */
     void show() {
         window.setVisible(true);
+        setUpPanel.requestFocusInWindow();
     }
 
     interface Listener {

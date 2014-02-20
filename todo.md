@@ -18,9 +18,10 @@ H16  X   Exception when trying to add new opponent
 H17  X   Board display messed up on Windows
 H18  X   Transcript does not put passes into game sent to reversiData
 H19  X   SetUpBoard sending null board into BoardPanel.paintBoard()
-H20      Transcript does not accept keyboard input when you click on the initially visible window rather than using the menu item
+H20  X   Transcript does not accept keyboard input when you click on the initially visible window rather than using the menu item
 H21      Clock is not decreasing when internal engine self-plays, even though time is being taken.
 H22      Node stats do not display during solve.
+H23  X   SetUpBoard does not accept keyboard input second time around
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key
@@ -48,7 +49,8 @@ L23  X   second-to-last move displayed in move grid when clicking on end-of-game
 L24  X   NullPointerException when trying to run a nonexistent executable.
 L25  X   MoveGrid database columns should have a blue background.
 L26  X   Eval of 0 should show as 0 in move list [Note, GGF games have an empty eval for both eval=0 and eval=missing].
-L27      SetUp window should be hidden in startup rather than shown/hidden flash.
+L27  X   SetUp window should be hidden in startup rather than shown/hidden flash.
+L28      Hint depth incorrect when not using SOLVER_START_HEIGHT
 
 CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
