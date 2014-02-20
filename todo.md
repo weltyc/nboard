@@ -19,9 +19,10 @@ H17  X   Board display messed up on Windows
 H18  X   Transcript does not put passes into game sent to reversiData
 H19  X   SetUpBoard sending null board into BoardPanel.paintBoard()
 H20  X   Transcript does not accept keyboard input when you click on the initially visible window rather than using the menu item
-H21      Clock is not decreasing when internal engine self-plays, even though time is being taken.
+H21  X   Clock is not decreasing when internal engine self-plays, even though time is being taken.
 H22      Node stats do not display during solve.
 H23  X   SetUpBoard does not accept keyboard input second time around
+H24      Node stats do not display when engine moves (rather than hints)
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key
@@ -51,6 +52,7 @@ L25  X   MoveGrid database columns should have a blue background.
 L26  X   Eval of 0 should show as 0 in move list [Note, GGF games have an empty eval for both eval=0 and eval=missing].
 L27  X   SetUp window should be hidden in startup rather than shown/hidden flash.
 L28      Hint depth incorrect when not using SOLVER_START_HEIGHT
+L29      Don't decrement clock in analysis mode
 
 CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
@@ -82,6 +84,8 @@ F23  X   Threading on internal engines
 F24  X   Enter Transcript command
 F25      Display PV in move grid
 F26  X   Iterative deepening in internal engine hints
+F27      Internal engines shouldn't time out during games
+F28      After a hint session is complete, remove moves from the previous ply
 
 FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games
 FL2      GGF games should be stored in a more compact format
