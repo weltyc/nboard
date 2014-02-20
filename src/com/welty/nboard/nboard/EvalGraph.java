@@ -46,7 +46,8 @@ class EvalGraph extends XYGraph {
 
     /**
      * Calculate graph data from a list of moves
-     * @param ml move list
+     *
+     * @param ml              move list
      * @param blackMovesFirst true if black makes the first move in the move list, false if white does
      * @return the graph data
      */

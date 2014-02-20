@@ -41,7 +41,7 @@ public class SetUpWindow {
         final Grid<Component> buttonBar = JSwingBuilder.buttonBar(true, ok, cancel);
 
         final BoardSelectionPanel setUpPanel = new SetUpPanel(data, this);
-        window = JSwingBuilder.frame("Set Up Board", WindowConstants.HIDE_ON_CLOSE,
+        window = JSwingBuilder.frame("Set Up Board", WindowConstants.HIDE_ON_CLOSE, false,
                 JSwingBuilder.vBox(
                         instructions,
                         setUpPanel,
@@ -49,7 +49,6 @@ public class SetUpWindow {
                         buttonBar
                 ));
         setUpPanel.requestFocusInWindow();
-        window.setVisible(false);
     }
 
     void cancel() {

@@ -48,7 +48,7 @@ public class EnterTranscriptWindow {
                 "Mouse click or arrow keys to move.\n" +
                 "For single digit move numbers such as '4', type '04' or '4<space>'");
 
-        window = JSwingBuilder.frame("Enter transcript", JFrame.HIDE_ON_CLOSE,
+        window = JSwingBuilder.frame("Enter transcript", JFrame.HIDE_ON_CLOSE, false,
                 JSwingBuilder.vBox(
                         instructions,
                         panel,
@@ -57,7 +57,6 @@ public class EnterTranscriptWindow {
                         JSwingBuilder.buttonBar(true, ok, cancel)
                 ).spacing(5).border(5)
         );
-        window.toFront();
         instructions.setBackground(window.getBackground());
     }
 

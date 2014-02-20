@@ -143,7 +143,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 evalGraph
         );
 
-        frame = frame("NBoard", WindowConstants.EXIT_ON_CLOSE, menuBar,
+        frame = frame("NBoard", WindowConstants.EXIT_ON_CLOSE, true, menuBar,
                 hBox(leftPanel, moveList)
 
         );

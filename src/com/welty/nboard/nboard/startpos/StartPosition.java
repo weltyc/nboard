@@ -15,7 +15,8 @@ import java.util.List;
  * Includes an initial board setup (to support the alternate start position)
  * and a move list from that setup (to support XOT).
  */
-@EqualsAndHashCode @ToString
+@EqualsAndHashCode
+@ToString
 public class StartPosition {
     public final Position initialPosition;
     public final OsMove[] moves;
