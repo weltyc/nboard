@@ -22,7 +22,7 @@ H20  X   Transcript does not accept keyboard input when you click on the initial
 H21  X   Clock is not decreasing when internal engine self-plays, even though time is being taken.
 H22  X   Node stats do not display during solve.
 H23  X   SetUpBoard does not accept keyboard input second time around
-H24      Node stats do not display when engine moves (rather than hints)
+H24  X   Node stats do not display when engine moves (rather than hints)
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key
@@ -56,7 +56,7 @@ L29      Don't decrement clock in analysis mode
 
 CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
-CC2      Make HintResponse.eval into a parsed class rather than an unparsed string
+CC2  X   Make HintResponse.eval into a parsed class rather than an unparsed string
 
 F1   X   External engine window
 F1a  X   Remove depth parameter from NBoardEngine
@@ -89,4 +89,4 @@ F28      After a hint session is complete, remove moves from the previous ply
 
 FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games
 FL2      GGF games should be stored in a more compact format
-FL3      Enter tournament games
+FL3  X   Enter tournament games
