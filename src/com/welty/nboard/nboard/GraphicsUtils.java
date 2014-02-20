@@ -7,13 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: HP_Administrator
- * Date: Jun 20, 2009
- * Time: 12:05:00 AM
- * To change this template use File | Settings | File Templates.
+ * Routines to simplify painting and text drawing
  */
-abstract class GraphicsUtils {
+public abstract class GraphicsUtils {
     public static void fillRect(Graphics gd, Rectangle rect, Color color) {
         gd.setColor(color);
         fillRect(gd, rect);

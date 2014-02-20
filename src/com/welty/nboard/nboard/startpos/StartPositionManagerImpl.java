@@ -1,8 +1,7 @@
-package com.welty.nboard.nboard;
+package com.welty.nboard.nboard.startpos;
 
-import com.welty.novello.core.Position;
+import com.welty.nboard.nboard.ReversiWindow;
 import com.welty.othello.gui.MenuButtonGroup;
-import com.welty.othello.gui.StartPositionChooser;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -14,7 +13,7 @@ public class StartPositionManagerImpl implements StartPositionManager {
         startPosition = new MenuButtonGroup("StartPosition", ReversiWindow.class, "Standard", "Alternate", "XOT", "F5");
     }
 
-    @NotNull @Override public Position getStartPosition() {
+    @NotNull @Override public StartPosition getStartPosition() {
         final String startPositionType = startPosition.getSelectedString();
         return StartPositionChooser.next(startPositionType);
     }

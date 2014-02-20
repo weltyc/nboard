@@ -30,7 +30,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
     private final ReversiWindowEngine.Listener listener;
     private final ResponseHandler responseHandler;
 
-    public EngineSynchronizer(OpponentSelector opponentSelector, ReversiWindowEngine.Listener listener)  {
+    public EngineSynchronizer(OpponentSelector opponentSelector, ReversiWindowEngine.Listener listener) {
         verifyEdt();
         this.listener = listener;
         responseHandler = new MyResponder();
@@ -40,7 +40,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
         opponentSelector.addListener(this);
     }
 
-    private StatelessEngine createInitialEngine(OpponentSelector opponentSelector)  {
+    private StatelessEngine createInitialEngine(OpponentSelector opponentSelector) {
         try {
             return opponentSelector.getOpponent().getOrCreateEngine(responseHandler);
         } catch (IOException e) {
@@ -53,7 +53,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
         return multiEngine.getName();
     }
 
-    @Override public void learn(@NotNull SearchState state) {
+    @Override public void learn(@NotNull NBoardState state) {
         verifyEdt();
         multiEngine.learn(pingPong, state);
     }
@@ -63,12 +63,12 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
         return multiEngine.isReady();
     }
 
-    @Override public void requestHints(@NotNull SearchState state, int nHints) {
+    @Override public void requestHints(@NotNull NBoardState state, int nHints) {
         verifyEdt();
         multiEngine.requestHints(pingPong, state, nHints);
     }
 
-    @Override public void requestMove(@NotNull SearchState state) {
+    @Override public void requestMove(@NotNull NBoardState state) {
         verifyEdt();
         multiEngine.requestMove(pingPong, state);
     }

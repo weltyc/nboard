@@ -1,8 +1,10 @@
 package com.welty.nboard.nboard.engine;
 
-import com.welty.othello.api.SearchState;
+import com.welty.othello.api.NBoardState;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.OsMoveListItem;
+import com.welty.othello.protocol.Depth;
+import com.welty.othello.protocol.Value;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,11 +19,11 @@ public interface ReversiWindowEngine {
      */
     boolean isReady();
 
-    void learn(@NotNull SearchState state);
+    void learn(@NotNull NBoardState state);
 
-    void requestHints(@NotNull SearchState state, int nHints);
+    void requestHints(@NotNull NBoardState state, int nHints);
 
-    void requestMove(@NotNull SearchState state);
+    void requestMove(@NotNull NBoardState state);
 
     public interface Listener {
         /**
@@ -57,7 +59,7 @@ public interface ReversiWindowEngine {
          * @param depth        depth searched to
          * @param freeformText engine comment
          */
-        void hint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText);
+        void hint(boolean fromBook, String pv, CMove move, Value eval, int nGames, Depth depth, String freeformText);
 
         /**
          * The engine has produced a line of text that cannot be parsed by the NBoard format.

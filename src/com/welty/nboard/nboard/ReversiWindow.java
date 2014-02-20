@@ -1,6 +1,5 @@
 package com.welty.nboard.nboard;
 
-import com.orbanova.common.misc.Engineering;
 import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.RadioGroup;
@@ -8,19 +7,24 @@ import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.nboard.engine.EngineSynchronizer;
 import com.welty.nboard.nboard.engine.ReversiWindowEngine;
 import com.welty.nboard.nboard.selector.GuiOpponentSelector;
+import com.welty.nboard.nboard.startpos.StartPosition;
+import com.welty.nboard.nboard.startpos.StartPositionManager;
+import com.welty.nboard.nboard.startpos.StartPositionManagerImpl;
+import com.welty.nboard.nboard.transcript.EnterTranscriptWindow;
 import com.welty.nboard.thor.DatabaseLoader;
 import com.welty.nboard.thor.DatabaseTableModel;
 import com.welty.nboard.thor.DatabaseUiPack;
 import com.welty.novello.core.Position;
-import com.welty.othello.api.SearchState;
+import com.welty.othello.api.NBoardState;
 import com.welty.othello.c.CReader;
 import com.welty.othello.c.CWriter;
 import com.welty.othello.core.CMove;
 import com.welty.othello.core.OperatingSystem;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsPosition;
-import com.welty.othello.gdk.OsClock;
 import com.welty.othello.gdk.OsMoveListItem;
+import com.welty.othello.protocol.Depth;
+import com.welty.othello.protocol.Value;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,6 +52,7 @@ import static com.welty.nboard.gui.MenuItemBuilder.menuItem;
 public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowEngine.Listener {
     private final JFrame frame;
     private final DatabaseLoader databaseLoader;
+    private final NodeCountPanel nodeCountPanel;
     private ReversiWindowEngine m_engine;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData reversiData;
@@ -56,10 +61,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      * Window where thor games are displayed
      */
     private final JLabel engineStatus = NBoard.createLabel(200, SwingConstants.LEFT);
-    private final JLabel engineNodeCount = NBoard.createLabel(200, SwingConstants.RIGHT);
 
-    private final MoveGrid moveGrid;
-    private final ReversiBoard board;
+    private final BoardPanel boardPanel;
 
     private final GameSelectionWindow gameSelectionWindow;    //< Used in File/Open... dialog when there are multiple games in a file
     private final Hints m_hints;
@@ -96,6 +99,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         startPositionManager = new StartPositionManagerImpl();
 
+
         reversiData = new ReversiData(this, this);
         gameSelectionWindow = new GameSelectionWindow(this);
         final DatabaseUiPack dbPack = new DatabaseUiPack(this, reversiData);
@@ -116,7 +120,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         m_hints = new Hints();
 
         // and show the move grid
-        moveGrid = new MoveGrid(reversiData, databaseTableModel, m_hints);
+        MoveGrid moveGrid = new MoveGrid(reversiData, databaseTableModel, m_hints);
         EvalGraph evalGraph = new EvalGraph(reversiData);
         Grid moveList = new MoveList(reversiData);
 
@@ -127,12 +131,13 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         reversiData.addListener(m_hints);
 
-        final JPanel enginePanel = createEnginePanel();
+        nodeCountPanel = NodeCountPanel.of();
+        final JPanel enginePanel = createEnginePanel(nodeCountPanel);
 
         JComponent leftPanel = vBox(
                 new StatusBar(reversiData),
                 new ScoreWindow(reversiData),
-                board = new ReversiBoard(reversiData, this, m_hints),
+                boardPanel = new ReversiBoard(reversiData, this, m_hints),
                 enginePanel,
                 moveGrid,
                 evalGraph
@@ -164,14 +169,15 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         // engine initialization - do this after we've constructed the windows for
         // the responses to be displayed in
         needsLove = true;
+
         TellEngineWhatToDo();
     }
 
-    private JPanel createEnginePanel() {
+    private JPanel createEnginePanel(NodeCountPanel nodeCountPanel) {
         final JPanel enginePanel = new JPanel();
         enginePanel.setLayout(new BorderLayout());
         enginePanel.add(engineStatus, BorderLayout.LINE_START);
-        enginePanel.add(engineNodeCount, BorderLayout.LINE_END);
+        enginePanel.add(nodeCountPanel, BorderLayout.LINE_END);
         enginePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
         return enginePanel;
     }
@@ -232,7 +238,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         thorMenu.addSeparator();
         thorMenu.add(menuItem("&Look up position").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                databaseTableModel.LookUpPosition();
+                databaseTableModel.lookUpPosition();
             }
         }));
         thorLookUpAll = createCheckBoxMenuItem("Look up &all", "Thor/LookUpAll", true);
@@ -255,7 +261,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private JMenu createViewMenu() {
         final ActionListener repaintBoard = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                board.repaint();
+                boardPanel.repaint();
             }
         };
         // set up the view menu
@@ -326,6 +332,26 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             }
         }));
 
+        final SetUpWindow setUpWindow = new SetUpWindow(new SetUpWindow.Listener() {
+            @Override public void setUpBoard(Position position) {
+                reversiData.StartNewGame(new StartPosition(position));
+            }
+        });
+        m_editMenu.add(menuItem("&Set Up Board...").build(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                setUpWindow.show();
+            }
+        }));
+        final EnterTranscriptWindow enterTranscriptWindow = new EnterTranscriptWindow(new EnterTranscriptWindow.Listener() {
+            @Override public void setGame(COsGame game) {
+                reversiData.setGame(game, true);
+            }
+        });
+        m_editMenu.add(menuItem("&Enter Transcript...").build(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                enterTranscriptWindow.show();
+            }
+        }));
         m_editMenu.addSeparator();
         m_editMenu.add(createMenuItem("Flip", flipMenu));
         m_editMenu.add(createMoveMenu());
@@ -558,6 +584,9 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         };
         reversiData.addListener(updater);
 
+        // set the initial value of the menu items
+        updater.handleSignal(null);
+
         return flipMenu;
     }
 
@@ -664,7 +693,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         return ((~mode.getIndex() >> (fBlack ? 1 : 0)) & 1) != 0;
     }
 
-    @NotNull @Override public Position getStartPosition() {
+    @NotNull @Override public StartPosition getStartPosition() {
         return startPositionManager.getStartPosition();
     }
 
@@ -730,7 +759,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      */
     public void TellEngineToLearn() {
         // Tell the engine to learn the game
-        m_engine.learn(new SearchState(reversiData.getGame(), getMaxDepth(), getContempt()));
+        m_engine.learn(new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt()));
 
         // reset the stored review point. The engine will update hints as a result.
         TellEngineWhatToDo();
@@ -777,24 +806,15 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             m_hints.Clear();
             if (isHint) {
                 // hints always relate to the displayed position.
-                final SearchState searchState = new SearchState(reversiData.getGame(), reversiData.IMove(), getMaxDepth(), getContempt());
-                m_engine.requestHints(searchState, engineTops[engineTop.getIndex()]);
+                final NBoardState NBoardState = new NBoardState(reversiData.getGame(), reversiData.IMove(), getMaxDepth(), getContempt());
+                m_engine.requestHints(NBoardState, engineTops[engineTop.getIndex()]);
             } else {
                 // a move request relates to the final position in the game
-                final SearchState searchState = new SearchState(reversiData.getGame(), getMaxDepth(), getContempt());
-                m_engine.requestMove(searchState);
+                final NBoardState NBoardState = new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt());
+                m_engine.requestMove(NBoardState);
             }
         }
     }
-
-    /**
-     * Look up the displayed position in the currently loaded thor database
-     */
-    void ThorLookUpPosition() {
-        databaseTableModel.LookUpPosition();
-        moveGrid.UpdateHints();
-    }
-
 
     /**
      * @return true if we should use photo-style pieces
@@ -849,7 +869,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     }
 
     void SetStatus(String status) {
-        engineStatus.setText(status);
+        engineStatus.setText(" " + status);
     }
 
     public void BringToTop() {
@@ -865,7 +885,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         public void actionPerformed(ActionEvent e) {
             needsLove = true;
             TellEngineWhatToDo();
-            board.repaint();
+            boardPanel.repaint();
         }
     };
 
@@ -886,15 +906,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     }
 
     @Override public void nodeStats(long nNodes, double tElapsed) {
-        final StringBuilder sb = new StringBuilder();
-        sb.append(Engineering.compactFormat(nNodes));
-        sb.append("n / ");
-        sb.append(Engineering.compactFormat(tElapsed));
-        sb.append("s");
-        if (tElapsed != 0) {
-            sb.append(" = ").append(Engineering.compactFormat(nNodes / tElapsed));
-        }
-        engineNodeCount.setText(sb.toString());
+        nodeCountPanel.nodeStats(nNodes, tElapsed);
     }
 
     @Override public void engineMove(OsMoveListItem mli) {
@@ -913,7 +925,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         TellEngineWhatToDo();
     }
 
-    @Override public void hint(boolean fromBook, String pv, CMove move, String eval, int nGames, String depth, String freeformText) {
+    @Override public void hint(boolean fromBook, String pv, CMove move, Value eval, int nGames, Depth depth, String freeformText) {
         boolean fBlackMove = reversiData.getGame().pos.board.fBlackMove;
         final Hint hint = new Hint(eval, nGames, depth, fromBook, fBlackMove);
         m_hints.Add(move, hint);
@@ -927,7 +939,4 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         frame.repaint();
     }
 
-    public @NotNull OsClock getGameStartClock() {
-        return reversiData.getGameStartClock();
-    }
 }

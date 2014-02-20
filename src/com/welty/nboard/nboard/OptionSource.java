@@ -1,6 +1,6 @@
 package com.welty.nboard.nboard;
 
-import com.welty.novello.core.Position;
+import com.welty.nboard.nboard.startpos.StartPosition;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,5 +33,5 @@ public interface OptionSource {
 
     boolean UserPlays(boolean fBlack);
 
-    @NotNull Position getStartPosition();
+    @NotNull StartPosition getStartPosition();
 }

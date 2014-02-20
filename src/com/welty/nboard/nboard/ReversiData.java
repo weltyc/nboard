@@ -5,7 +5,7 @@ import com.orbanova.common.clock.SystemClock;
 import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.SignalEvent;
 import com.welty.nboard.gui.SignalListener;
-import com.welty.novello.core.Position;
+import com.welty.nboard.nboard.startpos.StartPosition;
 import com.welty.othello.c.CReader;
 import com.welty.othello.gdk.*;
 import org.jetbrains.annotations.NotNull;
@@ -291,16 +291,20 @@ public class ReversiData implements BoardSource {
     }
 
     /**
-     * Clear the game and switch back to the standard start position
+     * Clear the game and switch to a new game's start position
      */
-    void StartNewGame(@NotNull Position startPosition) {
+    void StartNewGame(@NotNull StartPosition startPosition) {
         game.Clear();
         game.Initialize("8", getGameStartClock(), getGameStartClock());
-        final String sBoardText = startPosition.boardString("");
-        game.SetToPosition(sBoardText, startPosition.blackToMove);
+        final String sBoardText = startPosition.initialPosition.boardString("");
+        game.SetToPosition(sBoardText, startPosition.initialPosition.blackToMove);
+        for (OsMove move : startPosition.moves) {
+            game.append(new OsMoveListItem(move));
+        }
         game.SetTime(System.currentTimeMillis());
         game.SetPlace("NBoard");
-        m_iMove = 0;
+        m_iMove = startPosition.moves.length;
+
         resetTimer();
         fireBoardChanged();
     }

@@ -6,9 +6,9 @@ import com.welty.nboard.gui.GridTableModel;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.nboard.BoardSource;
 import com.welty.nboard.nboard.OptionSource;
+import com.welty.othello.gdk.COsBoard;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsPosition;
-import com.welty.othello.gdk.OsBoard;
 import com.welty.othello.gdk.OsMoveListItem;
 import gnu.trove.list.array.TIntArrayList;
 import org.jetbrains.annotations.NotNull;
@@ -16,12 +16,17 @@ import org.jetbrains.annotations.NotNull;
 import static com.welty.nboard.thor.Thor.MatchingPositions;
 
 /**
- * Encapsulate all data needed by the database window
+ * Encapsulate all data needed by the database gui
  */
 public class DatabaseTableModel extends GridTableModel {
+    /**
+     * Column number for year data
+     */
+    public static final int YEAR = 2;
+
     private final DatabaseData databaseData;
 
-    private static final GridColumn[] m_columns = {
+    private static final GridColumn[] columns = {
             new GridColumn(120, "Black", Align.LEFT),
             new GridColumn(120, "White", Align.LEFT),
             new GridColumn(50, "Year", Align.RIGHT),
@@ -32,8 +37,26 @@ public class DatabaseTableModel extends GridTableModel {
     private final @NotNull OptionSource optionSource;
     private final @NotNull BoardSource boardSource;
 
+    /**
+     * Summary data for moves
+     */
+    public ThorSummary summary = new ThorSummary();
+
+    /**
+     * List of games that match the displayed position and pass the filters.
+     * <p/>
+     * The int is an index into DatabaseData.GameItemText()
+     */
+    private TIntArrayList matchingIndices = new TIntArrayList();
+
+    /**
+     * Text that must match the given field in order to display the position
+     */
+    private final String[] filters = new String[columns.length];
+
+
     DatabaseTableModel(@NotNull OptionSource optionSource, @NotNull BoardSource boardSource, @NotNull DatabaseData databaseData) {
-        super(m_columns);
+        super(columns);
         this.optionSource = optionSource;
         this.boardSource = boardSource;
         this.databaseData = databaseData;
@@ -42,47 +65,30 @@ public class DatabaseTableModel extends GridTableModel {
         }
         boardSource.addListener(new SignalListener<OsMoveListItem>() {
             public void handleSignal(OsMoveListItem data) {
-                OnBoardChanged();
+                onBoardChanged();
             }
         });
         databaseData.addListener(new DatabaseData.Listener() {
             @Override public void databaseChanged() {
-                LookUpPosition();
+                lookUpPosition();
             }
         });
 
     }
 
-    void OnBoardChanged() {
+    void onBoardChanged() {
         if (optionSource.ThorLookUpAll()) {
-            LookUpPosition();
+            lookUpPosition();
         } else {
-            m_summary.clear();
+            summary.clear();
             fireTableDataChanged();
         }
     }
 
-    // Filtering
-    public TThorSummary m_summary = new TThorSummary();
-
-    /**
-     * List of games that match the displayed position.
-     * <p/>
-     * The int is an index into m_tgis.
-     */
-    private TIntArrayList matchingIndices = new TIntArrayList();
-    private final static int nFields = 6;
-
-    /**
-     * Text that must match the given field in order to display the position
-     */
-    private final String[] filters = new String[nFields];
-
-
     /**
      * @return true if the database window should be displayed.
      */
-    public boolean IsReady() {
+    public boolean isReady() {
         return nGamesInDatabase() != 0;
     }
 
@@ -94,49 +100,50 @@ public class DatabaseTableModel extends GridTableModel {
     }
 
     /**
-     * @param iFiltered model row, i.e. index into the list of displayed games
+     * @param row model row, i.e. index into the list of displayed games
      * @return a game in GGS/os format.
      */
-    public COsGame GameFromFilteredRow(int iFiltered) {
-        return databaseData.GameFromIndex(matchingIndices.get(iFiltered));
+    public COsGame gameFromRow(int row) {
+        return databaseData.GameFromIndex(matchingIndices.get(row));
     }
 
     /**
      * Look up the position and notify listeners that the table data has changed.
      */
-    public void LookUpPosition() {
+    public void lookUpPosition() {
         final COsPosition position = boardSource.DisplayedPosition();
-        LookUpPosition(position.board);
+        lookUpPosition(position.board);
     }
 
     /**
      * Look up a position in the database, filter, set summary, and signal that this has been done.
      */
-    public void LookUpPosition(final OsBoard pos) {
+    public void lookUpPosition(final COsBoard pos) {
         if (pos.nEmpty() > 3) {
             // look up position
             final MatchingPositions matchingPositions = databaseData.findMatchingPositions(pos);
-            matchingIndices = matchingPositions.index;
+            final TIntArrayList positionMatches = matchingPositions.index;
             final TIntArrayList iReflections = matchingPositions.iReflections;
 
             // filter
-            final int n = matchingIndices.size();
+            final int n = positionMatches.size();
             TIntArrayList fi = new TIntArrayList();
             TIntArrayList fir = new TIntArrayList();
             for (int i = 0; i < n; i++) {
-                final int j = matchingIndices.get(i);
-                if (FilterOk(j)) {
-                    fi.add(j);
+                final int ddGameId = positionMatches.get(i);
+                if (filterMatches(ddGameId)) {
+                    fi.add(ddGameId);
                     fir.add(iReflections.get(i));
                 }
             }
+            this.matchingIndices = fi;
 
             // set summary
-            m_summary = databaseData.summarize(pos, fi, fir);
+            summary = databaseData.summarize(pos, fi, fir);
         } else {
             // for performance reasons, don't look up games with very small number of empties.
             matchingIndices.clear();
-            m_summary.clear();
+            summary.clear();
         }
         fireTableDataChanged();
     }
@@ -147,46 +154,37 @@ public class DatabaseTableModel extends GridTableModel {
      *
      * @param field column index. Must be in the range [0,5]
      */
-    void SetFilter(String text, int field) {
+    void setFilter(String text, int field) {
+        System.out.println("setting filter " + field + " to " + text);
         assert (field < 6);
         if (field < 6) {
             filters[field] = text;
-            LookUpPosition();
+            lookUpPosition();
         }
     }
 
     /**
      * @return true if the item matches all filters set in the filter window
      */
-    boolean FilterOk(int item) {
-        for (int field = 0; field < nFields; field++) {
+    boolean filterMatches(int item) {
+        for (int field = 0; field < filters.length; field++) {
             String sFilter = filters[field];
-            if (!sFilter.isEmpty() && !sFilter.equals(databaseData.GameItemText(item, field)))
+            if (!sFilter.isEmpty() && !databaseData.GameItemText(item, field).startsWith(sFilter)) {
                 return false;
+            }
         }
         return true;
-    }
-
-    /**
-     * @return year in which the game was played
-     */
-    int GameYear(int iGame) {
-        return databaseData.getGameYear(iGame);
     }
 
     public int getRowCount() {
         return matchingIndices.size();
     }
 
-    public Object getValueAt(int rowIndex, int columnIndex) {
+    public String getValueAt(int rowIndex, int columnIndex) {
         return databaseData.GameItemText(matchingIndices.get(rowIndex), columnIndex);
     }
 
     public String getStatusString() {
         return getRowCount() + "/" + nGamesInDatabase() + " games selected";
-    }
-
-    public String GameItemText(int item, int field) {
-        return databaseData.GameItemText(item, field);
     }
 }

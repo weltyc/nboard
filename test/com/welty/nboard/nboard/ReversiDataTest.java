@@ -1,10 +1,13 @@
 package com.welty.nboard.nboard;
 
 import com.orbanova.common.clock.MockClock;
+import com.welty.nboard.gui.SignalListener;
+import com.welty.nboard.nboard.startpos.StartPosition;
 import com.welty.nboard.thor.ThorTest;
 import com.welty.novello.core.Position;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsClock;
+import com.welty.othello.gdk.OsMove;
 import com.welty.othello.gdk.OsMoveListItem;
 import junit.framework.TestCase;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +43,7 @@ public class ReversiDataTest extends TestCase {
 
     private static OptionSource mockOptionSource() {
         final OptionSource optionSource = Mockito.mock(OptionSource.class);
-        Mockito.stub(optionSource.getStartPosition()).toReturn(Position.START_POSITION);
+        Mockito.stub(optionSource.getStartPosition()).toReturn(new StartPosition(Position.START_POSITION));
         return optionSource;
     }
 
@@ -127,5 +130,22 @@ public class ReversiDataTest extends TestCase {
         } catch (IllegalArgumentException e) {
             assertEquals(message, e.getMessage());
         }
+    }
+
+    /**
+     * When we set a position, the listener should receive a signal that the board has changed.
+     */
+    public void testSetStartPosition() {
+        final ReversiData data = createRd();
+        //noinspection unchecked
+        final SignalListener<OsMoveListItem> listener = Mockito.mock(SignalListener.class);
+        data.addListener(listener);
+
+        data.StartNewGame(new StartPosition(Position.START_POSITION, new OsMove("F5")));
+        assertEquals(1, data.IMove());
+        assertEquals(59, data.DisplayedPosition().board.nEmpty());
+
+        Mockito.verify(listener).handleSignal(null);
+        Mockito.verifyNoMoreInteractions(listener);
     }
 }

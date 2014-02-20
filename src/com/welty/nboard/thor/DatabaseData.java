@@ -177,7 +177,7 @@ class DatabaseData extends ListenerManager<DatabaseData.Listener> {
         return game;
     }
 
-    public Thor.MatchingPositions findMatchingPositions(OsBoard pos) {
+    public Thor.MatchingPositions findMatchingPositions(COsBoard pos) {
         return ThorFindMatchingPositions(m_tgis, pos);
     }
 
@@ -190,7 +190,7 @@ class DatabaseData extends ListenerManager<DatabaseData.Listener> {
      *                     is the reflection that maps a move in the game to a move in pos
      * @return summary data for the various moves from a position
      */
-    public TThorSummary summarize(OsBoard pos, TIntArrayList index, TIntArrayList iReflections) {
+    public ThorSummary summarize(COsBoard pos, TIntArrayList index, TIntArrayList iReflections) {
         return ThorSummarize(m_tgis, pos, index, iReflections);
     }
 

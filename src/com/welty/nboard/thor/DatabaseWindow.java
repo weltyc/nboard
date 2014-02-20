@@ -7,6 +7,8 @@ import com.welty.nboard.nboard.ReversiWindow;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import java.awt.*;
@@ -38,13 +40,19 @@ class DatabaseWindow extends JFrame implements TableModelListener {
     private Grid<Component> createFilterBoxes() {
         final Grid<Component> filterBoxes = JSwingBuilder.hBox();
         for (int i = 0; i < tableModel.getColumnCount(); i++) {
-            final JTextField input = new JTextField();
-            final int width = tableModel.getColumnWidth(i);
-            input.setPreferredSize(new Dimension(width, 24));
-            input.setFont(table.getFont());
+            final JTextField input = createFilterBox(i);
             filterBoxes.add(input);
         }
         return filterBoxes;
+    }
+
+    private JTextField createFilterBox(int field) {
+        final JTextField input = new JTextField();
+        final int width = tableModel.getColumnWidth(field);
+        input.setPreferredSize(new Dimension(width, 24));
+        input.setFont(table.getFont());
+        input.getDocument().addDocumentListener(new FilterBoxListener(tableModel, field, input));
+        return input;
     }
 
     /**
@@ -52,7 +60,7 @@ class DatabaseWindow extends JFrame implements TableModelListener {
      */
     void ShowIfReady() {
         table.repaint();
-        final boolean isReady = tableModel.IsReady();
+        final boolean isReady = tableModel.isReady();
         if (isReady && !isVisible()) {
             pack();
             setVisible(true);
@@ -62,5 +70,33 @@ class DatabaseWindow extends JFrame implements TableModelListener {
     public void tableChanged(TableModelEvent e) {
         setTitle("Database (" + tableModel.getStatusString() + ")");
         ShowIfReady();
+    }
+
+    private static class FilterBoxListener implements DocumentListener {
+        private final DatabaseTableModel dtm;
+        private final int field;
+        private final JTextField input;
+
+        private FilterBoxListener(DatabaseTableModel dtm, int field, JTextField input) {
+            this.dtm = dtm;
+            this.field = field;
+            this.input = input;
+        }
+
+        @Override public void insertUpdate(DocumentEvent e) {
+            handle();
+        }
+
+        @Override public void removeUpdate(DocumentEvent e) {
+            handle();
+        }
+
+        @Override public void changedUpdate(DocumentEvent e) {
+            handle();
+        }
+
+        private void handle() {
+            dtm.setFilter(input.getText(), field);
+        }
     }
 }

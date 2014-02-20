@@ -41,7 +41,7 @@ class ScoreWindow extends JPanel {
         this.reversiData.addListener(new SignalListener<OsMoveListItem>() {
             public void handleSignal(OsMoveListItem data) {
                 final COsPosition pos = ScoreWindow.this.reversiData.DisplayedPosition();
-                OsBoard board = pos.board;
+                COsBoard board = pos.board;
                 final PieceCounts pieceCounts = board.getPieceCounts();
                 blackPanel.player.setText(ScoreWindow.this.reversiData.getGame().pis[1].sName);
                 blackPanel.score.setText(Integer.toString(pieceCounts.nBlack));
@@ -89,6 +89,7 @@ class ScoreWindow extends JPanel {
         setPlainFont(score);
         score.getPreferredSize();
         score.setPreferredSize(new Dimension(20, height));
+        score.setAlignmentX(1.0f);
         score.setHorizontalAlignment(SwingConstants.TRAILING);
         score.setVerticalAlignment(SwingConstants.TOP);
         return score;
@@ -107,6 +108,7 @@ class ScoreWindow extends JPanel {
             player.setPreferredSize(new Dimension(20, height));
             setPlainFont(player);
             add(player);
+            spacing(3);
         }
     }
 
@@ -129,6 +131,7 @@ class ScoreWindow extends JPanel {
             this.clock = new JLabel(clock.toString());
             add(this.clock);
 
+            spacing(3, 0);
             setVisible(true);
         }
 

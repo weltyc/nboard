@@ -9,5 +9,5 @@ import gnu.trove.map.hash.TIntObjectHashMap;
  * Time: 8:02:32 PM
  * </PRE>
  */
-public class TThorSummary extends TIntObjectHashMap<ThorSummaryData> {
+public class ThorSummary extends TIntObjectHashMap<ThorSummaryData> {
 }

@@ -6,7 +6,7 @@ import com.welty.othello.core.CBitBoard;
 import com.welty.othello.core.CMove;
 import com.welty.othello.core.CMoves;
 import com.welty.othello.core.CQPosition;
-import com.welty.othello.gdk.OsBoard;
+import com.welty.othello.gdk.COsBoard;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.procedure.TObjectProcedure;
 import org.jetbrains.annotations.NotNull;
@@ -237,7 +237,7 @@ public class Thor {
      * @param posMatch position to match
      * @return vector of indices of matching games, and vector of reflection indices that make the games match
      */
-    static MatchingPositions ThorFindMatchingPositions(final ArrayList<ThorGameInternal> games, final OsBoard posMatch) {
+    static MatchingPositions ThorFindMatchingPositions(final ArrayList<ThorGameInternal> games, final COsBoard posMatch) {
         CBitBoard reflections[] = GetReflections(new CQPosition(posMatch).BitBoard());
         final MatchingPositions result = new MatchingPositions();
 
@@ -292,8 +292,8 @@ public class Thor {
      *                     is the reflection that maps a move in the game to a move in pos
      * @return summary data for the various moves from a position
      */
-    static TThorSummary ThorSummarize(final ArrayList<ThorGameInternal> games, final OsBoard pos, final TIntArrayList index, final TIntArrayList iReflections) {
-        TThorSummary summary = new TThorSummary();
+    static ThorSummary ThorSummarize(final ArrayList<ThorGameInternal> games, final COsBoard pos, final TIntArrayList index, final TIntArrayList iReflections) {
+        ThorSummary summary = new ThorSummary();
 
         final boolean fMustPass = !pos.hasLegalMove() && !pos.isGameOver();
 

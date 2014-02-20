@@ -1,6 +1,7 @@
 package com.welty.nboard.nboard;
 
-import com.welty.othello.c.CReader;
+import com.welty.othello.protocol.Depth;
+import com.welty.othello.protocol.Value;
 
 /**
  * Structure used by ReversiWindow and its MoveGrid to store the engine's evaluations.
@@ -16,8 +17,7 @@ public class Hint {
     final float vBlack;    //!< Value in "draw to black" mode
     final float vWhite;    //!< Value in "draw to white" mode
     final int nGames;        //!< Number of games in book after this move
-    final String sPly;    //!< Search depth, as text.
-    final int nPly;        //!< Search depth, first numerical component
+    final Depth depth;    //!< Search depth, as text.
     final boolean fBook;        //!< True if this node was in book
 
     /**
@@ -29,22 +29,17 @@ public class Hint {
      * @param fromBook   if true, the move came from the engine's book
      * @param fBlackMove if true, the root position has black to move
      */
-    public Hint(String eval, int nGames, String depth, boolean fromBook, boolean fBlackMove) {
+    public Hint(Value eval, int nGames, Depth depth, boolean fromBook, boolean fBlackMove) {
         fBook = fromBook;
-        sPly = depth;
+        this.depth = depth;
         this.nGames = nGames;
-        String[] evalParts = eval.split(",");
-        float vBlack = Float.parseFloat(evalParts[0]);
-        float vWhite = evalParts.length > 1 ? Float.parseFloat(evalParts[1]) : vBlack;
-        if (fBlackMove ^ (vBlack > vWhite)) {
-            final float temp = vBlack;
-            vBlack = vWhite;
-            vWhite = temp;
+        if (fBlackMove) {
+            vBlack = eval.drawSeekingValue;
+            vWhite = eval.drawAvoidingValue;
+        } else {
+            vWhite = eval.drawSeekingValue;
+            vBlack = eval.drawAvoidingValue;
         }
-        this.vBlack = vBlack;
-        this.vWhite = vWhite;
-
-        nPly = new CReader(sPly).readInt(0);
     }
 
     /**
@@ -72,10 +67,10 @@ public class Hint {
 
 
     /**
-     * @return true if the position is solved exactly
+     * @return true if the position is solved exactly (disk differential is proven)
      */
-    boolean IsExact() {
-        return (sPly.equals("100%")) || (VNeutral() == 0 && sPly.equals("100%W"));
+    boolean isExact() {
+        return depth.isExact() || (depth.isWldProven() && VNeutral() == 0);
     }
 }
 

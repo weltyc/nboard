@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class SignalEvent<T> {
-    private final ArrayList<SignalListener<T>> m_targets = new ArrayList<SignalListener<T>>();
+    private final ArrayList<SignalListener<T>> m_targets = new ArrayList<>();
 
     public void Add(@NotNull SignalListener<T> listener) {
         m_targets.add(listener);

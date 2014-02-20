@@ -3,11 +3,11 @@ package com.welty.nboard.thor;
 import com.orbanova.common.feed.Feeds;
 import com.orbanova.common.feed.Predicate;
 import com.welty.othello.c.CReader;
-import com.welty.othello.gdk.OsBoard;
 import com.welty.othello.core.CBitBoard;
 import com.welty.othello.core.CMove;
 import com.welty.othello.core.CMoves;
 import com.welty.othello.core.CQPosition;
+import com.welty.othello.gdk.COsBoard;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +34,7 @@ public class ThorOpeningMap {
                 .asList();
 
         for (int i = 0; i < openingTexts.size(); i++) {
-            String[] parts = openingTexts.get(i).split("\\s+",2);
+            String[] parts = openingTexts.get(i).split("\\s+", 2);
             String sMoves = parts[0];
             String name = parts.length > 1 ? parts[1].split(",")[0] : "";
             names.add(name);
@@ -135,7 +135,7 @@ public class ThorOpeningMap {
 
         final byte[] moves = moveBytesFromGgf(sGgfGame);
 
-        final OsBoard board = new OsBoard(new CReader(boText));
+        final COsBoard board = new COsBoard(new CReader(boText));
         return OpeningCode(new CQPosition(board), moves);
     }
 
@@ -143,7 +143,7 @@ public class ThorOpeningMap {
         final byte[] moves = new byte[60];
 
         int loc = 0;
-        for (int i = 0; i < 60;) {
+        for (int i = 0; i < 60; ) {
             loc = sGgfGame.indexOf(']', loc) + 1;
             if (loc + 4 >= sGgfGame.length()) {
                 moves[i] = -2;

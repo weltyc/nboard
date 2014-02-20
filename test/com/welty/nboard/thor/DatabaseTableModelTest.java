@@ -24,20 +24,20 @@ import java.util.List;
 public class DatabaseTableModelTest extends ArrayTestCase {
     private static void testGameItemText(final DatabaseTableModel dd) {
         // Thor game
-        assertTrue(dd.GameItemText(0, 0).equals("???"));
-        assertTrue(dd.GameItemText(0, 1).equals("???"));
-        assertTrue(dd.GameItemText(0, 2).equals("1980"));
-        assertTrue(dd.GameItemText(0, 3).equals("???"));
-        assertTrue(dd.GameItemText(0, 4).equals("-2"));
-        assertTrue(dd.GameItemText(0, 5).equals("Parallel"));
+        assertTrue(dd.getValueAt(0, 0).equals("???"));
+        assertTrue(dd.getValueAt(0, 1).equals("???"));
+        assertTrue(dd.getValueAt(0, 2).equals("1980"));
+        assertTrue(dd.getValueAt(0, 3).equals("???"));
+        assertTrue(dd.getValueAt(0, 4).equals("-2"));
+        assertTrue(dd.getValueAt(0, 5).equals("Parallel"));
 
         // GGF game
-        assertTrue(dd.GameItemText(1, 0).equals("Saio1200"));
-        assertTrue(dd.GameItemText(1, 1).equals("Saio3000"));
-        assertTrue(dd.GameItemText(1, 2).equals("2003"));
-        assertTrue(dd.GameItemText(1, 3).equals("GGS/os"));
-        assertTrue(dd.GameItemText(1, 4).equals("0"));
-        assertTrue(dd.GameItemText(1, 5).equals("No-Kung"));
+        assertTrue(dd.getValueAt(1, 0).equals("Saio1200"));
+        assertTrue(dd.getValueAt(1, 1).equals("Saio3000"));
+        assertTrue(dd.getValueAt(1, 2).equals("2003"));
+        assertTrue(dd.getValueAt(1, 3).equals("GGS/os"));
+        assertTrue(dd.getValueAt(1, 4).equals("0"));
+        assertTrue(dd.getValueAt(1, 5).equals("No-Kung"));
     }
 
     public void testDatabaseData() throws IOException {
@@ -54,16 +54,35 @@ public class DatabaseTableModelTest extends ArrayTestCase {
         COsGame osg = new COsGame();
         osg.setToDefaultStartPosition(OsClock.DEFAULT, OsClock.DEFAULT);
 
-        dtm.LookUpPosition(osg.pos.board);
-        assertEquals(dtm.m_summary.size(), 2);
+        dtm.lookUpPosition(osg.pos.board);
+        assertEquals(dtm.summary.size(), 2);
 
         osg.append(new OsMoveListItem(new OsMove("F5")));
-        dtm.LookUpPosition(osg.pos.board);
-        assertEquals(dtm.m_summary.size(), 2);
+        dtm.lookUpPosition(osg.pos.board);
+        assertEquals(dtm.summary.size(), 2);
 
         osg.append(new OsMoveListItem(new OsMove("D6")));
-        dtm.LookUpPosition(osg.pos.board);
-        assertEquals(dtm.m_summary.size(), 1);
+        dtm.lookUpPosition(osg.pos.board);
+        assertEquals(dtm.summary.size(), 1);
+    }
+
+    public void testFiltering() throws IOException {
+        final String ggfFile = createTempFile(".ggf", "test.ggf");
+        final List<String> fns = Arrays.asList(ggfFile);
+
+        DatabaseTableModel dtm = createDtm(fns);
+
+        assertEquals(1, dtm.getRowCount());
+
+        final int BLACK_PLAYER_NAME = 0;
+        dtm.setFilter("q", BLACK_PLAYER_NAME);
+        assertEquals(0, dtm.getRowCount());
+
+        dtm.setFilter("Saio", BLACK_PLAYER_NAME);
+        assertEquals("ok if user name starts with filter", 1, dtm.getRowCount());
+
+        dtm.setFilter("Saio1200", BLACK_PLAYER_NAME);
+        assertEquals(1, dtm.getRowCount());
     }
 
     public void testReadingIrregularGames() throws IOException {
@@ -80,7 +99,7 @@ public class DatabaseTableModelTest extends ArrayTestCase {
         // The DT field (date/time) normally contains a text string starting with the year, e.g. "2008-07-06".
         // the only game that works exhibits a bug found in early GGS games: the time is given in seconds since
         // 1970-01-01. Make sure that we can handle this anomaly
-        assertEquals(1999, dtm.GameYear(0));
+        assertEquals("1999", dtm.getValueAt(0, DatabaseTableModel.YEAR));
     }
 
     private static DatabaseTableModel createDtm(List<String> fns) {

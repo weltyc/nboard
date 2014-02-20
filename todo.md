@@ -16,6 +16,9 @@ H14  X   Notify engine of start position on new game
 H15  X   Edax looping infinitely on hint
 H16  X   Exception when trying to add new opponent
 H17  X   Board display messed up on Windows
+H18  X   Transcript does not put passes into game sent to reversiData
+H19  X   SetUpBoard sending null board into BoardPanel.paintBoard()
+H20      Transcript does not accept keyboard input when you click on the initially visible window rather than using the menu item
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key
@@ -43,6 +46,7 @@ L23  X   second-to-last move displayed in move grid when clicking on end-of-game
 L24  X   NullPointerException when trying to run a nonexistent executable.
 L25  X   MoveGrid database columns should have a blue background.
 L26  X   Eval of 0 should show as 0 in move list [Note, GGF games have an empty eval for both eval=0 and eval=missing].
+L27      SetUp window should be hidden in startup rather than shown/hidden flash.
 
 CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
@@ -60,16 +64,20 @@ F7   X   Display clock
 F8   X   Timed matches
 F9   X   Paste command should paste any format (move list, game, board)
 F10  X   Ctrl-C should copy move list, Ctrl-Shift-C should copy game
-F11      Filter database by player, tournament, etc.
+F11  X   Filter database by player, tournament, etc.
 F12      Score graph
-F13      Remove overly verbose external engine communication
-F15      XOT start position should include moves
-F18      Set up board command
+F13  X   Remove overly verbose external engine communication
+F14  X   Display node stats
+F15  X   XOT start position should include moves
+F18  X   Set up board command
 F19      Time graph
 F20      Lost disks graph
 F21      Separate programs for analysis and opponent
 F22      More than 1 hint from internal engines
-F23      Check timing on internal engines
+F23  X   Threading on internal engines
+F24  X   Enter Transcript command
+F25      Display PV in move grid
+F26  X   Iterative deepening in internal engine hints
 
 FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games
 FL2      GGF games should be stored in a more compact format

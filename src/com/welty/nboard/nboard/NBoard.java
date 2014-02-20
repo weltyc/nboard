@@ -1,6 +1,7 @@
 package com.welty.nboard.nboard;
 
 import com.orbanova.common.misc.Require;
+import com.welty.othello.gdk.COsBoard;
 import com.welty.othello.util.CheckThreadViolationRepaintManager;
 
 import javax.swing.*;
@@ -12,6 +13,9 @@ import java.util.prefs.Preferences;
  * Main class for the NBoard application
  */
 public class NBoard {
+
+    public static final Color highlightColor = new Color(0x28, 0x98, 0x30);
+    public static final Color boardColor = new Color(0x38, 0x78, 0x30);
 
     private static final String sRegKey = "/Software/Welty/NBoard/";
 
@@ -75,11 +79,30 @@ public class NBoard {
         return icon;
     }
 
-    static JLabel createLabel(int width, int alignment) {
+    public static JLabel createLabel(int width, int alignment) {
         final JLabel label = new JLabel();
         label.setPreferredSize(new Dimension(width, 18));
         label.setFont(label.getFont().deriveFont(0));
         label.setHorizontalAlignment(alignment);
         return label;
+    }
+
+    static void drawPiece(Graphics gd, char pc, Rectangle rect, Color bgColor) {
+        // draw background
+        rect.x++;
+        rect.y++;
+        GraphicsUtils.fillRect(gd, rect, bgColor);
+        if (pc == COsBoard.BLACK || pc == COsBoard.WHITE) {
+            rect = GraphicsUtils.FractionalInflate(rect, -.2);
+            rect.x -= 1;
+            rect.y -= 1;
+            GraphicsUtils.fillEllipse(gd, rect, pc == COsBoard.BLACK ? Color.black : Color.white);
+            GraphicsUtils.outlineEllipse(gd, rect, Color.BLACK);
+        }
+    }
+
+    public static void paintSquare(Graphics g, int col, int row, char piece, Color bgColor) {
+        Rectangle rect = BoardPanel.rectFromSquare(col, row, BoardPanel.n, BoardPanel.boardArea);
+        drawPiece(g, piece, rect, bgColor);
     }
 }

@@ -1,7 +1,7 @@
 package com.welty.nboard.nboard.engine;
 
+import com.welty.othello.api.NBoardState;
 import com.welty.othello.api.PingPong;
-import com.welty.othello.api.SearchState;
 import com.welty.othello.api.StatelessEngine;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,15 +33,15 @@ public class MultiEngine implements StatelessEngine {
         throw new IllegalStateException("Not implemented");
     }
 
-    @Override public synchronized void learn(PingPong pingPong, SearchState state) {
+    @Override public synchronized void learn(PingPong pingPong, NBoardState state) {
         engine.learn(pingPong, state);
     }
 
-    @Override public synchronized void requestHints(PingPong pingPong, SearchState state, int nMoves) {
+    @Override public synchronized void requestHints(PingPong pingPong, NBoardState state, int nMoves) {
         engine.requestHints(pingPong, state, nMoves);
     }
 
-    @Override public synchronized void requestMove(PingPong pingPong, SearchState state) {
+    @Override public synchronized void requestMove(PingPong pingPong, NBoardState state) {
         engine.requestMove(pingPong, state);
     }
 

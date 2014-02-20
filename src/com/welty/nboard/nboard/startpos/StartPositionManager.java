@@ -1,6 +1,5 @@
-package com.welty.nboard.nboard;
+package com.welty.nboard.nboard.startpos;
 
-import com.welty.novello.core.Position;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -10,13 +9,13 @@ import javax.swing.*;
  * <p/>
  * All operations are expected to take place on the EDT.
  */
-interface StartPositionManager {
+public interface StartPositionManager {
     /**
      * Get the start position for a new game.
      *
      * @return A start position.
      */
-    @NotNull Position getStartPosition();
+    @NotNull StartPosition getStartPosition();
 
     /**
      * Add required menu items so the start position can be selected

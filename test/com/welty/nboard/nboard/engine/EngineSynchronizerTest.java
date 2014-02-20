@@ -2,9 +2,9 @@ package com.welty.nboard.nboard.engine;
 
 import com.orbanova.common.misc.Utils;
 import com.welty.nboard.nboard.selector.GuiOpponentSelector;
+import com.welty.othello.api.NBoardState;
 import com.welty.othello.api.OpponentSelection;
 import com.welty.othello.api.OpponentSelector;
-import com.welty.othello.api.SearchState;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsClock;
 import com.welty.othello.gdk.OsMoveListItem;
@@ -76,9 +76,9 @@ public class EngineSynchronizerTest extends TestCase {
         Mockito.stub(selector.getOpponent()).toReturn(new OpponentSelection(selectors.get(engineSelectorIndex), maxDepth));
     }
 
-    private static SearchState createState() {
+    private static NBoardState createState() {
         final COsGame game = new COsGame();
         game.Initialize("8", OsClock.DEFAULT, OsClock.DEFAULT);
-        return new SearchState(game, 1, 0);
+        return new NBoardState(game, 1, 0);
     }
 }

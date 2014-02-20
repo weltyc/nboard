@@ -46,7 +46,7 @@ class DatabaseTable extends Grid {
      */
     public void selectionChanged(int modelRow, int modelCol) {
         if (modelRow < PD().getRowCount()) {
-            reversiData.setGame(dtm.GameFromFilteredRow(modelRow), false);
+            reversiData.setGame(dtm.gameFromRow(modelRow), false);
             reversiWindow.BringToTop();
         }
     }

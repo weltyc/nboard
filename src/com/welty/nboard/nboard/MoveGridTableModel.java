@@ -39,7 +39,7 @@ class MoveGridTableModel extends GridTableModel implements TableModelListener {
         for (Map.Entry<Byte, Hint> it : m_hints.Map().entrySet()) {
             m_moves.add(it.getKey());
         }
-        for (int key : pdd.m_summary.keys()) {
+        for (int key : pdd.summary.keys()) {
             if (m_hints.Map().get((byte) key) == null)
                 m_moves.add(key);
         }
@@ -87,7 +87,7 @@ class MoveGridTableModel extends GridTableModel implements TableModelListener {
             case 4:
                 return "" + hint.nGames;
             case 5:
-                return hint.sPly;
+                return hint.depth.toString();
             default:
                 throw new IllegalArgumentException("illegal field : " + col);
         }
@@ -105,7 +105,7 @@ class MoveGridTableModel extends GridTableModel implements TableModelListener {
      * Write the text of the summary field to the StringBuilder
      */
     String OutputSummaryText(int sq, int field) {
-        ThorSummaryData it = pdd.m_summary.get(sq);
+        ThorSummaryData it = pdd.summary.get(sq);
         if (it == null) {
             return "";
         }

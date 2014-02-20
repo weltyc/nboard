@@ -4,6 +4,7 @@ import com.welty.nboard.gui.SignalEvent;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.OsMoveListItem;
+import com.welty.othello.protocol.Depth;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +23,10 @@ public class Hints extends HashMap<Byte, Hint> implements SignalListener<OsMoveL
      */
     final SignalEvent<ArrayList<Byte>> m_seUpdate = new SignalEvent<>();
 
-    String m_sPlyRecent;
+    /**
+     * Depth of the hint received most recently from the engine
+     */
+    Depth lastDepth;
 
 
     /**
@@ -57,10 +61,10 @@ public class Hints extends HashMap<Byte, Hint> implements SignalListener<OsMoveL
      * @param hint hint that was created
      */
     void Add(CMove move, Hint hint) {
-        if (!hint.fBook && !hint.sPly.equals(m_sPlyRecent)) {
-            RemoveNonbookHints(m_sPlyRecent);
-            m_sPlyRecent = hint.sPly;
-            OldNonbookHints(hint.sPly);
+        if (!hint.fBook && !hint.depth.equals(lastDepth)) {
+            RemoveNonbookHints(lastDepth);
+            lastDepth = hint.depth;
+            OldNonbookHints(hint.depth);
         }
         put((byte) move.Square(), hint);
 
@@ -108,8 +112,8 @@ public class Hints extends HashMap<Byte, Hint> implements SignalListener<OsMoveL
     /**
      * Remove all nonbook hints with hint.sPly!=sPly
      */
-    void RemoveNonbookHints(final String sPly) {
-        ArrayList<Byte> squaresRemoved = calcOldHints(sPly);
+    void RemoveNonbookHints(final Depth aDepth) {
+        final ArrayList<Byte> squaresRemoved = calcOldHints(aDepth);
 
         for (Byte sq : squaresRemoved) {
             remove(sq);
@@ -119,11 +123,11 @@ public class Hints extends HashMap<Byte, Hint> implements SignalListener<OsMoveL
             m_seUpdate.Raise(squaresRemoved);
     }
 
-    private ArrayList<Byte> calcOldHints(String sPly) {
+    private ArrayList<Byte> calcOldHints(Depth aDepth) {
         ArrayList<Byte> squaresRemoved = new ArrayList<>();
 
         for (Map.Entry<Byte, Hint> it : entrySet()) {
-            if (!it.getValue().fBook && !it.getValue().sPly.equals(sPly)) {
+            if (!it.getValue().fBook && !it.getValue().depth.equals(aDepth)) {
                 squaresRemoved.add(it.getKey());
             }
         }
@@ -133,8 +137,8 @@ public class Hints extends HashMap<Byte, Hint> implements SignalListener<OsMoveL
     /**
      * Raise the Old event for all nonbook hints with hint.sPly!=sPly
      */
-    void OldNonbookHints(final String sPly) {
-        ArrayList<Byte> old = calcOldHints(sPly);
+    void OldNonbookHints(final Depth aDepth) {
+        ArrayList<Byte> old = calcOldHints(aDepth);
 
         if (!old.isEmpty())
             m_seUpdate.Raise(old);
