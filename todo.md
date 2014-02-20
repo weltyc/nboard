@@ -20,7 +20,7 @@ H18  X   Transcript does not put passes into game sent to reversiData
 H19  X   SetUpBoard sending null board into BoardPanel.paintBoard()
 H20  X   Transcript does not accept keyboard input when you click on the initially visible window rather than using the menu item
 H21  X   Clock is not decreasing when internal engine self-plays, even though time is being taken.
-H22      Node stats do not display during solve.
+H22  X   Node stats do not display during solve.
 H23  X   SetUpBoard does not accept keyboard input second time around
 H24      Node stats do not display when engine moves (rather than hints)
 
