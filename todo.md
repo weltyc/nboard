@@ -51,7 +51,7 @@ L24  X   NullPointerException when trying to run a nonexistent executable.
 L25  X   MoveGrid database columns should have a blue background.
 L26  X   Eval of 0 should show as 0 in move list [Note, GGF games have an empty eval for both eval=0 and eval=missing].
 L27  X   SetUp window should be hidden in startup rather than shown/hidden flash.
-L28      Hint depth incorrect when not using SOLVER_START_HEIGHT
+L28  X   Hint depth incorrect when not using SOLVER_START_HEIGHT
 L29      Don't decrement clock in analysis mode
 
 CC       Replace CQPosition with novello.Position
