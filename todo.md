@@ -19,6 +19,8 @@ H17  X   Board display messed up on Windows
 H18  X   Transcript does not put passes into game sent to reversiData
 H19  X   SetUpBoard sending null board into BoardPanel.paintBoard()
 H20      Transcript does not accept keyboard input when you click on the initially visible window rather than using the menu item
+H21      Clock is not decreasing when internal engine self-plays, even though time is being taken.
+H22      Node stats do not display during solve.
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key
