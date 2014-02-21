@@ -140,12 +140,14 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 new ScoreWindow(reversiData),
                 boardPanel = new ReversiBoard(reversiData, this, m_hints),
                 enginePanel,
-                moveGrid,
                 hBox(evalGraph, timeGraph)
         );
 
         frame = frame("NBoard", WindowConstants.EXIT_ON_CLOSE, true, menuBar,
-                hBox(leftPanel, moveList)
+                vBox(
+                        hBox(leftPanel, moveList),
+                        moveGrid
+                )
 
         );
 
@@ -928,7 +930,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
     @Override public void hint(boolean fromBook, String pv, CMove move, Value eval, int nGames, Depth depth, String freeformText) {
         boolean fBlackMove = reversiData.getGame().pos.board.fBlackMove;
-        final Hint hint = new Hint(eval, nGames, depth, fromBook, fBlackMove);
+        final Hint hint = new Hint(eval, nGames, depth, fromBook, fBlackMove, pv);
         m_hints.Add(move, hint);
     }
 

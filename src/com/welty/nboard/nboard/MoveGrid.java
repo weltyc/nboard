@@ -24,8 +24,9 @@ public class MoveGrid extends Grid {
             new GridColumn(50, "DtB"),
             new GridColumn(50, "#Games"),
             new GridColumn(40, "Depth"),
+            new GridColumn(120, "Principal Variation", Align.LEFT),
             new GridColumn(55, "Played"),
-            new GridColumn(50, "Win %"),
+            new GridColumn(50, "Win %")
 
     };
 
@@ -51,8 +52,8 @@ public class MoveGrid extends Grid {
         // make move column orange and Database area grey
         final TableColumnModel columnModel = table.getColumnModel();
         setColorColumn(columnModel, new Color(0xFF, 0xDF, 0xBF), 0);
-        setColorColumn(columnModel, new Color(0xDF, 0xDF, 0xDF), 6);
         setColorColumn(columnModel, new Color(0xDF, 0xDF, 0xDF), 7);
+        setColorColumn(columnModel, new Color(0xDF, 0xDF, 0xDF), 8);
 
         // register for the signal event when a new hint is added
         hints.m_seUpdate.Add(new SignalListener<ArrayList<Byte>>() {

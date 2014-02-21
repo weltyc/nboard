@@ -77,6 +77,7 @@ public abstract class Grid extends JScrollPane {
             column.setPreferredWidth(width);
 
             final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+            //noinspection MagicConstant
             renderer.setHorizontalAlignment(tableModel.getColumnSwingAlignment(i));
 
             column.setCellRenderer(renderer);
@@ -100,7 +101,7 @@ public abstract class Grid extends JScrollPane {
      * @param modelRow selection row
      * @param modelCol selection column
      */
-    protected void selectionChanged(int modelRow, int modelCol){
+    protected void selectionChanged(int modelRow, int modelCol) {
     }
 
     protected JTable getTable() {
@@ -165,7 +166,6 @@ public abstract class Grid extends JScrollPane {
             onMouseClick(row, col);
         }
     }
-
 
 
 }

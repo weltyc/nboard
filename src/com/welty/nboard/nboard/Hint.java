@@ -19,20 +19,27 @@ public class Hint {
     final int nGames;        //!< Number of games in book after this move
     final Depth depth;    //!< Search depth, as text.
     final boolean fBook;        //!< True if this node was in book
+    /**
+     * Principal variation as text, for example "F5 d6 C3".
+     * There is no required format; this is returned by the engine.
+     */
+    final String principalVariation;
 
     /**
      * Construct a hint.
      *
-     * @param eval       Evaluation. Either a single float, or two floats separated by commas (if draw-to-white differs from draw-to-black)
-     * @param nGames     number of games played in this line, if a book move
-     * @param depth      search depth used to create the evaluation. Must start with an integer, but does not need to be completely integral, for example "100%" is ok.
-     * @param fromBook   if true, the move came from the engine's book
-     * @param fBlackMove if true, the root position has black to move
+     * @param eval               Evaluation. Either a single float, or two floats separated by commas (if draw-to-white differs from draw-to-black)
+     * @param nGames             number of games played in this line, if a book move
+     * @param depth              search depth used to create the evaluation. Must start with an integer, but does not need to be completely integral, for example "100%" is ok.
+     * @param fromBook           if true, the move came from the engine's book
+     * @param fBlackMove         if true, the root position has black to move
+     * @param principalVariation
      */
-    public Hint(Value eval, int nGames, Depth depth, boolean fromBook, boolean fBlackMove) {
+    public Hint(Value eval, int nGames, Depth depth, boolean fromBook, boolean fBlackMove, String principalVariation) {
         fBook = fromBook;
         this.depth = depth;
         this.nGames = nGames;
+        this.principalVariation = principalVariation;
         if (fBlackMove) {
             vBlack = eval.drawSeekingValue;
             vWhite = eval.drawAvoidingValue;

@@ -50,6 +50,7 @@ L25  X   MoveGrid database columns should have a blue background.
 L26  X   Eval of 0 should show as 0 in move list [Note, GGF games have an empty eval for both eval=0 and eval=missing].
 L27      SetUp window should be hidden in startup rather than shown/hidden flash.
 L28  X   When database window is resized the games grid should also resize
+L29      Time graph should include 0 on the y-axis
 
 CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
@@ -79,8 +80,9 @@ F21      Separate programs for analysis and opponent
 F22      More than 1 hint from internal engines
 F23  X   Threading on internal engines
 F24  X   Enter Transcript command
-F25      Display PV in move grid
+F25  X   Display PV in move grid
 F26  X   Iterative deepening in internal engine hints
+F27      Titles for graph window
 
 FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games
 FL2      GGF games should be stored in a more compact format
