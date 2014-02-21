@@ -56,6 +56,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private ReversiWindowEngine m_engine;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData reversiData;
+    private final GuiOpponentSelector opponentSelector = new GuiOpponentSelector();
 
     /**
      * Window where thor games are displayed
@@ -124,7 +125,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         Grid moveList = new MoveList(reversiData);
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
-        m_engine = new EngineSynchronizer(GuiOpponentSelector.getInstance(), this);
+        m_engine = new EngineSynchronizer(opponentSelector, this);
 
         final JMenuBar menuBar = createMenus(startPositionManager);
 
@@ -493,7 +494,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         menu.addSeparator();
         menu.add(menuItem("&Select Opponent...").build(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
-                GuiOpponentSelector.getInstance().show();
+                opponentSelector.show();
             }
         }));
 
@@ -752,7 +753,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      * @return max depth, in ply
      */
     private int getMaxDepth() {
-        return GuiOpponentSelector.getInstance().getOpponent().getMaxDepth();
+        return opponentSelector.getOpponent().getMaxDepth();
     }
 
     /**

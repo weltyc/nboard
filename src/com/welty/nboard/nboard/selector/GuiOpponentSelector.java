@@ -8,6 +8,7 @@ import com.welty.othello.gui.ExternalEngineManager;
 import com.welty.othello.gui.prefs.PrefInt;
 import com.welty.othello.gui.prefs.PrefString;
 import com.welty.othello.gui.selector.EngineSelector;
+import com.welty.othello.gui.selector.ExternalEngineSelector;
 import com.welty.othello.gui.selector.InternalEngineSelector;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,12 +28,8 @@ import static com.orbanova.common.jsb.JSwingBuilder.*;
  */
 public class GuiOpponentSelector extends OpponentSelector {
 
-    private static final PrefInt levelPref = new PrefInt(GuiOpponentSelector.class, "Level", 1);
-    private static final PrefString enginePref = new PrefString(GuiOpponentSelector.class, "Opponent", "Abigail");
-    /**
-     * Data used to initialize engineSelectors on startup.
-     */
-    private static final java.util.List<EngineSelector> INTERNAL_ENGINE_SELECTORS = internalOpponentSelectors();
+    private final PrefInt levelPref = new PrefInt(GuiOpponentSelector.class, "Level", 1);
+    private final PrefString enginePref = new PrefString(GuiOpponentSelector.class, "Opponent", "Abigail");
 
     /**
      * Create a list of internal opponent selectors
@@ -51,25 +48,16 @@ public class GuiOpponentSelector extends OpponentSelector {
     }
 
 
-    private static GuiOpponentSelector instance;
-
     private final JDialog frame;
     private final JList<Integer> levels = new JList<>();
-    static final EngineListModel engineListModel = new EngineListModel(INTERNAL_ENGINE_SELECTORS);
+    private final EngineListModel engineListModel = new EngineListModel(internalOpponentSelectors());
     private final JList<EngineSelector> engineSelectors = new JList<>(engineListModel);
 
     // these are written to when the user clicks "OK"
     private int selectedLevel;
     private @NotNull EngineSelector selectedEngine;
 
-    public synchronized static GuiOpponentSelector getInstance() {
-        if (instance == null) {
-            instance = new GuiOpponentSelector();
-        }
-        return instance;
-    }
-
-    private GuiOpponentSelector() {
+    public GuiOpponentSelector() {
         // Level selection list box.
         // Need to create this before Opponent selection list box because the
         // Opponent selection list box modifies it.
@@ -138,6 +126,12 @@ public class GuiOpponentSelector extends OpponentSelector {
         frame.setVisible(false);
 
         frame.getRootPane().setDefaultButton(ok);
+
+        ExternalEngineManager.instance.addListener(new ExternalEngineManager.Listener() {
+            @Override public void engineAdded(String name, String wd, String command) {
+                engineListModel.put(new ExternalEngineSelector(name, wd, command));
+            }
+        });
     }
 
     /**
@@ -166,6 +160,13 @@ public class GuiOpponentSelector extends OpponentSelector {
         selectedEngine = engineSelectors.getSelectedValue();
     }
 
+    /**
+     * Outline a list with a scrollPane which has a titled border
+     *
+     * @param title bordered title
+     * @param list  list
+     * @return the scollPane
+     */
     private static JComponent wrap(String title, JList list) {
         final Dimension preferredSize = list.getPreferredSize();
         list.setBorder(null);
@@ -230,7 +231,7 @@ public class GuiOpponentSelector extends OpponentSelector {
      * Nuke engine selectors
      */
     public static void main(String[] args) throws BackingStoreException {
-        ExternalEngineManager.removeAll();
+        ExternalEngineManager.instance.removeAll();
     }
 
     @NotNull @Override public OpponentSelection getOpponent() {
