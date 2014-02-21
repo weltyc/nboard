@@ -478,7 +478,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         };
 
         mode = new RadioGroup(menu, "Engine/Mode", 1, shutdownHooks,
-                menuItem("&Analysis mode").buildRadioButton(modeSetter),
+                menuItem("&Analyze Position").buildRadioButton(modeSetter),
                 menuItem("User plays &Black").buildRadioButton(modeSetter),
                 menuItem("User plays &White").buildRadioButton(modeSetter),
                 menuItem("&Engine plays both").buildRadioButton(modeSetter)
@@ -505,18 +505,6 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 TellEngineToLearn();
             }
         }));
-        menu.addSeparator();
-
-        ActionListener contemptSetter = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                TellEngineWhatToDo();
-            }
-        };
-        drawsTo = new RadioGroup(menu, "Engine/DrawsTo", 1, shutdownHooks,
-                menuItem("Draws to Black").buildRadioButton(contemptSetter),
-                menuItem("Draws = 0").buildRadioButton(contemptSetter),
-                menuItem("Draws to White").buildRadioButton(contemptSetter)
-        );
 
         return menu;
     }
@@ -531,6 +519,18 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 menuItem("Value >=2 moves").buildRadioButton(engineUpdater),
                 menuItem("Value >=4 moves").buildRadioButton(engineUpdater),
                 menuItem("Value all moves").buildRadioButton(engineUpdater)
+        );
+
+        menu.addSeparator();
+        ActionListener contemptSetter = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                TellEngineWhatToDo();
+            }
+        };
+        drawsTo = new RadioGroup(menu, "Engine/DrawsTo", 1, shutdownHooks,
+                menuItem("Draws to Black").buildRadioButton(contemptSetter),
+                menuItem("Draws = 0").buildRadioButton(contemptSetter),
+                menuItem("Draws to White").buildRadioButton(contemptSetter)
         );
 
         return menu;
