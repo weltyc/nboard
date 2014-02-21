@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class EngineSynchronizerTest extends TestCase {
-    private static final List<EngineSelector> selectors = GuiOpponentSelector.internalOpponentSelectors();
+    private static final List<EngineSelector> selectors = GuiOpponentSelector.internalOpponentSelectors(true);
 
     public void testSingleEngine() throws Throwable {
         /**

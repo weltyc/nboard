@@ -53,10 +53,10 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private final JFrame frame;
     private final DatabaseLoader databaseLoader;
     private final NodeCountPanel nodeCountPanel;
-    private ReversiWindowEngine m_engine;
+    private ReversiWindowEngine opposingEngine;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData reversiData;
-    private final GuiOpponentSelector opponentSelector = new GuiOpponentSelector();
+    private final GuiOpponentSelector opponentSelector = new GuiOpponentSelector("Select Opponent", true, "");
 
     /**
      * Window where thor games are displayed
@@ -125,7 +125,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         Grid moveList = new MoveList(reversiData);
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
-        m_engine = new EngineSynchronizer(opponentSelector, this);
+        opposingEngine = new EngineSynchronizer(opponentSelector, this);
 
         final JMenuBar menuBar = createMenus(startPositionManager);
 
@@ -735,7 +735,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     }
 
     private String getPlayerName(boolean enginePlays) {
-        return enginePlays ? m_engine.getName() : System.getProperty("user.name");
+        return enginePlays ? opposingEngine.getName() : System.getProperty("user.name");
     }
 
     /**
@@ -764,7 +764,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      */
     public void TellEngineToLearn() {
         // Tell the engine to learn the game
-        m_engine.learn(new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt()));
+        opposingEngine.learn(new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt()));
 
         // reset the stored review point. The engine will update hints as a result.
         TellEngineWhatToDo();
@@ -781,7 +781,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      */
     void TellEngineWhatToDo() {
         EngineSynchronizer.verifyEdt();
-        if (m_engine.isReady() && needsLove) {
+        if (opposingEngine.isReady() && needsLove) {
             needsLove = false;
             boolean isHint;
 
@@ -812,11 +812,11 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             if (isHint) {
                 // hints always relate to the displayed position.
                 final NBoardState NBoardState = new NBoardState(reversiData.getGame(), reversiData.IMove(), getMaxDepth(), getContempt());
-                m_engine.requestHints(NBoardState, engineTops[engineTop.getIndex()]);
+                opposingEngine.requestHints(NBoardState, engineTops[engineTop.getIndex()]);
             } else {
                 // a move request relates to the final position in the game
                 final NBoardState NBoardState = new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt());
-                m_engine.requestMove(NBoardState);
+                opposingEngine.requestMove(NBoardState);
             }
         }
     }
@@ -895,7 +895,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     };
 
     public String getEngineName() {
-        return m_engine.getName();
+        return opposingEngine.getName();
     }
 
     ///////////////////////////////////

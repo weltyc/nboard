@@ -28,19 +28,21 @@ import static com.orbanova.common.jsb.JSwingBuilder.*;
  */
 public class GuiOpponentSelector extends OpponentSelector {
 
-    private final PrefInt levelPref = new PrefInt(GuiOpponentSelector.class, "Level", 1);
-    private final PrefString enginePref = new PrefString(GuiOpponentSelector.class, "Opponent", "Abigail");
+    private final PrefInt levelPref;
+    private final PrefString enginePref;
 
     /**
      * Create a list of internal opponent selectors
      *
      * @return the list
      */
-    public static List<EngineSelector> internalOpponentSelectors() {
+    public static List<EngineSelector> internalOpponentSelectors(boolean includeWeakEngines) {
         final ArrayList<EngineSelector> selectors = new ArrayList<>();
 
-        for (String name : SimpleEval.getEvalNames()) {
-            selectors.add(new InternalEngineSelector(name));
+        if (includeWeakEngines) {
+            for (String name : SimpleEval.getEvalNames()) {
+                selectors.add(new InternalEngineSelector(name));
+            }
         }
         selectors.add(new InternalEngineSelector("Vegtbl", true, "ntestJ", ""));
 
@@ -50,14 +52,25 @@ public class GuiOpponentSelector extends OpponentSelector {
 
     private final JDialog frame;
     private final JList<Integer> levels = new JList<>();
-    private final EngineListModel engineListModel = new EngineListModel(internalOpponentSelectors());
-    private final JList<EngineSelector> engineSelectors = new JList<>(engineListModel);
+    private final EngineListModel engineListModel;
+    private final JList<EngineSelector> engineSelectors;
 
     // these are written to when the user clicks "OK"
     private int selectedLevel;
     private @NotNull EngineSelector selectedEngine;
 
-    public GuiOpponentSelector() {
+    /**
+     * Create a window that allows the user to select an Opponent (=engine + depth)
+     *
+     * @param windowTitle        title of the selection window
+     * @param includeWeakEngines if true, weak engines are included in the selection list. If false, they are not
+     * @param preferencePrefix   prefix for saving the user's choices.
+     */
+    public GuiOpponentSelector(String windowTitle, boolean includeWeakEngines, String preferencePrefix) {
+        levelPref = new PrefInt(GuiOpponentSelector.class, preferencePrefix + "Level", includeWeakEngines ? 1 : 12);
+        enginePref = new PrefString(GuiOpponentSelector.class, preferencePrefix + "Opponent", includeWeakEngines ? "Abigail" : "Vegtbl");
+        engineListModel = new EngineListModel(internalOpponentSelectors(includeWeakEngines));
+
         // Level selection list box.
         // Need to create this before Opponent selection list box because the
         // Opponent selection list box modifies it.
@@ -70,6 +83,7 @@ public class GuiOpponentSelector extends OpponentSelector {
 
 
         // Opponent selection list box.
+        engineSelectors = new JList<>(engineListModel);
         engineSelectors.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
@@ -165,7 +179,7 @@ public class GuiOpponentSelector extends OpponentSelector {
      *
      * @param title bordered title
      * @param list  list
-     * @return the scollPane
+     * @return the scrollPane
      */
     private static JComponent wrap(String title, JList list) {
         final Dimension preferredSize = list.getPreferredSize();
