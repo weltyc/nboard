@@ -48,7 +48,7 @@ L23  X   second-to-last move displayed in move grid when clicking on end-of-game
 L24  X   NullPointerException when trying to run a nonexistent executable.
 L25  X   MoveGrid database columns should have a blue background.
 L26  X   Eval of 0 should show as 0 in move list [Note, GGF games have an empty eval for both eval=0 and eval=missing].
-L27      SetUp window should be hidden in startup rather than shown/hidden flash.
+L27  X   SetUp window should be hidden in startup rather than shown/hidden flash.
 L28  X   When database window is resized the games grid should also resize
 L29  X   Time graph should include 0 on the y-axis
 
@@ -69,7 +69,7 @@ F8   X   Timed matches
 F9   X   Paste command should paste any format (move list, game, board)
 F10  X   Ctrl-C should copy move list, Ctrl-Shift-C should copy game
 F11  X   Filter database by player, tournament, etc.
-F12      Score graph
+F12  X   Score graph
 F13  X   Remove overly verbose external engine communication
 F14  X   Display node stats
 F15  X   XOT start position should include moves
@@ -82,7 +82,7 @@ F23  X   Threading on internal engines
 F24  X   Enter Transcript command
 F25  X   Display PV in move grid
 F26  X   Iterative deepening in internal engine hints
-F27      Titles for graph window
+F27  X   Titles for graph window
 
 FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games
 FL2      GGF games should be stored in a more compact format

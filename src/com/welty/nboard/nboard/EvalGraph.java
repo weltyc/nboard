@@ -1,5 +1,6 @@
 package com.welty.nboard.nboard;
 
+import com.welty.graph.x.Range;
 import com.welty.graph.xy.ListXYSeries;
 import com.welty.graph.xy.XYGraph;
 import com.welty.graph.xy.XYGraphData;
@@ -24,12 +25,13 @@ class EvalGraph extends XYGraph {
 
 
     EvalGraph(ReversiData reversiData) {
-        super(new XYGraphData(extractSeries(reversiData)));
+        super("Score", new XYGraphData(extractSeries(reversiData)));
         setPreferredSize(new Dimension(200, 100));
         interior().setBackground(Color.GRAY);
         setSeriesColors(Color.BLACK, Color.WHITE);
         reversiData.addListener(new MyListener(reversiData));
         yAxis().setMinSegments(3);
+        yAxis().setRequiredRange(new Range(-2, 2));
     }
 
     static List<ListXYSeries> extractSeries(ReversiData reversiData) {

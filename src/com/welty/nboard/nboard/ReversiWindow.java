@@ -121,8 +121,6 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         // and show the move grid
         MoveGrid moveGrid = new MoveGrid(reversiData, databaseTableModel, m_hints);
-        EvalGraph evalGraph = new EvalGraph(reversiData);
-        TimeGraph timeGraph = new TimeGraph(reversiData);
         Grid moveList = new MoveList(reversiData);
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
@@ -140,7 +138,9 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 new ScoreWindow(reversiData),
                 boardPanel = new ReversiBoard(reversiData, this, m_hints),
                 enginePanel,
-                hBox(evalGraph, timeGraph)
+                hBox(
+                        new EvalGraph(reversiData), new TimeGraph(reversiData)
+                ).spacing(3).border(3)
         );
 
         frame = frame("NBoard", WindowConstants.EXIT_ON_CLOSE, true, menuBar,
