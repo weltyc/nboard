@@ -1,8 +1,9 @@
 package com.welty.nboard.nboard;
 
-import com.welty.graph.xy.ListXYSeries;
-import com.welty.graph.xy.XYGraph;
-import com.welty.graph.xy.XYGraphData;
+import com.welty.graph.cy.BarGraph;
+import com.welty.graph.cy.CategoryGraphData;
+import com.welty.graph.cy.CategorySeries;
+import com.welty.graph.cy.ListCategorySeries;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMoveList;
@@ -13,18 +14,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * A graph that displays evals.
- * <p/>
- * Evals by both players in the game are displayed.
- * <p/>
- * Evals favouring the black player are displayed as positive in the graph. Evals produced by the white
- * player are inverted before graphing; if the white player returns an eval of "-1" this is graphed as a +1.
+ * A graph that displays time taken by the players.
  */
-class EvalGraph extends XYGraph {
+class TimeGraph extends BarGraph<Integer> {
 
 
-    EvalGraph(ReversiData reversiData) {
-        super(new XYGraphData(extractSeries(reversiData)));
+    TimeGraph(ReversiData reversiData) {
+        super(new CategoryGraphData<>(extractSeries(reversiData)));
         setPreferredSize(new Dimension(200, 100));
         interior().setBackground(Color.GRAY);
         setSeriesColors(Color.BLACK, Color.WHITE);
@@ -32,7 +28,7 @@ class EvalGraph extends XYGraph {
         yAxis().setMinSegments(3);
     }
 
-    static List<ListXYSeries> extractSeries(ReversiData reversiData) {
+    static List<CategorySeries<Integer>> extractSeries(ReversiData reversiData) {
         final COsGame game = reversiData.getGame();
         return extractSeries(game.getMoveList(), game.posStart.board.isBlackMove());
     }
@@ -44,22 +40,22 @@ class EvalGraph extends XYGraph {
      * @param blackMovesFirst true if black makes the first move in the move list, false if white does
      * @return the graph data
      */
-    static List<ListXYSeries> extractSeries(COsMoveList ml, boolean blackMovesFirst) {
-        final ListXYSeries black = new ListXYSeries("Black");
-        final ListXYSeries white = new ListXYSeries("White");
+    static List<CategorySeries<Integer>> extractSeries(COsMoveList ml, boolean blackMovesFirst) {
+        final ListCategorySeries<Integer> black = new ListCategorySeries<>("Black");
+        final ListCategorySeries<Integer> white = new ListCategorySeries<>("White");
 
         boolean blackToMove = blackMovesFirst;
 
         for (int moveNumber = 1; moveNumber <= ml.size(); moveNumber++) {
             final OsMoveListItem mli = ml.get(moveNumber - 1);
             if (blackToMove) {
-                black.add(moveNumber, mli.getEval());
+                black.add(moveNumber, mli.getElapsedTime());
             } else {
-                white.add(moveNumber, -mli.getEval());
+                white.add(moveNumber, mli.getElapsedTime());
             }
             blackToMove = !blackToMove;
         }
-        return Arrays.asList(black, white);
+        return Arrays.<CategorySeries<Integer>>asList(black, white);
     }
 
     private class MyListener implements SignalListener<OsMoveListItem> {
