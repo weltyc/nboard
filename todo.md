@@ -73,7 +73,7 @@ F13  X   Remove overly verbose external engine communication
 F14  X   Display node stats
 F15  X   XOT start position should include moves
 F18  X   Set up board command
-F19      Time graph
+F19  X   Time graph
 F20      Lost disks graph
 F21      Separate programs for analysis and opponent
 F22      More than 1 hint from internal engines
