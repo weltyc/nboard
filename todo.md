@@ -83,6 +83,12 @@ F24  X   Enter Transcript command
 F25  X   Display PV in move grid
 F26  X   Iterative deepening in internal engine hints
 F27  X   Titles for graph window
+F28      Analyze game and add to graph
+
+Before release:
+BR1      Update NBoard Protocol documentation
+BR2      Fix Engine display names
+BR3      Log engine communication to debugLog.txt instead of System.out (in ProcessLogger).
 
 FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games
 FL2      GGF games should be stored in a more compact format
