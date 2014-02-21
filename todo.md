@@ -49,7 +49,7 @@ L24  X   NullPointerException when trying to run a nonexistent executable.
 L25  X   MoveGrid database columns should have a blue background.
 L26  X   Eval of 0 should show as 0 in move list [Note, GGF games have an empty eval for both eval=0 and eval=missing].
 L27      SetUp window should be hidden in startup rather than shown/hidden flash.
-L28      When database window is resized the games grid should also resize
+L28  X   When database window is resized the games grid should also resize
 
 CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
