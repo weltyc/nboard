@@ -20,7 +20,7 @@ class TimeGraph extends BarGraph<Integer> {
 
 
     TimeGraph(ReversiData reversiData) {
-        super(new CategoryGraphData<>(extractSeries(reversiData)));
+        super("Time taken", new CategoryGraphData<>(extractSeries(reversiData)));
         setPreferredSize(new Dimension(200, 100));
         interior().setBackground(Color.GRAY);
         setSeriesColors(Color.BLACK, Color.WHITE);

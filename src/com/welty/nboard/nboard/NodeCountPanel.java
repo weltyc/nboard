@@ -16,7 +16,6 @@ public class NodeCountPanel extends Grid<JComponent> {
         this.nodeCount = nodeCount;
         this.nodeTime = nodeTime;
         this.nps = nps;
-        setBorder(BorderFactory.createLoweredBevelBorder());
     }
 
     public static NodeCountPanel of() {

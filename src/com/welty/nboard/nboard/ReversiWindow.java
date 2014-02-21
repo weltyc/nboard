@@ -182,6 +182,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         enginePanel.add(engineStatus, BorderLayout.LINE_START);
         enginePanel.add(nodeCountPanel, BorderLayout.LINE_END);
         enginePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        enginePanel.setBorder(BorderFactory.createLoweredBevelBorder());
         return enginePanel;
     }
 
