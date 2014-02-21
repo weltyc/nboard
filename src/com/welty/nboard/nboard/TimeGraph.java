@@ -4,6 +4,7 @@ import com.welty.graph.cy.BarGraph;
 import com.welty.graph.cy.CategoryGraphData;
 import com.welty.graph.cy.CategorySeries;
 import com.welty.graph.cy.ListCategorySeries;
+import com.welty.graph.x.Range;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMoveList;
@@ -20,12 +21,13 @@ class TimeGraph extends BarGraph<Integer> {
 
 
     TimeGraph(ReversiData reversiData) {
-        super("Time taken", new CategoryGraphData<>(extractSeries(reversiData)));
+        super("Time used", new CategoryGraphData<>(extractSeries(reversiData)));
         setPreferredSize(new Dimension(200, 100));
         interior().setBackground(Color.GRAY);
         setSeriesColors(Color.BLACK, Color.WHITE);
         reversiData.addListener(new MyListener(reversiData));
         yAxis().setMinSegments(3);
+        yAxis().setRequiredRange(new Range(0., 1.));
     }
 
     static List<CategorySeries<Integer>> extractSeries(ReversiData reversiData) {

@@ -50,7 +50,7 @@ L25  X   MoveGrid database columns should have a blue background.
 L26  X   Eval of 0 should show as 0 in move list [Note, GGF games have an empty eval for both eval=0 and eval=missing].
 L27      SetUp window should be hidden in startup rather than shown/hidden flash.
 L28  X   When database window is resized the games grid should also resize
-L29      Time graph should include 0 on the y-axis
+L29  X   Time graph should include 0 on the y-axis
 
 CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
