@@ -27,7 +27,7 @@ class DatabaseWindow extends JFrame implements TableModelListener {
         this.tableModel = tableModel;
         table = new DatabaseTable(reversiWindow, reversiData, tableModel);
 
-        add(JSwingBuilder.vBox(
+        add(JSwingBuilder.vBox(1,
                 createFilterBoxes(),
                 table
         )

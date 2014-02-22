@@ -5,7 +5,6 @@ import com.orbanova.common.jsb.Grid;
 import com.orbanova.common.jsb.JsbTextField;
 import com.welty.othello.core.OperatingSystem;
 import com.welty.othello.gui.ExternalEngineManager;
-import com.welty.othello.gui.selector.ExternalEngineSelector;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,8 +46,7 @@ class AddEngineDialog extends JDialog {
                     JOptionPane.showMessageDialog(AddEngineDialog.this, "Command must not be empty");
                     return;
                 }
-                ExternalEngineManager.add(name, wd, command);
-                GuiOpponentSelector.engineListModel.put(new ExternalEngineSelector(name, wd, command));
+                ExternalEngineManager.instance.add(name, wd, command);
                 AddEngineDialog.this.setVisible(false);
                 AddEngineDialog.this.dispose();
             }

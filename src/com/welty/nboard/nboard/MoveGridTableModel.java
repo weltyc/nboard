@@ -55,12 +55,11 @@ class MoveGridTableModel extends GridTableModel implements TableModelListener {
 
         if (field == 0)
             return new CMove((byte) sq).toString();
-        else if (field < 6)
-            return OutputHintText(sq, field);
-        else
-            return OutputSummaryText(sq, field);
-
-
+        else if (field < 7) {
+            return OutputHintText(sq, field - 1);
+        } else {
+            return OutputSummaryText(sq, field - 7);
+        }
     }
 
     public OsMove getMove(int row) {
@@ -71,25 +70,30 @@ class MoveGridTableModel extends GridTableModel implements TableModelListener {
 
     /**
      * get the hint text for the move
+     *
+     * @param field field number, from 0 to 5.
      */
-    String OutputHintText(int sq, int col) {
+    String OutputHintText(int sq, int field) {
         Hint hint = m_hints.Map().get((byte) sq);
         if (hint == null) {
             return "";
         }
-        switch (col) {
-            case 1:
+        switch (field) {
+            case 0:
                 return formatEval(hint.VNeutral());
-            case 2:
+            case 1:
                 return formatEval(hint.vBlack);
-            case 3:
+            case 2:
                 return formatEval(hint.vWhite);
-            case 4:
+            case 3:
                 return "" + hint.nGames;
-            case 5:
+            case 4:
                 return hint.depth.toString();
+            case 5:
+                // prepend with a space to make it look nicer
+                return " " + hint.principalVariation;
             default:
-                throw new IllegalArgumentException("illegal field : " + col);
+                throw new IllegalArgumentException("illegal field : " + field);
         }
     }
 
@@ -103,6 +107,8 @@ class MoveGridTableModel extends GridTableModel implements TableModelListener {
 
     /**
      * Write the text of the summary field to the StringBuilder
+     *
+     * @param field, from 0 to 1.
      */
     String OutputSummaryText(int sq, int field) {
         ThorSummaryData it = pdd.summary.get(sq);
@@ -110,9 +116,9 @@ class MoveGridTableModel extends GridTableModel implements TableModelListener {
             return "";
         }
         switch (field) {
-            case 6:
+            case 0:
                 return "" + it.getNPlayed();
-            case 7:
+            case 1:
                 return ((int) (it.getScore() * 100)) + "%";
             default:
                 throw new IllegalArgumentException("Can't have field id = " + field);

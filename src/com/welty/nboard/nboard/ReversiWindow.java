@@ -53,9 +53,10 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private final JFrame frame;
     private final DatabaseLoader databaseLoader;
     private final NodeCountPanel nodeCountPanel;
-    private ReversiWindowEngine m_engine;
+    private ReversiWindowEngine opposingEngine;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData reversiData;
+    private final GuiOpponentSelector opponentSelector = new GuiOpponentSelector("Select Opponent", true, "");
 
     /**
      * Window where thor games are displayed
@@ -121,11 +122,10 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         // and show the move grid
         MoveGrid moveGrid = new MoveGrid(reversiData, databaseTableModel, m_hints);
-        EvalGraph evalGraph = new EvalGraph(reversiData);
         Grid moveList = new MoveList(reversiData);
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
-        m_engine = new EngineSynchronizer(GuiOpponentSelector.getInstance(), this);
+        opposingEngine = new EngineSynchronizer(opponentSelector, this);
 
         final JMenuBar menuBar = createMenus(startPositionManager);
 
@@ -139,12 +139,16 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 new ScoreWindow(reversiData, this),
                 boardPanel = new ReversiBoard(reversiData, this, m_hints),
                 enginePanel,
-                moveGrid,
-                evalGraph
+                hBox(
+                        new EvalGraph(reversiData), new TimeGraph(reversiData)
+                ).spacing(3).border(3)
         );
 
         frame = frame("NBoard", WindowConstants.EXIT_ON_CLOSE, true, menuBar,
-                hBox(leftPanel, moveList)
+                vBox(
+                        hBox(leftPanel, moveList),
+                        moveGrid
+                )
 
         );
 
@@ -179,6 +183,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         enginePanel.add(engineStatus, BorderLayout.LINE_START);
         enginePanel.add(nodeCountPanel, BorderLayout.LINE_END);
         enginePanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        enginePanel.setBorder(BorderFactory.createLoweredBevelBorder());
         return enginePanel;
     }
 
@@ -473,7 +478,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         };
 
         mode = new RadioGroup(menu, "Engine/Mode", 1, shutdownHooks,
-                menuItem("&Analysis mode").buildRadioButton(modeSetter),
+                menuItem("&Analyze Position").buildRadioButton(modeSetter),
                 menuItem("User plays &Black").buildRadioButton(modeSetter),
                 menuItem("User plays &White").buildRadioButton(modeSetter),
                 menuItem("&Engine plays both").buildRadioButton(modeSetter)
@@ -489,7 +494,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         menu.addSeparator();
         menu.add(menuItem("&Select Opponent...").build(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
-                GuiOpponentSelector.getInstance().show();
+                opponentSelector.show();
             }
         }));
 
@@ -500,18 +505,6 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 TellEngineToLearn();
             }
         }));
-        menu.addSeparator();
-
-        ActionListener contemptSetter = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                TellEngineWhatToDo();
-            }
-        };
-        drawsTo = new RadioGroup(menu, "Engine/DrawsTo", 1, shutdownHooks,
-                menuItem("Draws to Black").buildRadioButton(contemptSetter),
-                menuItem("Draws = 0").buildRadioButton(contemptSetter),
-                menuItem("Draws to White").buildRadioButton(contemptSetter)
-        );
 
         return menu;
     }
@@ -526,6 +519,18 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 menuItem("Value >=2 moves").buildRadioButton(engineUpdater),
                 menuItem("Value >=4 moves").buildRadioButton(engineUpdater),
                 menuItem("Value all moves").buildRadioButton(engineUpdater)
+        );
+
+        menu.addSeparator();
+        ActionListener contemptSetter = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                TellEngineWhatToDo();
+            }
+        };
+        drawsTo = new RadioGroup(menu, "Engine/DrawsTo", 1, shutdownHooks,
+                menuItem("Draws to Black").buildRadioButton(contemptSetter),
+                menuItem("Draws = 0").buildRadioButton(contemptSetter),
+                menuItem("Draws to White").buildRadioButton(contemptSetter)
         );
 
         return menu;
@@ -734,7 +739,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     }
 
     private String getPlayerName(boolean enginePlays) {
-        return enginePlays ? m_engine.getName() : System.getProperty("user.name");
+        return enginePlays ? opposingEngine.getName() : System.getProperty("user.name");
     }
 
     /**
@@ -752,7 +757,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      * @return max depth, in ply
      */
     private int getMaxDepth() {
-        return GuiOpponentSelector.getInstance().getOpponent().getMaxDepth();
+        return opponentSelector.getOpponent().getMaxDepth();
     }
 
     /**
@@ -763,7 +768,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      */
     public void TellEngineToLearn() {
         // Tell the engine to learn the game
-        m_engine.learn(new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt()));
+        opposingEngine.learn(new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt()));
 
         // reset the stored review point. The engine will update hints as a result.
         TellEngineWhatToDo();
@@ -780,7 +785,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      */
     void TellEngineWhatToDo() {
         EngineSynchronizer.verifyEdt();
-        if (m_engine.isReady() && needsLove) {
+        if (opposingEngine.isReady() && needsLove) {
             needsLove = false;
             boolean isHint;
 
@@ -811,11 +816,11 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             if (isHint) {
                 // hints always relate to the displayed position.
                 final NBoardState NBoardState = new NBoardState(reversiData.getGame(), reversiData.IMove(), getMaxDepth(), getContempt());
-                m_engine.requestHints(NBoardState, engineTops[engineTop.getIndex()]);
+                opposingEngine.requestHints(NBoardState, engineTops[engineTop.getIndex()]);
             } else {
                 // a move request relates to the final position in the game
                 final NBoardState NBoardState = new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt());
-                m_engine.requestMove(NBoardState);
+                opposingEngine.requestMove(NBoardState);
             }
         }
     }
@@ -894,7 +899,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     };
 
     public String getEngineName() {
-        return m_engine.getName();
+        return opposingEngine.getName();
     }
 
     ///////////////////////////////////
@@ -931,7 +936,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
     @Override public void hint(boolean fromBook, String pv, CMove move, Value eval, int nGames, Depth depth, String freeformText) {
         boolean fBlackMove = reversiData.getGame().pos.board.fBlackMove;
-        final Hint hint = new Hint(eval, nGames, depth, fromBook, fBlackMove);
+        final Hint hint = new Hint(eval, nGames, depth, fromBook, fBlackMove, pv);
         m_hints.Add(move, hint);
     }
 

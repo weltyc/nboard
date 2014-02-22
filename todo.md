@@ -53,6 +53,8 @@ L26  X   Eval of 0 should show as 0 in move list [Note, GGF games have an empty 
 L27  X   SetUp window should be hidden in startup rather than shown/hidden flash.
 L28  X   Hint depth incorrect when not using SOLVER_START_HEIGHT
 L29  X   Don't decrement clock in analysis mode
+L28a X   When database window is resized the games grid should also resize
+L29b X   Time graph should include 0 on the y-axis
 
 CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
@@ -71,21 +73,28 @@ F8   X   Timed matches
 F9   X   Paste command should paste any format (move list, game, board)
 F10  X   Ctrl-C should copy move list, Ctrl-Shift-C should copy game
 F11  X   Filter database by player, tournament, etc.
-F12      Score graph
+F12  X   Score graph
 F13  X   Remove overly verbose external engine communication
 F14  X   Display node stats
 F15  X   XOT start position should include moves
 F18  X   Set up board command
-F19      Time graph
+F19  X   Time graph
 F20      Lost disks graph
 F21      Separate programs for analysis and opponent
 F22      More than 1 hint from internal engines
 F23  X   Threading on internal engines
 F24  X   Enter Transcript command
-F25      Display PV in move grid
+F25  X   Display PV in move grid
 F26  X   Iterative deepening in internal engine hints
 F27      Internal engines shouldn't time out during games
 F28      After a hint session is complete, remove moves from the previous ply
+F27a X   Titles for graph window
+F28a     Analyze game and add to graph
+
+Before release:
+BR1      Update NBoard Protocol documentation
+BR2      Fix Engine display names
+BR3      Log engine communication to debugLog.txt instead of System.out (in ProcessLogger).
 
 FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games
 FL2      GGF games should be stored in a more compact format

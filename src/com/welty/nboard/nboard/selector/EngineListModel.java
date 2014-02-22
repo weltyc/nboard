@@ -13,7 +13,7 @@ class EngineListModel extends DefaultListModel<EngineSelector> {
             addElement(es);
         }
         try {
-            for (ExternalEngineManager.Xei xei : ExternalEngineManager.getXei()) {
+            for (ExternalEngineManager.Xei xei : ExternalEngineManager.instance.getXei()) {
                 final ExternalEngineSelector selector = new ExternalEngineSelector(xei.name, xei.wd, xei.cmd);
                 addElement(selector);
             }
