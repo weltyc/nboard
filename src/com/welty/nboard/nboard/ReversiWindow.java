@@ -136,7 +136,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         JComponent leftPanel = vBox(
                 new StatusBar(reversiData),
-                new ScoreWindow(reversiData),
+                new ScoreWindow(reversiData, this),
                 boardPanel = new ReversiBoard(reversiData, this, m_hints),
                 enginePanel,
                 moveGrid,
@@ -691,6 +691,10 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      */
     public boolean UserPlays(boolean fBlack) {
         return ((~mode.getIndex() >> (fBlack ? 1 : 0)) & 1) != 0;
+    }
+
+    @Override public boolean isAnalyzing() {
+        return mode.getIndex()==0;
     }
 
     @NotNull @Override public StartPosition getStartPosition() {

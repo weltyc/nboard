@@ -13,21 +13,17 @@ import static com.welty.nboard.nboard.GraphicsUtils.setPlainFont;
 
 /**
  * A score window is where the piece counts/player names/clocks are displayed
- * <p/>
- * Created by IntelliJ IDEA.
- * User: HP_Administrator
- * Date: Jun 17, 2009
- * Time: 1:53:22 AM
- * To change this template use File | Settings | File Templates.
  */
 class ScoreWindow extends JPanel {
     private final ReversiData reversiData;
+    private final OptionSource optionSource;
     private static final int height = 24;
     private final PlayerPanel blackPanel;
     private final PlayerPanel whitePanel;
 
-    ScoreWindow(ReversiData reversiData) {
+    ScoreWindow(ReversiData reversiData, OptionSource optionSource) {
         this.reversiData = reversiData;
+        this.optionSource = optionSource;
         setLayout(new BorderLayout());
         final COsPosition pos = reversiData.getGame().getPos();
         blackPanel = new PlayerPanel(height, "2", "smallBlack.GIF", pos.getBlackClock());
@@ -72,7 +68,7 @@ class ScoreWindow extends JPanel {
     }
 
     private void updateClocks() {
-        if (!reversiData.isReviewing() && !reversiData.getGame().isOver()) {
+        if (!reversiData.isReviewing() && !reversiData.getGame().isOver() && !optionSource.isAnalyzing()) {
             final double tElapsed = reversiData.secondsSinceLastMove();
             final COsPosition pos = reversiData.getGame().getPos();
             if (pos.board.isBlackMove()) {

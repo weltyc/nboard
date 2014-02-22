@@ -34,4 +34,9 @@ public interface OptionSource {
     boolean UserPlays(boolean fBlack);
 
     @NotNull StartPosition getStartPosition();
+
+    /**
+     * @return true if the user is analyzing a game (no game is currently being played)
+     */
+    boolean isAnalyzing();
 }
