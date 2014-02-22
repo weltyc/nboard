@@ -80,7 +80,7 @@ F15  X   XOT start position should include moves
 F18  X   Set up board command
 F19  X   Time graph
 F20      Lost disks graph
-F21      Separate programs for analysis and opponent
+F21  X   Separate programs for analysis and opponent
 F22      More than 1 hint from internal engines
 F23  X   Threading on internal engines
 F24  X   Enter Transcript command

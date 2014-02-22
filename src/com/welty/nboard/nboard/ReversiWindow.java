@@ -53,9 +53,11 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private final JFrame frame;
     private final DatabaseLoader databaseLoader;
     private final NodeCountPanel nodeCountPanel;
-    private ReversiWindowEngine opposingEngine;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData reversiData;
+    private ReversiWindowEngine analysisEngine;
+    private final GuiOpponentSelector analysisSelector = new GuiOpponentSelector("Select Analysis Engine", false, "Analysis");
+    private ReversiWindowEngine opposingEngine;
     private final GuiOpponentSelector opponentSelector = new GuiOpponentSelector("Select Opponent", true, "");
 
     /**
@@ -126,6 +128,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
         opposingEngine = new EngineSynchronizer(opponentSelector, this);
+        analysisEngine = new EngineSynchronizer(analysisSelector, this);
 
         final JMenuBar menuBar = createMenus(startPositionManager);
 
@@ -522,6 +525,13 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         );
 
         menu.addSeparator();
+        menu.add(menuItem("&Select Analysis Engine...").build(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                analysisSelector.show();
+            }
+        }));
+
+        menu.addSeparator();
         ActionListener contemptSetter = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 TellEngineWhatToDo();
@@ -760,6 +770,12 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         return opponentSelector.getOpponent().getMaxDepth();
     }
 
+    private int getMaxAnalysisDepth() {
+        return analysisSelector.getOpponent().getMaxDepth();
+    }
+
+
+
     /**
      * Tell the engine to learn the game, and perform associated tasks
      * <p/>
@@ -815,8 +831,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             m_hints.Clear();
             if (isHint) {
                 // hints always relate to the displayed position.
-                final NBoardState NBoardState = new NBoardState(reversiData.getGame(), reversiData.IMove(), getMaxDepth(), getContempt());
-                opposingEngine.requestHints(NBoardState, engineTops[engineTop.getIndex()]);
+                final NBoardState NBoardState = new NBoardState(reversiData.getGame(), reversiData.IMove(), getMaxAnalysisDepth(), getContempt());
+                analysisEngine.requestHints(NBoardState, engineTops[engineTop.getIndex()]);
             } else {
                 // a move request relates to the final position in the game
                 final NBoardState NBoardState = new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt());
