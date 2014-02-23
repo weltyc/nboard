@@ -78,7 +78,9 @@ public class MoveGrid extends Grid {
     @Override protected void onMouseClick(int row, int col) {
         MoveGridTableModel model = getModel();
         OsMove mv = model.getMove(row);
-        reversiData.update(new OsMoveListItem(mv), true);
+        if (row >= 0) {
+            reversiData.update(new OsMoveListItem(mv), true);
+        }
     }
 
     public void UpdateHints() {
