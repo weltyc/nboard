@@ -92,7 +92,9 @@ class EvalGraph extends XYGraph {
         }
 
         @Override public void dataChanged() {
-            getGraphData().setSeries(extractSeries(reversiData, analysisData));
+            final XYGraphData graphData = getGraphData();
+            graphData.setSeries(extractSeries(reversiData, analysisData));
+            graphData.setCursor(reversiData.IMove());
         }
     }
 }

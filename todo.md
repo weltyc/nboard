@@ -89,7 +89,7 @@ F26  X   Iterative deepening in internal engine hints
 F27      Internal engines shouldn't time out during games
 F28      After a hint session is complete, remove moves from the previous ply
 F27a X   Titles for graph window
-F28a     Analyze game and add to graph
+F28a X   Analyze game and add to graph
 
 Before release:
 BR1      Update NBoard Protocol documentation
