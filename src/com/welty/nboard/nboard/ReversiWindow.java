@@ -16,6 +16,7 @@ import com.welty.nboard.thor.DatabaseTableModel;
 import com.welty.nboard.thor.DatabaseUiPack;
 import com.welty.novello.core.Position;
 import com.welty.othello.api.NBoardState;
+import com.welty.othello.api.PingPong;
 import com.welty.othello.c.CReader;
 import com.welty.othello.c.CWriter;
 import com.welty.othello.core.CMove;
@@ -96,6 +97,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private RadioGroup engineTop;
     private final GgfFileChooser chooser;
     private final StartPositionManager startPositionManager;
+    private final AnalysisData analysisData = new AnalysisData();
 
 
     ReversiWindow() {
@@ -127,8 +129,9 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         Grid moveList = new MoveList(reversiData);
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
-        opposingEngine = new EngineSynchronizer(opponentSelector, this);
-        analysisEngine = new EngineSynchronizer(analysisSelector, this);
+        final PingPong pingPong = new PingPong();
+        opposingEngine = new EngineSynchronizer("opponent", pingPong, opponentSelector, this);
+        analysisEngine = new EngineSynchronizer("analysis", pingPong, analysisSelector, this);
 
         final JMenuBar menuBar = createMenus(startPositionManager);
 
@@ -143,7 +146,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 boardPanel = new ReversiBoard(reversiData, this, m_hints),
                 enginePanel,
                 hBox(
-                        new EvalGraph(reversiData), new TimeGraph(reversiData)
+                        new EvalGraph(reversiData, analysisData), new TimeGraph(reversiData)
                 ).spacing(3).border(3)
         );
 
@@ -784,7 +787,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      */
     public void TellEngineToLearn() {
         // Tell the engine to learn the game
-        opposingEngine.learn(new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt()));
+        analysisEngine.learn(new NBoardState(reversiData.getGame(), getMaxAnalysisDepth(), getContempt()));
 
         // reset the stored review point. The engine will update hints as a result.
         TellEngineWhatToDo();
@@ -932,6 +935,10 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
     @Override public void nodeStats(long nNodes, double tElapsed) {
         nodeCountPanel.nodeStats(nNodes, tElapsed);
+    }
+
+    @Override public void analysis(int moveNumber, double eval) {
+        analysisData.put(moveNumber, eval);
     }
 
     @Override public void engineMove(OsMoveListItem mli) {

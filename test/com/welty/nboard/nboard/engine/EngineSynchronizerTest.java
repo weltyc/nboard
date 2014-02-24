@@ -4,6 +4,7 @@ import com.welty.nboard.nboard.selector.GuiOpponentSelector;
 import com.welty.othello.api.NBoardState;
 import com.welty.othello.api.OpponentSelection;
 import com.welty.othello.api.OpponentSelector;
+import com.welty.othello.api.PingPong;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsClock;
@@ -37,7 +38,7 @@ public class EngineSynchronizerTest extends TestCase {
                 stubSelector(selector, 0, 1);
 
 
-                final EngineSynchronizer sync = new EngineSynchronizer(selector, rwl);
+                final EngineSynchronizer sync = new EngineSynchronizer("test", new PingPong(), selector, rwl);
 
                 // now request a move.
                 sync.requestMove(createState());
@@ -121,6 +122,9 @@ public class EngineSynchronizerTest extends TestCase {
         }
 
         @Override public void nodeStats(long nNodes, double tElapsed) {
+        }
+
+        @Override public void analysis(int moveNumber, double eval) {
         }
     }
 }

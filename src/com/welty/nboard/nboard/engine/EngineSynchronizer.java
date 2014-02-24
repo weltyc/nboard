@@ -23,17 +23,26 @@ import java.io.IOException;
  * - If isReady() returns false then messages from the engine relate to a previous board state and can be ignored.
  */
 public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector.Listener {
-    private final PingPong pingPong = new PingPong();
+    private final PingPong pingPong;
 
     private final @NotNull MultiEngine multiEngine;
     private final OpponentSelector opponentSelector;
     private final ReversiWindowEngine.Listener listener;
     private final ResponseHandler responseHandler;
+    private final String name;
 
-    public EngineSynchronizer(OpponentSelector opponentSelector, ReversiWindowEngine.Listener listener) {
+    /**
+     * @param name
+     * @param pingPong         The one global PingPong, needed because multiple EngineSynchronizers may share an engine
+     * @param opponentSelector
+     * @param listener
+     */
+    public EngineSynchronizer(String name, PingPong pingPong, OpponentSelector opponentSelector, ReversiWindowEngine.Listener listener) {
+        this.pingPong = pingPong;
         verifyEdt();
+        this.name = name;
         this.listener = listener;
-        responseHandler = new MyResponder();
+        responseHandler = new MyResponder(SyncStatelessEngine.debug);
         final StatelessEngine firstEngine = createInitialEngine(opponentSelector);
         this.multiEngine = new MultiEngine(firstEngine);
         this.opponentSelector = opponentSelector;
@@ -55,6 +64,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
 
     @Override public void learn(@NotNull NBoardState state) {
         verifyEdt();
+        System.out.println("> (" + name + ") learn");
         multiEngine.learn(pingPong, state);
     }
 
@@ -100,7 +110,16 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
     }
 
     private class MyResponder implements ResponseHandler {
+        private final boolean debug;
+
+        private MyResponder(boolean debug) {
+            this.debug = debug;
+        }
+
         @Override public void handle(@NotNull NBoardResponse nBoardResponse) {
+            if (debug) {
+                System.out.println("< (" + name + ")" + nBoardResponse);
+            }
             SwingUtilities.invokeLater(new ResponseRunner(nBoardResponse));
         }
     }
@@ -158,6 +177,11 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
                     // We update ping every time we change the engine, so if the pong
                     // is current we know the current engine sent the message.
                     listener.nodeStats(r.nNodes, r.tElapsed);
+                }
+            } else if (c == AnalysisResponse.class) {
+                final AnalysisResponse r = (AnalysisResponse) response;
+                if (isCurrent(r.pong)) {
+                    listener.analysis(r.moveNumber, r.eval);
                 }
             } else {
                 throw new IllegalArgumentException("Unknown message : " + response);

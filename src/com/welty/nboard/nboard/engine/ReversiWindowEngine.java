@@ -83,5 +83,13 @@ public interface ReversiWindowEngine {
          * @param tElapsed time taken to search
          */
         void nodeStats(long nNodes, double tElapsed);
+
+        /**
+         * The engine has given a retrograde analysis evaluation of a position
+         *
+         * @param moveNumber number of moves played in game
+         * @param eval position evaluation, positive means mover is ahead.
+         */
+        void analysis(int moveNumber, double eval);
     }
 }

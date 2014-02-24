@@ -4,12 +4,14 @@ import com.welty.graph.x.Range;
 import com.welty.graph.xy.ListXYSeries;
 import com.welty.graph.xy.XYGraph;
 import com.welty.graph.xy.XYGraphData;
+import com.welty.graph.xy.XYSeries;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMoveList;
 import com.welty.othello.gdk.OsMoveListItem;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,21 +24,32 @@ import java.util.List;
  * player are inverted before graphing; if the white player returns an eval of "-1" this is graphed as a +1.
  */
 class EvalGraph extends XYGraph {
-
-
-    EvalGraph(ReversiData reversiData) {
-        super("Score", new XYGraphData(extractSeries(reversiData)));
+    EvalGraph(ReversiData reversiData, AnalysisData analysisData) {
+        super("Score", new XYGraphData(extractSeries(reversiData, analysisData)));
         setPreferredSize(new Dimension(200, 100));
         interior().setBackground(Color.GRAY);
-        setSeriesColors(Color.BLACK, Color.WHITE);
-        reversiData.addListener(new MyListener(reversiData));
+        setSeriesColors(Color.BLACK, Color.WHITE, Color.BLUE);
+        final MyListener listener = new MyListener(reversiData, analysisData);
+        reversiData.addListener(listener);
+        analysisData.addListener(listener);
         yAxis().setMinSegments(3);
         yAxis().setRequiredRange(new Range(-2, 2));
     }
 
-    static List<ListXYSeries> extractSeries(ReversiData reversiData) {
+    /**
+     * Get graph data from a list of moves, appending analysisData if it exists.
+     *
+     * @param reversiData  evaluations from the game
+     * @param analysisData evaluations from the analysis engine
+     * @return complete list of evaluations.
+     */
+    static List<XYSeries> extractSeries(ReversiData reversiData, AnalysisData analysisData) {
         final COsGame game = reversiData.getGame();
-        return extractSeries(game.getMoveList(), game.posStart.board.isBlackMove());
+        final ArrayList<XYSeries> serieses = new ArrayList<XYSeries>(extractSeries(game.getMoveList(), game.posStart.board.isBlackMove()));
+        if (analysisData.hasData()) {
+            serieses.add(analysisData);
+        }
+        return serieses;
     }
 
     /**
@@ -61,18 +74,25 @@ class EvalGraph extends XYGraph {
             }
             blackToMove = !blackToMove;
         }
+
         return Arrays.asList(black, white);
     }
 
-    private class MyListener implements SignalListener<OsMoveListItem> {
+    private class MyListener implements SignalListener<OsMoveListItem>, AnalysisData.Listener {
         private final ReversiData reversiData;
+        private final AnalysisData analysisData;
 
-        private MyListener(ReversiData reversiData) {
+        private MyListener(ReversiData reversiData, AnalysisData analysisData) {
             this.reversiData = reversiData;
+            this.analysisData = analysisData;
         }
 
         @Override public void handleSignal(OsMoveListItem data) {
-            getGraphData().setSeries(extractSeries(reversiData));
+            dataChanged();
+        }
+
+        @Override public void dataChanged() {
+            getGraphData().setSeries(extractSeries(reversiData, analysisData));
         }
     }
 }
