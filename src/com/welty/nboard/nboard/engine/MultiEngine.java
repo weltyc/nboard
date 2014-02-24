@@ -37,6 +37,10 @@ public class MultiEngine implements StatelessEngine {
         engine.learn(pingPong, state);
     }
 
+    @Override public synchronized void analyze(PingPong pingPong, NBoardState state) {
+        engine.analyze(pingPong, state);
+    }
+
     @Override public synchronized void requestHints(PingPong pingPong, NBoardState state, int nMoves) {
         engine.requestHints(pingPong, state, nMoves);
     }

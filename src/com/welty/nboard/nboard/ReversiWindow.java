@@ -519,6 +519,13 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         // set up the Engine menu
         JMenu menu = new JMenu();
 
+        menu.add(menuItem("Analyze Game").build(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                requestAnalysis();
+            }
+        }));
+        menu.addSeparator();
+
         // top n list
         engineTop = new RadioGroup(menu, "Engine/Top", 2, shutdownHooks,
                 menuItem("Value >=1 move").buildRadioButton(engineUpdater),
@@ -786,8 +793,15 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      * Also update the hints afterwards.
      */
     public void TellEngineToLearn() {
-        // Tell the engine to learn the game
-        analysisEngine.learn(new NBoardState(reversiData.getGame(), getMaxAnalysisDepth(), getContempt()));
+        opposingEngine.learn(new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt()));
+        // reset the stored review point. The engine will update hints as a result.
+        TellEngineWhatToDo();
+    }
+
+    public void requestAnalysis() {
+        // Clear the existing analysis
+        analysisData.clearData();
+        analysisEngine.requestAnalysis(new NBoardState(reversiData.getGame(), getMaxAnalysisDepth(), getContempt()));
 
         // reset the stored review point. The engine will update hints as a result.
         TellEngineWhatToDo();

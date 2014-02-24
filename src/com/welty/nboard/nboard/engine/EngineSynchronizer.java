@@ -68,6 +68,12 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
         multiEngine.learn(pingPong, state);
     }
 
+    @Override public void requestAnalysis(@NotNull NBoardState state) {
+        verifyEdt();
+        System.out.println("> (" + name + ") analyze");
+        multiEngine.analyze(pingPong, state);
+    }
+
     @Override public boolean isReady() {
         verifyEdt();
         return multiEngine.isReady();

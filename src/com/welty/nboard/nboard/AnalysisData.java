@@ -17,6 +17,10 @@ public class AnalysisData extends ListenerManager<AnalysisData.Listener> impleme
 
     public void put(int moveNumber, double eval) {
         scores.put(moveNumber, eval);
+        fireDataChanged();
+    }
+
+    private void fireDataChanged() {
         for (Listener listener : getListeners()) {
             listener.dataChanged();
         }
@@ -39,6 +43,11 @@ public class AnalysisData extends ListenerManager<AnalysisData.Listener> impleme
 
     public boolean hasData() {
         return !scores.isEmpty();
+    }
+
+    public void clearData() {
+        scores.clear();
+        fireDataChanged();
     }
 
     public interface Listener {

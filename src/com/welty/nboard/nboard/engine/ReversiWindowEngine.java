@@ -19,7 +19,15 @@ public interface ReversiWindowEngine {
      */
     boolean isReady();
 
+    /**
+     * Tell the engine that it should learn the game (add it to book).
+     */
     void learn(@NotNull NBoardState state);
+
+    /**
+     * Request a retrograde game analysis from the engine
+     */
+    void requestAnalysis(@NotNull NBoardState state);
 
     void requestHints(@NotNull NBoardState state, int nHints);
 
