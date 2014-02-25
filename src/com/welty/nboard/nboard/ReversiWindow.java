@@ -97,7 +97,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private RadioGroup engineTop;
     private final GgfFileChooser chooser;
     private final StartPositionManager startPositionManager;
-    private final AnalysisData analysisData = new AnalysisData();
+    private final AnalysisData analysisData;
 
 
     ReversiWindow() {
@@ -106,6 +106,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
 
         reversiData = new ReversiData(this, this);
+        analysisData = new AnalysisData(reversiData);
+
         gameSelectionWindow = new GameSelectionWindow(this);
         final DatabaseUiPack dbPack = new DatabaseUiPack(this, reversiData);
         databaseTableModel = dbPack.tableModel;
@@ -487,7 +489,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 menuItem("&Analyze Position").buildRadioButton(modeSetter),
                 menuItem("User plays &Black").buildRadioButton(modeSetter),
                 menuItem("User plays &White").buildRadioButton(modeSetter),
-                menuItem("&Engine plays both").buildRadioButton(modeSetter)
+                menuItem("&Engine self-play").buildRadioButton(modeSetter)
         ) {
             @Override public int readIndex() {
                 // it's really annoying to have engine/engine matches on startup. Switch to user/user in this case

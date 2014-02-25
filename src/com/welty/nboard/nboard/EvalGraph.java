@@ -25,7 +25,7 @@ import java.util.List;
  */
 class EvalGraph extends XYGraph {
     EvalGraph(ReversiData reversiData, AnalysisData analysisData) {
-        super("Score", new XYGraphData(extractSeries(reversiData, analysisData)));
+        super("Score", new XYGraphData(extractAllSeries(reversiData, analysisData)));
         setPreferredSize(new Dimension(200, 100));
         interior().setBackground(Color.GRAY);
         setSeriesColors(Color.BLACK, Color.WHITE, Color.BLUE);
@@ -43,7 +43,7 @@ class EvalGraph extends XYGraph {
      * @param analysisData evaluations from the analysis engine
      * @return complete list of evaluations.
      */
-    static List<XYSeries> extractSeries(ReversiData reversiData, AnalysisData analysisData) {
+    static List<XYSeries> extractAllSeries(ReversiData reversiData, AnalysisData analysisData) {
         final COsGame game = reversiData.getGame();
         final ArrayList<XYSeries> serieses = new ArrayList<XYSeries>(extractSeries(game.getMoveList(), game.posStart.board.isBlackMove()));
         if (analysisData.hasData()) {
@@ -93,7 +93,7 @@ class EvalGraph extends XYGraph {
 
         @Override public void dataChanged() {
             final XYGraphData graphData = getGraphData();
-            graphData.setSeries(extractSeries(reversiData, analysisData));
+            graphData.setSeries(extractAllSeries(reversiData, analysisData));
             graphData.setCursor(reversiData.IMove());
         }
     }
