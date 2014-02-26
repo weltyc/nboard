@@ -208,7 +208,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         menuBar.add(createMenuItem("&View", createViewMenu()));
         menuBar.add(createMenuItem("E&ngine", createEngineMenu()));
         menuBar.add(createMenuItem("&Analysis", createAnalysisMenu()));
-        menuBar.add(createMenuItem("&Games", createGamesMenu(startPositionManager)));
+        menuBar.add(createMenuItem("&Start", createGamesMenu(startPositionManager)));
         menuBar.add(createMenuItem("&Database", createThorMenu()));
 
         return menuBar;

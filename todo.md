@@ -23,6 +23,8 @@ H21  X   Clock is not decreasing when internal engine self-plays, even though ti
 H22  X   Node stats do not display during solve.
 H23  X   SetUpBoard does not accept keyboard input second time around
 H24  X   Node stats do not display when engine moves (rather than hints)
+H25  X   Internal engine dies in endgame
+H26  X   Vegtbl returning non-integer evals from solved positions. Occurs even from 1 empty.
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key
@@ -55,6 +57,7 @@ L28  X   Hint depth incorrect when not using SOLVER_START_HEIGHT
 L29  X   Don't decrement clock in analysis mode
 L28a X   When database window is resized the games grid should also resize
 L29b X   Time graph should include 0 on the y-axis
+L30      Support analysis command in external engines
 
 CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
