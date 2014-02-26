@@ -124,7 +124,14 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
 
         @Override public void handle(@NotNull NBoardResponse nBoardResponse) {
             if (debug) {
-                System.out.println("< (" + name + ")" + nBoardResponse);
+                final String text;
+                if (nBoardResponse instanceof StatusChangedResponse) {
+                    text = "set status " + multiEngine.getStatus();
+                }
+                else {
+                    text = "" + nBoardResponse;
+                }
+                System.out.println("< (" + name + ")" + text);
             }
             SwingUtilities.invokeLater(new ResponseRunner(nBoardResponse));
         }
