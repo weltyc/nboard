@@ -366,8 +366,8 @@ public class ReversiData implements BoardSource {
         }
     }
 
-    private boolean looksLikeBoard(String compressed) {
-        return "OX*0-._".contains(compressed.substring(0, 1));
+    static boolean looksLikeBoard(String compressed) {
+        return !compressed.isEmpty() && "OX*0-._".contains(compressed.substring(0, 1));
     }
 
     private static boolean looksLikeMoveList(String compressed) {

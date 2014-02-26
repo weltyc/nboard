@@ -98,6 +98,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private final GgfFileChooser chooser;
     private final StartPositionManager startPositionManager;
     private final AnalysisData analysisData;
+    private final PingPong pingPong;
 
 
     ReversiWindow() {
@@ -131,7 +132,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         Grid moveList = new MoveList(reversiData);
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
-        final PingPong pingPong = new PingPong();
+        pingPong = new PingPong();
         opposingEngine = new EngineSynchronizer("opponent", pingPong, opponentSelector, this);
         analysisEngine = new EngineSynchronizer("analysis", pingPong, analysisSelector, this);
 
@@ -824,8 +825,11 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             boolean isHint;
 
             if (reversiData.DisplayedPosition().board.isGameOver()) {
-                // do nothing. learning is handled in the Update function now to ensure
+                // The engine should do nothing. learning is handled in the Update function now to ensure
                 // that the engine is learning the right game, and learning it just once.
+                // However, we need to update the PingPong so we don't update the gui with hints relating to the
+                // previous position.
+                pingPong.next();
                 return;
             }
             // If the user is reviewing the game, the computer gives hints
