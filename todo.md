@@ -93,7 +93,7 @@ F27  X   Internal engines shouldn't time out during games
 F28      After a hint session is complete, remove moves from the previous ply
 F27a X   Titles for graph window
 F28a X   Analyze game and add to graph
-F29      Internal engines should report node stats more frequently
+F29  X   Internal engines should report node stats more frequently
 F30  X   Clocks with < 1 minute left should display as 0:ss
 
 Before release:
