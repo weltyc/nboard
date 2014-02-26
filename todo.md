@@ -57,7 +57,7 @@ L28  X   Hint depth incorrect when not using SOLVER_START_HEIGHT
 L29  X   Don't decrement clock in analysis mode
 L28a X   When database window is resized the games grid should also resize
 L29b X   Time graph should include 0 on the y-axis
-L30      Support analysis command in external engines
+L30  X   Support analysis command in external engines
 
 CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
