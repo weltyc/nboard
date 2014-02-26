@@ -1,7 +1,6 @@
 package com.welty.nboard.nboard.selector;
 
 import com.orbanova.common.jsb.JsbGridLayout;
-import com.welty.novello.eval.SimpleEval;
 import com.welty.othello.api.OpponentSelection;
 import com.welty.othello.api.OpponentSelector;
 import com.welty.othello.gui.ExternalEngineManager;
@@ -9,7 +8,7 @@ import com.welty.othello.gui.prefs.PrefInt;
 import com.welty.othello.gui.prefs.PrefString;
 import com.welty.othello.gui.selector.EngineSelector;
 import com.welty.othello.gui.selector.ExternalEngineSelector;
-import com.welty.othello.gui.selector.InternalEngineSelector;
+import com.welty.othello.gui.selector.InternalEngineSelectorManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -17,7 +16,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.BackingStoreException;
 
@@ -30,24 +28,6 @@ public class GuiOpponentSelector extends OpponentSelector {
 
     private final PrefInt levelPref;
     private final PrefString enginePref;
-
-    /**
-     * Create a list of internal opponent selectors
-     *
-     * @return the list
-     */
-    public static List<EngineSelector> internalOpponentSelectors(boolean includeWeakEngines) {
-        final ArrayList<EngineSelector> selectors = new ArrayList<>();
-
-        if (includeWeakEngines) {
-            for (String name : SimpleEval.getEvalNames()) {
-                selectors.add(new InternalEngineSelector(name));
-            }
-        }
-        selectors.add(new InternalEngineSelector("Vegtbl", true, "ntestJ", ""));
-
-        return selectors;
-    }
 
 
     private final JDialog frame;
@@ -69,7 +49,7 @@ public class GuiOpponentSelector extends OpponentSelector {
     public GuiOpponentSelector(String windowTitle, boolean includeWeakEngines, String preferencePrefix) {
         levelPref = new PrefInt(GuiOpponentSelector.class, preferencePrefix + "Level", includeWeakEngines ? 1 : 12);
         enginePref = new PrefString(GuiOpponentSelector.class, preferencePrefix + "Opponent", includeWeakEngines ? "Abigail" : "Vegtbl");
-        engineListModel = new EngineListModel(internalOpponentSelectors(includeWeakEngines));
+        engineListModel = new EngineListModel(InternalEngineSelectorManager.internalOpponentSelectors(includeWeakEngines));
 
         // Level selection list box.
         // Need to create this before Opponent selection list box because the
