@@ -205,8 +205,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         menuBar.add(createMenuItem("&File", createFileMenu()));
         menuBar.add(createMenuItem("&Edit", createEditMenu()));
+        menuBar.add(createMenuItem("&Game", createEngineMenu()));
         menuBar.add(createMenuItem("&View", createViewMenu()));
-        menuBar.add(createMenuItem("E&ngine", createEngineMenu()));
         menuBar.add(createMenuItem("&Analysis", createAnalysisMenu()));
         menuBar.add(createMenuItem("&Start", createGamesMenu(startPositionManager)));
         menuBar.add(createMenuItem("&Database", createThorMenu()));
@@ -304,13 +304,13 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             }
         }));
         m_editMenu.addSeparator();
-        m_editMenu.add(menuItem("Copy &Move List\tCtrl+C").build(new ActionListener() {
+        m_editMenu.add(menuItem("Copy &Moves\tCtrl+C").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 SetClipboardText(reversiData.getGame().getMoveList().toMoveListString());
             }
         }));
 
-        m_editMenu.add(menuItem("&Copy Game\tCtrl+Shift+C").build(new ActionListener() {
+        m_editMenu.add(menuItem("Copy &Game\tCtrl+Shift+C").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 SetClipboardText(reversiData.getGame().toString());
             }
@@ -415,7 +415,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 }
             }
         }));
-        m_fileMenu.add(menuItem("&Open\tCtrl+O").build(new ActionListener() {
+        m_fileMenu.add(menuItem("&Open...\tCtrl+O").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // note: We continue to receive windows messages in the GetOpenFilename() function.
                 final File file = chooser.open();
@@ -424,12 +424,12 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 }
             }
         }));
-        m_fileMenu.add(menuItem("&Save\tCtrl+S").build(new ActionListener() {
+        m_fileMenu.add(menuItem("&Save...\tCtrl+S").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Save(false);
             }
         }));
-        m_fileMenu.add(menuItem("&Append\tCtrl+A").build(new ActionListener() {
+        m_fileMenu.add(menuItem("&Append...\tCtrl+A").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Save(true);
             }
@@ -489,7 +489,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 menuItem("&Analyze Position").buildRadioButton(modeSetter),
                 menuItem("User plays &Black").buildRadioButton(modeSetter),
                 menuItem("User plays &White").buildRadioButton(modeSetter),
-                menuItem("&Engine self-play").buildRadioButton(modeSetter)
+                menuItem("&Engine plays itself").buildRadioButton(modeSetter)
         ) {
             @Override public int readIndex() {
                 // it's really annoying to have engine/engine matches on startup. Switch to user/user in this case
