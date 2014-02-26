@@ -25,6 +25,7 @@ H23  X   SetUpBoard does not accept keyboard input second time around
 H24  X   Node stats do not display when engine moves (rather than hints)
 H25  X   Internal engine dies in endgame
 H26  X   Vegtbl returning non-integer evals from solved positions. Occurs even from 1 empty.
+H27  X   Click in move grid is performing the wrong move
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key

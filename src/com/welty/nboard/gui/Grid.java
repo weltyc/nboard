@@ -146,11 +146,14 @@ public abstract class Grid extends JScrollPane {
 
     /**
      * The mouse was clicked in the given grid location
+     * <p/>
+     * To convert view row to model row, use table.convertRowIndexToModel(viewRow);
+     * likewise for cols
      *
-     * @param row table row the mouse was clicked in, or -1 if the user clicked outside the row range.
-     * @param col table column the mouse was clicked in, or -1 if the user clicked outside the col range.
+     * @param viewRow table row the mouse was clicked in, or -1 if the user clicked outside the row range.
+     * @param viewCol table column the mouse was clicked in, or -1 if the user clicked outside the viewCol range.
      */
-    protected void onMouseClick(int row, int col) {
+    protected void onMouseClick(int viewRow, int viewCol) {
     }
 
     private class MyMouseAdapter extends MouseAdapter {
@@ -161,9 +164,9 @@ public abstract class Grid extends JScrollPane {
         }
 
         @Override public void mousePressed(MouseEvent e) {
-            final int row = jTable.rowAtPoint(e.getPoint());
-            final int col = jTable.columnAtPoint(e.getPoint());
-            onMouseClick(row, col);
+            final int viewRow = jTable.rowAtPoint(e.getPoint());
+            final int viewCol = jTable.columnAtPoint(e.getPoint());
+            onMouseClick(viewRow, viewCol);
         }
     }
 

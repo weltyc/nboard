@@ -75,9 +75,10 @@ public class MoveGrid extends Grid {
         return ((MoveGridTableModel) getTable().getModel());
     }
 
-    @Override protected void onMouseClick(int row, int col) {
-        if (row >= 0) {
-            final OsMove mv = getModel().getMove(row);
+    @Override protected void onMouseClick(int viewRow, int viewCol) {
+        if (viewRow >= 0) {
+            final int modelRow = getTable().convertRowIndexToModel(viewRow);
+            final OsMove mv = getModel().getMove(modelRow);
             reversiData.update(new OsMoveListItem(mv), true);
         }
     }

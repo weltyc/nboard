@@ -60,12 +60,12 @@ public class MoveList extends Grid {
         });
     }
 
-    @Override protected void onMouseClick(int row, int col) {
-        System.out.println("mouse clicked at " + row + ", " + col);
-        if (col >= 1) {
+    @Override protected void onMouseClick(int viewRow, int viewCol) {
+        System.out.println("mouse clicked at " + viewRow + ", " + viewCol);
+        if (viewCol >= 1) {
             final int iMove;
-            if (row >= 0) {
-                iMove = Math.min(boardSource.nMoves(), row * 2 + (col > 2 ? 1 : 0));
+            if (viewRow >= 0) {
+                iMove = Math.min(boardSource.nMoves(), viewRow * 2 + (viewCol > 2 ? 1 : 0));
             } else {
                 iMove = boardSource.nMoves();
             }
