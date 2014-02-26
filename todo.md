@@ -96,7 +96,7 @@ F28a X   Analyze game and add to graph
 F29      Internal engines should report node stats more frequently
 
 Before release:
-BR1      Update NBoard Protocol documentation
+BR1  X   Update NBoard Protocol documentation
 BR2      Fix Engine display names
 BR3      Log engine communication to debugLog.txt instead of System.out (in ProcessLogger).
 
