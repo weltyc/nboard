@@ -14,25 +14,21 @@ import static com.welty.nboard.thor.ThorOpeningMap.OpeningCodeFromGgf;
 import static com.welty.nboard.thor.ThorOpeningMap.OpeningName;
 
 /**
- * Created by IntelliJ IDEA.
- * User: HP_Administrator
- * Date: Jun 20, 2009
- * Time: 9:33:29 AM
- * To change this template use File | Settings | File Templates.
+ * Panel that displays the move buttons and the opening name
  */
-class StatusBar extends JPanel {
-    private final ReversiData m_pd;
+class NavigationBar extends JPanel {
+    private final ReversiData reversiData;
     private final JLabel openingField = new JLabel();
 
     private static final int preferredHeight = 24;
     private static final int openingWidth = 120;
 
-    StatusBar(ReversiData d) {
-        m_pd = d;
-        m_pd.addListener(new SignalListener<OsMoveListItem>() {
+    NavigationBar(ReversiData reversiData) {
+        this.reversiData = reversiData;
+        this.reversiData.addListener(new SignalListener<OsMoveListItem>() {
 
             public void handleSignal(OsMoveListItem data) {
-                final String sGgfGame = m_pd.getGame().toString();
+                final String sGgfGame = NavigationBar.this.reversiData.getGame().toString();
                 final int openingCode = OpeningCodeFromGgf(sGgfGame);
                 openingField.setText(OpeningName(openingCode));
             }
@@ -44,6 +40,7 @@ class StatusBar extends JPanel {
 
         createOpeningField();
         add(openingField, BorderLayout.LINE_END);
+        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
     }
 
     private void createOpeningField() {
@@ -58,22 +55,22 @@ class StatusBar extends JPanel {
         flowLayout.setHgap(0);
         addButton(buttonPanel, "first", KeyEvent.VK_UP, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                m_pd.First();
+                reversiData.First();
             }
         });
         addButton(buttonPanel, "undo", KeyEvent.VK_LEFT, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                m_pd.Undo();
+                reversiData.Undo();
             }
         });
         addButton(buttonPanel, "redo", KeyEvent.VK_RIGHT, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                m_pd.Redo();
+                reversiData.Redo();
             }
         });
         addButton(buttonPanel, "last", KeyEvent.VK_DOWN, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                m_pd.Last();
+                reversiData.Last();
             }
         });
         return buttonPanel;

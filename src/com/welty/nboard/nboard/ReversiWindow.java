@@ -143,7 +143,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         final JPanel enginePanel = createEnginePanel(nodeCountPanel);
 
         JComponent leftPanel = vBox(
-                new StatusBar(reversiData),
+                new NavigationBar(reversiData),
                 new ScoreWindow(reversiData, this),
                 boardPanel = new ReversiBoard(reversiData, this, m_hints),
                 enginePanel,
@@ -721,7 +721,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     }
 
     @Override public boolean isAnalyzing() {
-        return mode.getIndex()==0;
+        return mode.getIndex() == 0;
     }
 
     @NotNull @Override public StartPosition getStartPosition() {
@@ -785,7 +785,6 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private int getMaxAnalysisDepth() {
         return analysisSelector.getOpponent().getMaxDepth();
     }
-
 
 
     /**
