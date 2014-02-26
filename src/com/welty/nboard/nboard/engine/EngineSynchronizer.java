@@ -64,13 +64,13 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
 
     @Override public void learn(@NotNull NBoardState state) {
         verifyEdt();
-        System.out.println("> (" + name + ") learn");
+        System.out.println("<< (" + name + ") learn");
         multiEngine.learn(pingPong, state);
     }
 
     @Override public void requestAnalysis(@NotNull NBoardState state) {
         verifyEdt();
-        System.out.println("> (" + name + ") analyze");
+        System.out.println("<< (" + name + ") analyze");
         multiEngine.analyze(pingPong, state);
     }
 
@@ -81,11 +81,13 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
 
     @Override public void requestHints(@NotNull NBoardState state, int nHints) {
         verifyEdt();
+        System.out.println("<< (" + name + ") hint " + nHints);
         multiEngine.requestHints(pingPong, state, nHints);
     }
 
     @Override public void requestMove(@NotNull NBoardState state) {
         verifyEdt();
+        System.out.println("<< (" + name + ") go");
         multiEngine.requestMove(pingPong, state);
     }
 
@@ -124,7 +126,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
 
         @Override public void handle(@NotNull NBoardResponse nBoardResponse) {
             if (debug) {
-                System.out.println("< (" + name + ")" + nBoardResponse);
+                System.out.println(">> (" + name + ")" + nBoardResponse);
             }
             SwingUtilities.invokeLater(new ResponseRunner(nBoardResponse));
         }
