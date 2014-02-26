@@ -86,7 +86,7 @@ F23  X   Threading on internal engines
 F24  X   Enter Transcript command
 F25  X   Display PV in move grid
 F26  X   Iterative deepening in internal engine hints
-F27      Internal engines shouldn't time out during games
+F27  X   Internal engines shouldn't time out during games
 F28      After a hint session is complete, remove moves from the previous ply
 F27a X   Titles for graph window
 F28a X   Analyze game and add to graph
