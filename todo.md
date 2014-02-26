@@ -94,10 +94,11 @@ F28      After a hint session is complete, remove moves from the previous ply
 F27a X   Titles for graph window
 F28a X   Analyze game and add to graph
 F29      Internal engines should report node stats more frequently
+F30  X   Clocks with < 1 minute left should display as 0:ss
 
 Before release:
 BR1  X   Update NBoard Protocol documentation
-BR2      Fix Engine display names
+BR2  X   Fix Engine display names
 BR3      Log engine communication to debugLog.txt instead of System.out (in ProcessLogger).
 
 FL1      GGF Load progress window should display progress while reading from disk in addition to parsing games

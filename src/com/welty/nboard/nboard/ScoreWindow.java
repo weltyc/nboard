@@ -124,7 +124,7 @@ class ScoreWindow extends JPanel {
             // spacer
             add(new JLabel(""));
 
-            this.clock = new JLabel(clock.toString());
+            this.clock = new JLabel(clock.toDisplayString());
             add(this.clock);
 
             spacing(3, 0);
@@ -143,7 +143,7 @@ class ScoreWindow extends JPanel {
         }
 
         public void setClock(OsClock clock) {
-            this.clock.setText(clock.toString());
+            this.clock.setText(clock.toDisplayString());
         }
     }
 }
