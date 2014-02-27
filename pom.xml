@@ -61,7 +61,7 @@
                     </archive>
                 </configuration>
             </plugin>
-           <plugin>
+            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.2.1</version>
                 <configuration>
@@ -100,12 +100,12 @@
                 </executions>
                 <configuration>
                     <proguardVersion>4.8</proguardVersion>
-                    <obfuscate>true</obfuscate>
+                    <obfuscate>false</obfuscate>
                     <options>
                         <option>-allowaccessmodification</option>
                         <option>-dontskipnonpubliclibraryclasses</option>
-                        <option>-keep public class com.welty.nboard.nboard.NBoard { public *; public static *; }
-                        </option>
+                        <option>-optimizations !code/allocation/variable</option>
+                        <option>-keep public class com.welty.nboard.nboard.NBoard { public *; public static *; }</option>
                     </options>
                     <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
                     <inFilter>!**/Luthor.luth,!**/package.html,!*.properties</inFilter>
