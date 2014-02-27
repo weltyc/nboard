@@ -100,6 +100,7 @@ F30  X   Clocks with < 1 minute left should display as 0:ss
 F31  X   Notify user if running a 32-bit JVM
 F32  X   About box with contact info and copyright notice
 F33  X   Get proguard working
+F34  X   Remove JetBrains @NotNull assertions from proguard jar
 
 Before release:
 BR1  X   Update NBoard Protocol documentation

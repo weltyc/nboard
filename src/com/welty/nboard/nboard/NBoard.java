@@ -83,6 +83,7 @@ public class NBoard {
         final JLabel label = new JLabel();
         label.setPreferredSize(new Dimension(width, 18));
         label.setFont(label.getFont().deriveFont(0));
+        //noinspection MagicConstant
         label.setHorizontalAlignment(alignment);
         return label;
     }
