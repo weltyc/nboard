@@ -2,7 +2,6 @@ package com.welty.nboard.nboard;
 
 import com.orbanova.common.misc.Require;
 import com.welty.othello.gdk.COsBoard;
-import com.welty.othello.util.CheckThreadViolationRepaintManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +19,12 @@ public class NBoard {
     private static final String sRegKey = "/Software/Welty/NBoard/";
 
     public static void main(final String[] args) {
-        CheckThreadViolationRepaintManager.install();
+        final String jvmBits = System.getProperty("sun.arch.data.model");
+        if (jvmBits.equals("32")) {
+            final String msg = "You are running on a 32-bit JVM.\nNBoard will run 3x faster if you use a 64-bit JVM.";
+            JOptionPane.showMessageDialog(null, msg, "runtime info", JOptionPane.WARNING_MESSAGE);
+        }
+//        CheckThreadViolationRepaintManager.install();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI(args);
