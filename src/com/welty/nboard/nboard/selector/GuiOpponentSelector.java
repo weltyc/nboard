@@ -104,7 +104,7 @@ public class GuiOpponentSelector extends OpponentSelector {
             }
         });
 
-        frame = new JDialog(null, "Select Opponent", Dialog.ModalityType.APPLICATION_MODAL);
+        frame = new JDialog(null,  windowTitle, Dialog.ModalityType.APPLICATION_MODAL);
         frame.setLayout(new JsbGridLayout(1));
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         frame.add(

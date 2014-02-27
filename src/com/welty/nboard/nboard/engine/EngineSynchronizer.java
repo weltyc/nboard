@@ -3,7 +3,7 @@ package com.welty.nboard.nboard.engine;
 import com.orbanova.common.misc.Require;
 import com.welty.othello.api.*;
 import com.welty.othello.core.CMove;
-import com.welty.othello.gui.selector.InternalEngineSelector;
+import com.welty.othello.gui.selector.InternalEngineSelectorManager;
 import com.welty.othello.protocol.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,10 +32,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
     private final String name;
 
     /**
-     * @param name
      * @param pingPong         The one global PingPong, needed because multiple EngineSynchronizers may share an engine
-     * @param opponentSelector
-     * @param listener
      */
     public EngineSynchronizer(String name, PingPong pingPong, OpponentSelector opponentSelector, ReversiWindowEngine.Listener listener) {
         this.pingPong = pingPong;
@@ -53,7 +50,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
         try {
             return opponentSelector.getOpponent().getOrCreateEngine(responseHandler);
         } catch (IOException e) {
-            return new InternalEngineSelector("Abigail").createPingEngine(1, responseHandler);
+            return InternalEngineSelectorManager.ABIGAIL.createPingEngine(1, responseHandler);
         }
     }
 
@@ -100,7 +97,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
             listener.status(multiEngine.getStatus());
         } catch (IOException e) {
             // keep using the existing engine.
-            listener.engineError("Unable to start up " + opponent + ": " + e, "");
+            listener.engineError("Unable to start up " + opponent + "\n" + e, "");
         }
     }
 

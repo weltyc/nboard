@@ -983,7 +983,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     }
 
     @Override public void engineError(String message, String comment) {
-        warn("Engine communication error", "received \"" + message + "\"\n\n" + comment);
+        warn("Engine communication error", message + "\n\n" + comment);
     }
 
     public void repaint() {
