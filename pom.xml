@@ -100,21 +100,15 @@
                 </executions>
                 <configuration>
                     <proguardVersion>4.8</proguardVersion>
-                    <obfuscate>false</obfuscate>
+                    <obfuscate>true</obfuscate>
                     <options>
                         <option>-allowaccessmodification</option>
                         <option>-dontskipnonpubliclibraryclasses</option>
                         <option>-keep public class com.welty.nboard.nboard.NBoard { public *; public static *; }
                         </option>
-                        <option>-keep public class com.welty.othello.deploy.DeployerGui { public *; public static *; }
-                        </option>
-                        <option>-keep public class com.welty.othello.auto.Ggs { public *; public static *; }
-                        </option>
-                        <option>-optimizations !code/allocation/variable
-                        </option>
                     </options>
                     <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
-                    <inFilter>!**/Luthor.luth,!**/package.html</inFilter>
+                    <inFilter>!**/Luthor.luth,!**/package.html,!*.properties</inFilter>
                     <outjar>nboard.jar</outjar>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                     <libs>
