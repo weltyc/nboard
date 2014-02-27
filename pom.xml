@@ -100,11 +100,11 @@
                 </executions>
                 <configuration>
                     <proguardVersion>4.8</proguardVersion>
-                    <obfuscate>false</obfuscate>
+                    <obfuscate>true</obfuscate>
                     <options>
                         <option>-allowaccessmodification</option>
                         <option>-dontskipnonpubliclibraryclasses</option>
-                        <option>-optimizations !code/allocation/variable</option>
+                        <option>-adaptresourcefilenames **.txt,**.html,**.cof</option>
                         <option>-keep public class com.welty.nboard.nboard.NBoard { public *; public static *; }</option>
                     </options>
                     <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
