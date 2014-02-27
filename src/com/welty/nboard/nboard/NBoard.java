@@ -19,11 +19,6 @@ public class NBoard {
     private static final String sRegKey = "/Software/Welty/NBoard/";
 
     public static void main(final String[] args) {
-        final String jvmBits = System.getProperty("sun.arch.data.model");
-        if (jvmBits.equals("32")) {
-            final String msg = "You are running on a 32-bit JVM.\nNBoard will run 3x faster if you use a 64-bit JVM.";
-            JOptionPane.showMessageDialog(null, msg, "runtime info", JOptionPane.WARNING_MESSAGE);
-        }
 //        CheckThreadViolationRepaintManager.install();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -33,6 +28,7 @@ public class NBoard {
     }
 
     private static void createAndShowGUI(String[] args) {
+
         // todo associate .ggf files with this executable
         // Z::AssociateFileType(".ggf", "ggf_games", "GGF Games", sMFN+",101", sMFN+" %1");
 

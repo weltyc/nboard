@@ -147,7 +147,10 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 new NavigationBar(reversiData),
                 new ScoreWindow(reversiData, this),
                 boardPanel = new ReversiBoard(reversiData, this, m_hints),
-                enginePanel,
+                enginePanel
+                );
+        addGoFasterButton(leftPanel);
+        leftPanel.add(
                 hBox(
                         new EvalGraph(reversiData, analysisData), new TimeGraph(reversiData)
                 ).spacing(3).border(3)
@@ -184,6 +187,26 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         needsLove = true;
 
         TellEngineWhatToDo();
+    }
+
+    private static void addGoFasterButton(JComponent leftPanel) {
+        //        final Frame goFasterWindow = frame("Go Faster", JFrame.HIDE_ON_CLOSE, false, textArea(false, ))
+        final String jvmBits = System.getProperty("sun.arch.data.model");
+        if (jvmBits.equals("32")) {
+            final JButton button = button(new AbstractAction("Go Faster") {
+                @Override public void actionPerformed(ActionEvent e) {
+//                    goFasterWindow.setVisible(true);
+                    JOptionPane.showMessageDialog(null, "<html>You are using 32-bit Java. <p>" +
+                            "NBoard will run 3x faster when running 64-bit Java. To speed it up,</p>" +
+                            "<ol><li>Download 64-bit Java</li>" +
+                            "<li>If you start NBoard by double-clicking, set the .jar file association to the new Java</li>" +
+                            "<li>If you start NBoard from the command line, replace the old Java in your PATH.</li></ol>" +
+                            "If you are using 64-bit Java, the 'Go Faster' button will not appear.</html>");
+                }
+            });
+            button.setAlignmentX(1.f);
+            leftPanel.add(button);
+        }
     }
 
     private JPanel createEnginePanel(NodeCountPanel nodeCountPanel) {
