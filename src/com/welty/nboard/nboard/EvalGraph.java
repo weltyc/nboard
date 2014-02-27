@@ -1,10 +1,10 @@
 package com.welty.nboard.nboard;
 
-import com.welty.graph.x.Range;
-import com.welty.graph.xy.ListXYSeries;
-import com.welty.graph.xy.XYGraph;
-import com.welty.graph.xy.XYGraphData;
-import com.welty.graph.xy.XYSeries;
+import com.orbanova.common.graph.x.Range;
+import com.orbanova.common.graph.xy.ListXYSeries;
+import com.orbanova.common.graph.xy.XYGraph;
+import com.orbanova.common.graph.xy.XYGraphData;
+import com.orbanova.common.graph.xy.XYSeries;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMoveList;

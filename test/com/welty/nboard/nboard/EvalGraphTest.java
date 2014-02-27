@@ -1,6 +1,6 @@
 package com.welty.nboard.nboard;
 
-import com.welty.graph.xy.ListXYSeries;
+import com.orbanova.common.graph.xy.ListXYSeries;
 import com.welty.othello.gdk.COsMoveList;
 import com.welty.othello.gdk.OsMoveListItem;
 import junit.framework.TestCase;

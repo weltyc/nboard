@@ -14,10 +14,10 @@ com.orbanova.common.clock.Clock -> a:
     void finite(double) -> a
     void inRange(java.lang.String,double,java.lang.String,double,double) -> a
     boolean isOdd(int) -> a
-    com.welty.graph.x.AxisData autoRange(com.welty.graph.x.Range,int) -> a
-    double nBits(com.welty.graph.x.Range,double) -> a
-    long bottom(com.welty.graph.x.Range,double) -> b
-    long top(com.welty.graph.x.Range,double) -> c
+    AxisData autoRange(Range,int) -> a
+    double nBits(Range,double) -> a
+    long bottom(Range,double) -> b
+    long top(Range,double) -> c
     java.util.ArrayList ThorLoadGames(java.lang.String,com.welty.nboard.thor.IndeterminateProgressTracker) -> a
     java.util.ArrayList ThorLoadStrings(java.lang.String,int) -> a
     int MatchesReflections(com.welty.othello.core.CBitBoard,com.welty.othello.core.CBitBoard[]) -> a
@@ -273,51 +273,51 @@ com.welty.c.CBinaryReader -> K:
     void close() -> b
     short readShort() -> c
     int available() -> d
-com.welty.graph.InteriorRenderer -> L:
+InteriorRenderer -> L:
     java.awt.Color background -> a
-com.welty.graph.Style -> M:
-    void plotSeries(java.awt.Graphics2D,com.welty.graph.x.AffineFunction,com.welty.graph.x.AffineFunction,java.awt.Color,java.util.List) -> a
-com.welty.graph.cy.BarCore -> N:
-    com.welty.graph.x.AxisRenderer yAxisRenderer -> a
-    com.welty.graph.cy.CategoryRenderer dataRenderer -> b
-    com.welty.graph.cy.CategoryGraphData graphData -> c
-    com.welty.graph.InteriorRenderer interior -> d
+Style -> M:
+    void plotSeries(java.awt.Graphics2D,AffineFunction,AffineFunction,java.awt.Color,java.util.List) -> a
+BarCore -> N:
+    AxisRenderer yAxisRenderer -> a
+    CategoryRenderer dataRenderer -> b
+    CategoryGraphData graphData -> c
+    InteriorRenderer interior -> d
     java.awt.Color[] defaultColors -> e
     java.awt.Color[] colors -> f
-    com.welty.graph.cy.CategoryGraphData getGraphData() -> a
+    CategoryGraphData getGraphData() -> a
     void paintComponent(java.awt.Graphics) -> paintComponent
     void setSeriesColors(java.awt.Color[]) -> a
-    com.welty.graph.InteriorRenderer interior() -> b
-    com.welty.graph.x.AxisRenderer yAxis() -> c
+    InteriorRenderer interior() -> b
+    AxisRenderer yAxis() -> c
     void dataChanged() -> d
-    java.util.List access$000(com.welty.graph.cy.BarCore,java.util.List) -> a
-com.welty.graph.cy.BarCore$1 -> O:
-    com.welty.graph.cy.BarCore this$0 -> a
+    java.util.List access$000(BarCore,java.util.List) -> a
+BarCore$1 -> O:
+    BarCore this$0 -> a
     java.lang.Object y(java.lang.Object) -> a
-com.welty.graph.cy.BarCore$2 -> P:
+BarCore$2 -> P:
     boolean y(java.lang.Object) -> a
-com.welty.graph.cy.BarGraph -> Q:
-    com.welty.graph.cy.BarCore core -> a
-    com.welty.graph.cy.CategoryGraphData getGraphData() -> a
-com.welty.graph.cy.CategoryGraphData -> R:
+BarGraph -> Q:
+    BarCore core -> a
+    CategoryGraphData getGraphData() -> a
+CategoryGraphData -> R:
     java.util.List series -> b
     java.util.List getSeries() -> a
     void setSeries(java.util.List) -> a
-com.welty.graph.cy.CategoryGraphData$Listener -> S:
+CategoryGraphData$Listener -> S:
     void dataChanged() -> d
-com.welty.graph.cy.CategoryPoint -> T:
+CategoryPoint -> T:
     java.lang.Object x -> a
     double y -> b
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     java.lang.String toString() -> toString
-com.welty.graph.cy.CategoryRanges -> U:
+CategoryRanges -> U:
     java.util.List x -> a
-    com.welty.graph.x.Range y -> b
-com.welty.graph.cy.CategoryRenderer -> V:
-com.welty.graph.cy.CategorySeries -> W:
+    Range y -> b
+CategoryRenderer -> V:
+CategorySeries -> W:
     java.util.List getPoints() -> a
-com.welty.graph.cy.ListCategorySeries -> X:
+ListCategorySeries -> X:
     java.lang.String name -> a
     java.util.ArrayList points -> b
     java.util.List getPoints() -> a
@@ -325,13 +325,13 @@ com.welty.graph.cy.ListCategorySeries -> X:
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     java.lang.String toString() -> toString
-com.welty.graph.x.AffineFunction -> Y:
+AffineFunction -> Y:
     double x0 -> b
     double y0 -> c
     double m -> a
     int y(double) -> a
-com.welty.graph.x.AxisData -> Z:
-    com.welty.graph.x.AxisData DEFAULT -> a
+AxisData -> Z:
+    AxisData DEFAULT -> a
     long bottom -> b
     long top -> c
     double spacing -> d
@@ -342,40 +342,40 @@ com.welty.graph.x.AxisData -> Z:
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     java.lang.String toString() -> toString
-com.welty.graph.x.AxisLabel -> aa:
+AxisLabel -> aa:
     java.lang.String text -> a
     double value -> b
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.graph.x.AxisRenderer -> ab:
+AxisRenderer -> ab:
     int minSegments -> a
-    com.welty.graph.x.AxisRenderer$Ranger ranger -> b
-    com.welty.graph.x.AxisRenderer$Ranger standardRanger -> c
+    AxisRenderer$Ranger ranger -> b
+    AxisRenderer$Ranger standardRanger -> c
     void setMinSegments(int) -> a
-    com.welty.graph.x.AxisData calcAxisRange(com.welty.graph.x.Range) -> a
-    void setRequiredRange(com.welty.graph.x.Range) -> b
+    AxisData calcAxisRange(Range) -> a
+    void setRequiredRange(Range) -> b
     boolean getShowGridlines() -> a
-com.welty.graph.x.AxisRenderer$1 -> ac:
-    com.welty.graph.x.AxisData calcRange(com.welty.graph.x.Range,int) -> a
-com.welty.graph.x.AxisRenderer$Ranger -> ad:
-    com.welty.graph.x.AxisData calcRange(com.welty.graph.x.Range,int) -> a
-com.welty.graph.x.AxisRenderer$RequiredRanger -> ae:
-    com.welty.graph.x.Range requiredRange -> a
-    com.welty.graph.x.AxisData calcRange(com.welty.graph.x.Range,int) -> a
-com.welty.graph.x.MutableRange -> af:
+AxisRenderer$1 -> ac:
+    AxisData calcRange(Range,int) -> a
+AxisRenderer$Ranger -> ad:
+    AxisData calcRange(Range,int) -> a
+AxisRenderer$RequiredRanger -> ae:
+    Range requiredRange -> a
+    AxisData calcRange(Range,int) -> a
+MutableRange -> af:
     double min -> a
     double max -> b
     void update(double) -> a
-    com.welty.graph.x.Range asRange() -> a
-com.welty.graph.x.Range -> ag:
+    Range asRange() -> a
+Range -> ag:
     double min -> a
     double max -> b
     boolean isEmpty() -> a
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.graph.xy.ListXYSeries -> ah:
+ListXYSeries -> ah:
     java.lang.String name -> a
     java.util.ArrayList points -> b
     java.util.List getPoints() -> a
@@ -383,46 +383,46 @@ com.welty.graph.xy.ListXYSeries -> ah:
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     java.lang.String toString() -> toString
-com.welty.graph.xy.XYCore -> ai:
-    com.welty.graph.x.AxisRenderer xAxisRenderer -> a
-    com.welty.graph.x.AxisRenderer yAxisRenderer -> b
-    com.welty.graph.xy.XYRenderer dataRenderer -> c
-    com.welty.graph.xy.XYGraphData xyGraphData -> d
-    com.welty.graph.InteriorRenderer interior -> e
+XYCore -> ai:
+    AxisRenderer xAxisRenderer -> a
+    AxisRenderer yAxisRenderer -> b
+    XYRenderer dataRenderer -> c
+    XYGraphData xyGraphData -> d
+    InteriorRenderer interior -> e
     java.awt.Color[] defaultColors -> f
     java.awt.Color[] colors -> g
-    com.welty.graph.xy.XYGraphData getGraphData() -> a
+    XYGraphData getGraphData() -> a
     void paintComponent(java.awt.Graphics) -> paintComponent
     void setSeriesColors(java.awt.Color[]) -> a
-    com.welty.graph.InteriorRenderer interior() -> b
-    com.welty.graph.x.AxisRenderer yAxis() -> c
+    InteriorRenderer interior() -> b
+    AxisRenderer yAxis() -> c
     void dataChanged() -> d
-    java.util.List access$000(com.welty.graph.xy.XYCore,java.util.List) -> a
-com.welty.graph.xy.XYCore$1 -> aj:
-    com.welty.graph.xy.XYCore this$0 -> a
+    java.util.List access$000(XYCore,java.util.List) -> a
+XYCore$1 -> aj:
+    XYCore this$0 -> a
     java.lang.Object y(java.lang.Object) -> a
-com.welty.graph.xy.XYCore$2 -> ak:
+XYCore$2 -> ak:
     boolean y(java.lang.Object) -> a
-com.welty.graph.xy.XYGraph -> al:
-    com.welty.graph.xy.XYCore core -> a
-    com.welty.graph.xy.XYGraphData getGraphData() -> a
-com.welty.graph.xy.XYGraphData -> am:
+XYGraph -> al:
+    XYCore core -> a
+    XYGraphData getGraphData() -> a
+XYGraphData -> am:
     java.util.List series -> c
     double cursor -> b
     java.util.List getSeries() -> a
     void setSeries(java.util.List) -> a
     void fireDataChanged() -> b
-com.welty.graph.xy.XYPoint -> an:
+XYPoint -> an:
     double x -> a
     double y -> b
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     java.lang.String toString() -> toString
-com.welty.graph.xy.XYRanges -> ao:
-    com.welty.graph.x.Range x -> a
-    com.welty.graph.x.Range y -> b
-com.welty.graph.xy.XYRenderer -> ap:
-    com.welty.graph.Style style -> a
+XYRanges -> ao:
+    Range x -> a
+    Range y -> b
+XYRenderer -> ap:
+    Style style -> a
 com.welty.nboard.gui.Align -> aq:
     com.welty.nboard.gui.Align LEFT -> a
     com.welty.nboard.gui.Align CENTER -> b
