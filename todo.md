@@ -98,7 +98,7 @@ F28a X   Analyze game and add to graph
 F29  X   Internal engines should report node stats more frequently
 F30  X   Clocks with < 1 minute left should display as 0:ss
 F31  X   Notify user if running a 32-bit JVM
-F32      About box with contact info and copyright notice
+F32  X   About box with contact info and copyright notice
 F33      Get proguard working
 
 Before release:

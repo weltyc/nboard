@@ -234,6 +234,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         menuBar.add(createMenuItem("&Analysis", createAnalysisMenu()));
         menuBar.add(createMenuItem("&Start", createGamesMenu(startPositionManager)));
         menuBar.add(createMenuItem("&Database", createThorMenu()));
+        menuBar.add(createMenuItem("&Help", createHelpMenu()));
 
         return menuBar;
     }
@@ -393,6 +394,19 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         m_editMenu.add(createMenuItem("Flip", flipMenu));
         m_editMenu.add(createMoveMenu());
         return m_editMenu;
+    }
+
+    private JMenu createHelpMenu() {
+        JMenu helpMenu = new JMenu();
+        helpMenu.add(menuItem("&About...").build(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                final String message = "<html><h2 align='center'>NBoard 2.0</h2>" +
+                        "<p>NBoard 2.0 is copyright 2005-2014 Chris Welty, all rights reserved.</p><br/>" +
+                        "<p>Questions, comments, bug reports to <a href='mailto:chris.welty.1@gmail.com'>chris.welty.1@gmail.com</a></p>";
+                JOptionPane.showMessageDialog(null, message, "About NBoard", JOptionPane.PLAIN_MESSAGE);
+            }
+        }));
+        return helpMenu;
     }
 
     private void warn(String title, String msg) {
