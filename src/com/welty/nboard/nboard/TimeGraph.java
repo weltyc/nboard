@@ -1,10 +1,10 @@
 package com.welty.nboard.nboard;
 
-import com.welty.graph.cy.BarGraph;
-import com.welty.graph.cy.CategoryGraphData;
-import com.welty.graph.cy.CategorySeries;
-import com.welty.graph.cy.ListCategorySeries;
-import com.welty.graph.x.Range;
+import com.orbanova.common.graph.cy.BarGraph;
+import com.orbanova.common.graph.cy.CategoryGraphData;
+import com.orbanova.common.graph.cy.CategorySeries;
+import com.orbanova.common.graph.cy.ListCategorySeries;
+import com.orbanova.common.graph.x.Range;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsMoveList;

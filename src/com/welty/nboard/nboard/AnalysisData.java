@@ -1,8 +1,8 @@
 package com.welty.nboard.nboard;
 
 import com.orbanova.common.misc.ListenerManager;
-import com.welty.graph.xy.XYPoint;
-import com.welty.graph.xy.XYSeries;
+import com.orbanova.common.graph.xy.XYPoint;
+import com.orbanova.common.graph.xy.XYSeries;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsMoveListItem;
