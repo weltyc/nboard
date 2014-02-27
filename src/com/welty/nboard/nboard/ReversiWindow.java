@@ -378,7 +378,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
     private JMenuItem createMoveMenu() {
         final JMenu menu = new JMenu("Move");
-        menu.add(menuItem("First\tup arrow").icon("first.gif").build(new ActionListener() {
+        menu.add(menuItem("First\tup arrow").icon("first.GIF").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 reversiData.First();
             }

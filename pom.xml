@@ -61,6 +61,77 @@
                     </archive>
                 </configuration>
             </plugin>
+           <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.welty.nboard.nboard.NBoard</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!-- this is used for inheritance merges -->
+                        <phase>package</phase>
+                        <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.0.6</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <proguardVersion>4.8</proguardVersion>
+                    <obfuscate>false</obfuscate>
+                    <options>
+                        <option>-allowaccessmodification</option>
+                        <option>-dontskipnonpubliclibraryclasses</option>
+                        <option>-keep public class com.welty.nboard.nboard.NBoard { public *; public static *; }
+                        </option>
+                        <option>-keep public class com.welty.othello.deploy.DeployerGui { public *; public static *; }
+                        </option>
+                        <option>-keep public class com.welty.othello.auto.Ggs { public *; public static *; }
+                        </option>
+                        <option>-optimizations !code/allocation/variable
+                        </option>
+                    </options>
+                    <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
+                    <inFilter>!**/Luthor.luth,!**/package.html</inFilter>
+                    <outjar>nboard.jar</outjar>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <libs>
+                        <lib>${java.home}/lib/rt.jar</lib>
+                        <lib>${settings.localRepository}/ant/ant/1.6.5/ant-1.6.5.jar</lib>
+                        <lib>${settings.localRepository}/junit/junit/4.4/junit-4.4.jar</lib>
+                    </libs>
+                    <addMavenDescriptor>false</addMavenDescriptor>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard</artifactId>
+                        <version>4.8</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
 
