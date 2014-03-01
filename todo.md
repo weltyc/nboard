@@ -103,6 +103,8 @@ F31  X   Notify user if running a 32-bit JVM
 F32  X   About box with contact info and copyright notice
 F33  X   Get proguard working
 F34  X   Remove JetBrains @NotNull assertions from proguard jar
+F35      Allow users to run "SelfPlaySet" - need to add 'clear' command to NBoard protocol handler
+F36      Strength estimation in OpponentSelectionWindow
 
 Before release:
 BR1  X   Update NBoard Protocol documentation

@@ -34,6 +34,7 @@ public class GuiOpponentSelector extends OpponentSelector {
     private final JList<Integer> levels = new JList<>();
     private final EngineListModel engineListModel;
     private final JList<EngineSelector> engineSelectors;
+    private final JLabel strengthLabel = new JLabel("Strength");
 
     // these are written to when the user clicks "OK"
     private int selectedLevel;
@@ -60,31 +61,40 @@ public class GuiOpponentSelector extends OpponentSelector {
         setUpList(levels);
         levels.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         levels.setVisibleRowCount(EngineSelector.advancedLevels.length / 2);
+        levels.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    setStrength();
+                }
+            }
+        });
 
 
         // Opponent selection list box.
         engineSelectors = new JList<>(engineListModel);
+
+        selectUsersPreferredEngine();
+        selectUsersPreferredLevel();
+        setUpList(engineSelectors);
+        setStrength();
+
         engineSelectors.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
                     final EngineSelector engineSelector = engineSelectors.getSelectedValue();
                     setLevelElements(levelModel, engineSelector.availableLevels);
                     levels.setSelectedIndex(findNearestLevel(selectedLevel, engineSelector.availableLevels));
+                    setStrength();
                 }
             }
         });
-        setUpList(engineSelectors);
-
-        selectUsersPreferredEngine();
-        selectUsersPreferredLevel();
-
 
         final JButton ok = button(new AbstractAction("OK") {
             @Override public void actionPerformed(ActionEvent e) {
                 frame.setVisible(false);
                 selectedLevel = levels.getSelectedValue();
                 levelPref.put(levels.getSelectedValue());
-                selectedEngine = engineSelectors.getSelectedValue();
+                setSelectedEngine();
                 enginePref.put(selectedEngine.name);
                 fireOpponentChanged();
             }
@@ -104,7 +114,7 @@ public class GuiOpponentSelector extends OpponentSelector {
             }
         });
 
-        frame = new JDialog(null,  windowTitle, Dialog.ModalityType.APPLICATION_MODAL);
+        frame = new JDialog(null, windowTitle, Dialog.ModalityType.APPLICATION_MODAL);
         frame.setLayout(new JsbGridLayout(1));
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         frame.add(
@@ -112,6 +122,7 @@ public class GuiOpponentSelector extends OpponentSelector {
                         grid(2, 0, -1,
                                 wrap("Opponent", engineSelectors), wrap("Level", levels)
                         ),
+                        strengthLabel,
                         buttonBar(false, addEngine),
                         buttonBar(true, ok, cancel)
                 )
@@ -126,6 +137,21 @@ public class GuiOpponentSelector extends OpponentSelector {
                 engineListModel.put(new ExternalEngineSelector(name, wd, command));
             }
         });
+    }
+
+    private void setSelectedEngine() {
+        selectedEngine = engineSelectors.getSelectedValue();
+    }
+
+    private void setStrength() {
+        final EngineSelector selector = engineSelectors.getSelectedValue();
+        if (selector != null) {
+            final Integer selectedLevel = levels.getSelectedValue();
+            if (selectedLevel != null) {
+                final String strength = selector.strengthEstimate(selectedLevel);
+                strengthLabel.setText(strength);
+            }
+        }
     }
 
     /**
@@ -151,7 +177,7 @@ public class GuiOpponentSelector extends OpponentSelector {
         final String preferredEngineName = enginePref.get();
         final int i = engineListModel.find(preferredEngineName);
         engineSelectors.setSelectedIndex(Math.max(0, i));
-        selectedEngine = engineSelectors.getSelectedValue();
+        setSelectedEngine();
     }
 
     /**
