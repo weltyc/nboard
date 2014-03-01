@@ -107,6 +107,10 @@
                         <option>-repackageclasses ''</option>
                         <option>-adaptresourcefilenames **.txt,**.html,**.cof</option>
                         <option>-keep public class com.welty.nboard.nboard.NBoard { public *; public static *; }</option>
+                        <option>-keep public class com.welty.nboard.nboard.ReversiWindow { public *; public static *; }</option>
+                        <option>-keep public class com.welty.othello.gui.ExternalEngineManager { public *; public static *; }</option>
+                        <option>-keep public class com.welty.nboard.nboard.selector.GuiOpponentSelector { public *;
+                            public static *; }</option>
                     </options>
                     <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
                     <inFilter>!**/Luthor.luth,!**/package.html,!*.properties,!**/LICENSE.txt,!**/NOTICE.txt</inFilter>

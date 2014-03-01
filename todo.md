@@ -61,6 +61,7 @@ L29  X   Don't decrement clock in analysis mode
 L28a X   When database window is resized the games grid should also resize
 L29b X   Time graph should include 0 on the y-axis
 L30  X   Support analysis command in external engines
+L31  X   Keep preference-using classes public in proguard so preferences don't disappear on recompile
 
 CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
