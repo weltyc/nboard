@@ -1,12 +1,12 @@
 package com.welty.nboard.thor;
 
-import com.orbanova.common.misc.ArrayTestCase;
 import com.welty.nboard.nboard.BoardSource;
 import com.welty.nboard.nboard.OptionSource;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsClock;
 import com.welty.othello.gdk.OsMove;
 import com.welty.othello.gdk.OsMoveListItem;
+import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.mockito.Mockito;
 
@@ -21,7 +21,7 @@ import java.util.List;
  * Time: 7:50:25 PM
  * </PRE>
  */
-public class DatabaseTableModelTest extends ArrayTestCase {
+public class DatabaseTableModelTest extends TestCase {
     private static void testGameItemText(final DatabaseTableModel dd) {
         // Thor game
         assertTrue(dd.getValueAt(0, 0).equals("???"));
