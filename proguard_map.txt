@@ -1,7 +1,12 @@
 com.orbanova.common.clock.Clock -> a:
     long getMillis() -> a
+    com.orbanova.common.graph.x.AxisData autoRange(com.orbanova.common.graph.x.Range,int) -> a
+    double nBits(com.orbanova.common.graph.x.Range,double) -> a
+    long bottom(com.orbanova.common.graph.x.Range,double) -> b
+    long top(com.orbanova.common.graph.x.Range,double) -> c
     void eq(int,java.lang.String,int,java.lang.String) -> a
     void eq(int,java.lang.String,int) -> a
+    void eq(char,java.lang.String,char) -> a
     void gt(int,java.lang.String,int) -> b
     void geq(int,java.lang.String,int) -> c
     void notNull(java.lang.Object) -> a
@@ -14,10 +19,6 @@ com.orbanova.common.clock.Clock -> a:
     void finite(double) -> a
     void inRange(java.lang.String,double,java.lang.String,double,double) -> a
     boolean isOdd(int) -> a
-    AxisData autoRange(Range,int) -> a
-    double nBits(Range,double) -> a
-    long bottom(Range,double) -> b
-    long top(Range,double) -> c
     java.util.ArrayList ThorLoadGames(java.lang.String,com.welty.nboard.thor.IndeterminateProgressTracker) -> a
     java.util.ArrayList ThorLoadStrings(java.lang.String,int) -> a
     int MatchesReflections(com.welty.othello.core.CBitBoard,com.welty.othello.core.CBitBoard[]) -> a
@@ -117,21 +118,171 @@ com.orbanova.common.feed.WrappedReader -> m:
     java.lang.String readLine() -> d
     java.lang.String next() -> e
     java.lang.Object next() -> a
-com.orbanova.common.jsb.ComponentCoordinates -> n:
+com.orbanova.common.graph.InteriorRenderer -> n:
+    java.awt.Color background -> a
+com.orbanova.common.graph.Style -> o:
+    void plotSeries(java.awt.Graphics2D,com.orbanova.common.graph.x.AffineFunction,com.orbanova.common.graph.x.AffineFunction,java.awt.Color,java.util.List) -> a
+com.orbanova.common.graph.cy.BarCore -> p:
+    com.orbanova.common.graph.x.AxisRenderer yAxisRenderer -> a
+    com.orbanova.common.graph.cy.CategoryRenderer dataRenderer -> b
+    com.orbanova.common.graph.cy.CategoryGraphData graphData -> c
+    com.orbanova.common.graph.InteriorRenderer interior -> d
+    java.awt.Color[] defaultColors -> e
+    java.awt.Color[] colors -> f
+    com.orbanova.common.graph.cy.CategoryGraphData getGraphData() -> a
+    void paintComponent(java.awt.Graphics) -> paintComponent
+    void setSeriesColors(java.awt.Color[]) -> a
+    com.orbanova.common.graph.InteriorRenderer interior() -> b
+    com.orbanova.common.graph.x.AxisRenderer yAxis() -> c
+    void dataChanged() -> d
+    java.util.List access$000(com.orbanova.common.graph.cy.BarCore,java.util.List) -> a
+com.orbanova.common.graph.cy.BarCore$1 -> q:
+    com.orbanova.common.graph.cy.BarCore this$0 -> a
+    java.lang.Object y(java.lang.Object) -> a
+com.orbanova.common.graph.cy.BarCore$2 -> r:
+    boolean y(java.lang.Object) -> a
+com.orbanova.common.graph.cy.BarGraph -> s:
+    com.orbanova.common.graph.cy.BarCore core -> a
+    com.orbanova.common.graph.cy.CategoryGraphData getGraphData() -> a
+com.orbanova.common.graph.cy.CategoryGraphData -> t:
+    java.util.List series -> a
+    java.util.List getSeries() -> a
+    void setSeries(java.util.List) -> a
+com.orbanova.common.graph.cy.CategoryGraphData$Listener -> u:
+    void dataChanged() -> d
+com.orbanova.common.graph.cy.CategoryPoint -> v:
+    java.lang.Object x -> a
+    double y -> b
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
+    java.lang.String toString() -> toString
+com.orbanova.common.graph.cy.CategoryRanges -> w:
+    java.util.List x -> a
+    com.orbanova.common.graph.x.Range y -> b
+com.orbanova.common.graph.cy.CategoryRenderer -> x:
+com.orbanova.common.graph.cy.CategorySeries -> y:
+    java.util.List getPoints() -> a
+com.orbanova.common.graph.cy.ListCategorySeries -> z:
+    java.lang.String name -> a
+    java.util.ArrayList points -> b
+    java.util.List getPoints() -> a
+    void add(java.lang.Comparable,double) -> a
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
+    java.lang.String toString() -> toString
+com.orbanova.common.graph.x.AffineFunction -> A:
+    double x0 -> b
+    double y0 -> c
+    double m -> a
+    int y(double) -> a
+com.orbanova.common.graph.x.AxisData -> B:
+    com.orbanova.common.graph.x.AxisData DEFAULT -> a
+    long bottom -> b
+    long top -> c
+    double spacing -> d
+    double getMin() -> a
+    double getMax() -> b
+    java.util.List getLabels() -> c
+    int dp(double) -> a
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
+    java.lang.String toString() -> toString
+com.orbanova.common.graph.x.AxisLabel -> C:
+    java.lang.String text -> a
+    double value -> b
+    java.lang.String toString() -> toString
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
+com.orbanova.common.graph.x.AxisRenderer -> D:
+    int minSegments -> a
+    com.orbanova.common.graph.x.AxisRenderer$Ranger ranger -> b
+    com.orbanova.common.graph.x.AxisRenderer$Ranger standardRanger -> c
+    void setMinSegments(int) -> a
+    com.orbanova.common.graph.x.AxisData calcAxisRange(com.orbanova.common.graph.x.Range) -> a
+    void setRequiredRange(com.orbanova.common.graph.x.Range) -> b
+    boolean getShowGridlines() -> a
+com.orbanova.common.graph.x.AxisRenderer$1 -> E:
+    com.orbanova.common.graph.x.AxisData calcRange(com.orbanova.common.graph.x.Range,int) -> a
+com.orbanova.common.graph.x.AxisRenderer$Ranger -> F:
+    com.orbanova.common.graph.x.AxisData calcRange(com.orbanova.common.graph.x.Range,int) -> a
+com.orbanova.common.graph.x.AxisRenderer$RequiredRanger -> G:
+    com.orbanova.common.graph.x.Range requiredRange -> a
+    com.orbanova.common.graph.x.AxisData calcRange(com.orbanova.common.graph.x.Range,int) -> a
+com.orbanova.common.graph.x.MutableRange -> H:
+    double min -> a
+    double max -> b
+    void update(double) -> a
+    com.orbanova.common.graph.x.Range asRange() -> a
+com.orbanova.common.graph.x.Range -> I:
+    double min -> a
+    double max -> b
+    boolean isEmpty() -> a
+    java.lang.String toString() -> toString
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
+com.orbanova.common.graph.xy.ListXYSeries -> J:
+    java.lang.String name -> a
+    java.util.ArrayList points -> b
+    java.util.List getPoints() -> a
+    void add(double,double) -> a
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
+    java.lang.String toString() -> toString
+com.orbanova.common.graph.xy.XYCore -> K:
+    com.orbanova.common.graph.x.AxisRenderer xAxisRenderer -> a
+    com.orbanova.common.graph.x.AxisRenderer yAxisRenderer -> b
+    com.orbanova.common.graph.xy.XYRenderer dataRenderer -> c
+    com.orbanova.common.graph.xy.XYGraphData xyGraphData -> d
+    com.orbanova.common.graph.InteriorRenderer interior -> e
+    java.awt.Color[] defaultColors -> f
+    java.awt.Color[] colors -> g
+    com.orbanova.common.graph.xy.XYGraphData getGraphData() -> a
+    void paintComponent(java.awt.Graphics) -> paintComponent
+    void setSeriesColors(java.awt.Color[]) -> a
+    com.orbanova.common.graph.InteriorRenderer interior() -> b
+    com.orbanova.common.graph.x.AxisRenderer yAxis() -> c
+    void dataChanged() -> d
+    java.util.List access$000(com.orbanova.common.graph.xy.XYCore,java.util.List) -> a
+com.orbanova.common.graph.xy.XYCore$1 -> L:
+    com.orbanova.common.graph.xy.XYCore this$0 -> a
+    java.lang.Object y(java.lang.Object) -> a
+com.orbanova.common.graph.xy.XYCore$2 -> M:
+    boolean y(java.lang.Object) -> a
+com.orbanova.common.graph.xy.XYGraph -> N:
+    com.orbanova.common.graph.xy.XYCore core -> a
+    com.orbanova.common.graph.xy.XYGraphData getGraphData() -> a
+com.orbanova.common.graph.xy.XYGraphData -> O:
+    java.util.List series -> b
+    double cursor -> a
+    java.util.List getSeries() -> a
+    void setSeries(java.util.List) -> a
+    void fireDataChanged() -> b
+com.orbanova.common.graph.xy.XYPoint -> P:
+    double x -> a
+    double y -> b
+    boolean equals(java.lang.Object) -> equals
+    int hashCode() -> hashCode
+    java.lang.String toString() -> toString
+com.orbanova.common.graph.xy.XYRanges -> Q:
+    com.orbanova.common.graph.x.Range x -> a
+    com.orbanova.common.graph.x.Range y -> b
+com.orbanova.common.graph.xy.XYRenderer -> R:
+    com.orbanova.common.graph.Style style -> a
+com.orbanova.common.jsb.ComponentCoordinates -> S:
     java.awt.Component component -> a
     int row -> b
     int col -> c
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.orbanova.common.jsb.Control -> o:
+com.orbanova.common.jsb.Control -> T:
     javax.swing.JLabel label -> a
     java.awt.Component component -> b
-com.orbanova.common.jsb.Extent -> p:
+com.orbanova.common.jsb.Extent -> U:
     int start -> a
     int extent -> b
     boolean equals(java.lang.Object) -> equals
     java.lang.String toString() -> toString
-com.orbanova.common.jsb.Grid -> q:
+com.orbanova.common.jsb.Grid -> V:
     com.orbanova.common.jsb.JsbGridLayout layout -> a
     com.orbanova.common.jsb.Grid alignX(float) -> a
     com.orbanova.common.jsb.Grid spacing(int,int) -> a
@@ -139,11 +290,11 @@ com.orbanova.common.jsb.Grid -> q:
     com.orbanova.common.jsb.Grid border(int) -> b
     com.orbanova.common.jsb.Grid alignColumn(int,float) -> a
     void setLayout(java.awt.LayoutManager) -> setLayout
-com.orbanova.common.jsb.GridSizer -> r:
+com.orbanova.common.jsb.GridSizer -> W:
     int getSize(com.orbanova.common.jsb.GridSizerInputs,com.orbanova.common.jsb.SizeType) -> a
     com.orbanova.common.jsb.Extent[] getLayoutExtents(com.orbanova.common.jsb.GridSizerInputs,int) -> a
     boolean isResizable() -> a
-com.orbanova.common.jsb.GridSizerInputs -> s:
+com.orbanova.common.jsb.GridSizerInputs -> X:
     int leftInset -> a
     int rightInset -> b
     int spacing -> c
@@ -153,10 +304,10 @@ com.orbanova.common.jsb.GridSizerInputs -> s:
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     java.lang.String toString() -> toString
-com.orbanova.common.jsb.GridSizerInputsPair -> t:
+com.orbanova.common.jsb.GridSizerInputsPair -> Y:
     com.orbanova.common.jsb.GridSizerInputs rows -> a
     com.orbanova.common.jsb.GridSizerInputs cols -> b
-com.orbanova.common.jsb.JSwingBuilder -> u:
+com.orbanova.common.jsb.JSwingBuilder -> Z:
     com.orbanova.common.jsb.JsbFrame frame(java.lang.String,int,boolean,javax.swing.JMenuBar,javax.swing.JComponent) -> a
     com.orbanova.common.jsb.JsbFrame frame(java.lang.String,int,boolean,javax.swing.JComponent) -> a
     com.orbanova.common.jsb.Grid fixedGrid(int,java.awt.Component[]) -> b
@@ -172,11 +323,11 @@ com.orbanova.common.jsb.JSwingBuilder -> u:
     com.orbanova.common.jsb.JsbTextField textField() -> a
     javax.swing.JLabel label(java.lang.String) -> a
     javax.swing.JButton button(javax.swing.Action) -> a
-com.orbanova.common.jsb.JsbFrame -> v:
+com.orbanova.common.jsb.JsbFrame -> aa:
     boolean isMinSetExternally -> a
     void doLayout() -> doLayout
     void setMinimumSize(java.awt.Dimension) -> setMinimumSize
-com.orbanova.common.jsb.JsbGridLayout -> w:
+com.orbanova.common.jsb.JsbGridLayout -> ab:
     com.orbanova.common.jsb.GridSizer rowSizer -> a
     com.orbanova.common.jsb.GridSizer colSizer -> b
     int nColumns -> c
@@ -198,35 +349,35 @@ com.orbanova.common.jsb.JsbGridLayout -> w:
     void addLayoutComponent(java.lang.String,java.awt.Component) -> addLayoutComponent
     void removeLayoutComponent(java.awt.Component) -> removeLayoutComponent
     boolean isResizable() -> a
-com.orbanova.common.jsb.JsbGridLayout$Store -> x:
+com.orbanova.common.jsb.JsbGridLayout$Store -> ac:
     gnu.trove.list.array.TIntArrayList min -> a
     gnu.trove.list.array.TIntArrayList pref -> b
     gnu.trove.list.array.TIntArrayList max -> c
     void update(int,int,int,int) -> a
     void update(int,gnu.trove.list.array.TIntArrayList,int) -> a
     com.orbanova.common.jsb.GridSizerInputs toInputs(int,int,int) -> a
-com.orbanova.common.jsb.JsbTextField -> y:
-com.orbanova.common.jsb.Placer -> z:
+com.orbanova.common.jsb.JsbTextField -> ad:
+com.orbanova.common.jsb.Placer -> ae:
     int nColumns -> a
     int row -> b
     int col -> c
     java.lang.Object y(java.lang.Object) -> a
-com.orbanova.common.jsb.ResizeGridSizer -> A:
+com.orbanova.common.jsb.ResizeGridSizer -> af:
     com.orbanova.common.jsb.GridSizer FIXED -> a
     int resizeRow -> b
     int getSize(com.orbanova.common.jsb.GridSizerInputs,com.orbanova.common.jsb.SizeType) -> a
     com.orbanova.common.jsb.Extent[] getLayoutExtents(com.orbanova.common.jsb.GridSizerInputs,int) -> a
     boolean isResizable() -> a
-com.orbanova.common.jsb.ResizeGridSizer$1 -> B:
+com.orbanova.common.jsb.ResizeGridSizer$1 -> ag:
     int[] $SwitchMap$com$orbanova$common$jsb$SizeType -> a
-com.orbanova.common.jsb.SizeType -> C:
+com.orbanova.common.jsb.SizeType -> ah:
     com.orbanova.common.jsb.SizeType MIN -> a
     com.orbanova.common.jsb.SizeType MAX -> b
     com.orbanova.common.jsb.SizeType PREF -> c
     com.orbanova.common.jsb.SizeType[] $VALUES -> d
     com.orbanova.common.jsb.SizeType[] values() -> a
-com.orbanova.common.math.function.oned.Function -> D:
-com.orbanova.common.misc.Engineering -> E:
+com.orbanova.common.math.function.oned.Function -> ai:
+com.orbanova.common.misc.Engineering -> aj:
     char[] prefixes -> a
     char[] negPrefixes -> b
     java.lang.String compactFormat(double) -> a
@@ -237,29 +388,32 @@ com.orbanova.common.misc.Engineering -> E:
     int calculateNDigits(long) -> b
     java.lang.String formatLong(long,int) -> a
     char[] access$100() -> a
-com.orbanova.common.misc.Engineering$AbscissaMantissa -> F:
+com.orbanova.common.misc.Engineering$AbscissaMantissa -> ak:
     boolean isNegative -> a
     long abscissa -> b
     int exponent -> c
     int nAbscissaDigits -> d
     java.lang.String toString() -> toString
-com.orbanova.common.misc.ListenerManager -> G:
+com.orbanova.common.misc.ListenerManager -> al:
     java.util.List listeners -> a
-    void addListener(java.lang.Object) -> a
-com.orbanova.common.misc.Logger -> H:
+    void addListener(java.lang.Object) -> addListener
+    boolean removeListener(java.lang.Object) -> removeListener
+    java.util.List getListeners() -> getListeners
+    void clear() -> clear
+com.orbanova.common.misc.Logger -> am:
     java.lang.String name -> a
     com.orbanova.common.misc.Logger$Level level -> b
     com.orbanova.common.misc.Logger logger(java.lang.Class) -> a
     void debug(java.lang.Object) -> a
     void info(java.lang.Object) -> b
     void log(java.lang.String,java.lang.Object) -> a
-com.orbanova.common.misc.Logger$Level -> I:
+com.orbanova.common.misc.Logger$Level -> an:
     com.orbanova.common.misc.Logger$Level DEBUG -> a
     com.orbanova.common.misc.Logger$Level INFO -> b
     com.orbanova.common.misc.Logger$Level WARN -> c
     int i -> d
     int access$000(com.orbanova.common.misc.Logger$Level) -> a
-com.orbanova.common.misc.Vec -> J:
+com.orbanova.common.misc.Vec -> ao:
     int max(int[]) -> a
     void fillRect(java.awt.Graphics,java.awt.Rectangle) -> a
     void drawString(java.awt.Graphics,java.lang.String,java.awt.Rectangle) -> a
@@ -267,162 +421,12 @@ com.orbanova.common.misc.Vec -> J:
     java.awt.Rectangle FractionalInflate(java.awt.Rectangle,double) -> a
     void setPlainFont(javax.swing.JLabel) -> a
     int eval(long,long) -> a
-com.welty.c.CBinaryReader -> K:
+com.welty.c.CBinaryReader -> ap:
     java.io.DataInputStream in -> a
     int readInt() -> a
     void close() -> b
     short readShort() -> c
     int available() -> d
-InteriorRenderer -> L:
-    java.awt.Color background -> a
-Style -> M:
-    void plotSeries(java.awt.Graphics2D,AffineFunction,AffineFunction,java.awt.Color,java.util.List) -> a
-BarCore -> N:
-    AxisRenderer yAxisRenderer -> a
-    CategoryRenderer dataRenderer -> b
-    CategoryGraphData graphData -> c
-    InteriorRenderer interior -> d
-    java.awt.Color[] defaultColors -> e
-    java.awt.Color[] colors -> f
-    CategoryGraphData getGraphData() -> a
-    void paintComponent(java.awt.Graphics) -> paintComponent
-    void setSeriesColors(java.awt.Color[]) -> a
-    InteriorRenderer interior() -> b
-    AxisRenderer yAxis() -> c
-    void dataChanged() -> d
-    java.util.List access$000(BarCore,java.util.List) -> a
-BarCore$1 -> O:
-    BarCore this$0 -> a
-    java.lang.Object y(java.lang.Object) -> a
-BarCore$2 -> P:
-    boolean y(java.lang.Object) -> a
-BarGraph -> Q:
-    BarCore core -> a
-    CategoryGraphData getGraphData() -> a
-CategoryGraphData -> R:
-    java.util.List series -> b
-    java.util.List getSeries() -> a
-    void setSeries(java.util.List) -> a
-CategoryGraphData$Listener -> S:
-    void dataChanged() -> d
-CategoryPoint -> T:
-    java.lang.Object x -> a
-    double y -> b
-    boolean equals(java.lang.Object) -> equals
-    int hashCode() -> hashCode
-    java.lang.String toString() -> toString
-CategoryRanges -> U:
-    java.util.List x -> a
-    Range y -> b
-CategoryRenderer -> V:
-CategorySeries -> W:
-    java.util.List getPoints() -> a
-ListCategorySeries -> X:
-    java.lang.String name -> a
-    java.util.ArrayList points -> b
-    java.util.List getPoints() -> a
-    void add(java.lang.Comparable,double) -> a
-    boolean equals(java.lang.Object) -> equals
-    int hashCode() -> hashCode
-    java.lang.String toString() -> toString
-AffineFunction -> Y:
-    double x0 -> b
-    double y0 -> c
-    double m -> a
-    int y(double) -> a
-AxisData -> Z:
-    AxisData DEFAULT -> a
-    long bottom -> b
-    long top -> c
-    double spacing -> d
-    double getMin() -> a
-    double getMax() -> b
-    java.util.List getLabels() -> c
-    int dp(double) -> a
-    boolean equals(java.lang.Object) -> equals
-    int hashCode() -> hashCode
-    java.lang.String toString() -> toString
-AxisLabel -> aa:
-    java.lang.String text -> a
-    double value -> b
-    java.lang.String toString() -> toString
-    boolean equals(java.lang.Object) -> equals
-    int hashCode() -> hashCode
-AxisRenderer -> ab:
-    int minSegments -> a
-    AxisRenderer$Ranger ranger -> b
-    AxisRenderer$Ranger standardRanger -> c
-    void setMinSegments(int) -> a
-    AxisData calcAxisRange(Range) -> a
-    void setRequiredRange(Range) -> b
-    boolean getShowGridlines() -> a
-AxisRenderer$1 -> ac:
-    AxisData calcRange(Range,int) -> a
-AxisRenderer$Ranger -> ad:
-    AxisData calcRange(Range,int) -> a
-AxisRenderer$RequiredRanger -> ae:
-    Range requiredRange -> a
-    AxisData calcRange(Range,int) -> a
-MutableRange -> af:
-    double min -> a
-    double max -> b
-    void update(double) -> a
-    Range asRange() -> a
-Range -> ag:
-    double min -> a
-    double max -> b
-    boolean isEmpty() -> a
-    java.lang.String toString() -> toString
-    boolean equals(java.lang.Object) -> equals
-    int hashCode() -> hashCode
-ListXYSeries -> ah:
-    java.lang.String name -> a
-    java.util.ArrayList points -> b
-    java.util.List getPoints() -> a
-    void add(double,double) -> a
-    boolean equals(java.lang.Object) -> equals
-    int hashCode() -> hashCode
-    java.lang.String toString() -> toString
-XYCore -> ai:
-    AxisRenderer xAxisRenderer -> a
-    AxisRenderer yAxisRenderer -> b
-    XYRenderer dataRenderer -> c
-    XYGraphData xyGraphData -> d
-    InteriorRenderer interior -> e
-    java.awt.Color[] defaultColors -> f
-    java.awt.Color[] colors -> g
-    XYGraphData getGraphData() -> a
-    void paintComponent(java.awt.Graphics) -> paintComponent
-    void setSeriesColors(java.awt.Color[]) -> a
-    InteriorRenderer interior() -> b
-    AxisRenderer yAxis() -> c
-    void dataChanged() -> d
-    java.util.List access$000(XYCore,java.util.List) -> a
-XYCore$1 -> aj:
-    XYCore this$0 -> a
-    java.lang.Object y(java.lang.Object) -> a
-XYCore$2 -> ak:
-    boolean y(java.lang.Object) -> a
-XYGraph -> al:
-    XYCore core -> a
-    XYGraphData getGraphData() -> a
-XYGraphData -> am:
-    java.util.List series -> c
-    double cursor -> b
-    java.util.List getSeries() -> a
-    void setSeries(java.util.List) -> a
-    void fireDataChanged() -> b
-XYPoint -> an:
-    double x -> a
-    double y -> b
-    boolean equals(java.lang.Object) -> equals
-    int hashCode() -> hashCode
-    java.lang.String toString() -> toString
-XYRanges -> ao:
-    Range x -> a
-    Range y -> b
-XYRenderer -> ap:
-    Style style -> a
 com.welty.nboard.gui.Align -> aq:
     com.welty.nboard.gui.Align LEFT -> a
     com.welty.nboard.gui.Align CENTER -> b
@@ -495,7 +499,7 @@ com.welty.nboard.gui.SignalEvent -> aE:
     void Add(com.welty.nboard.gui.SignalListener) -> a
     void Raise(java.lang.Object) -> a
 com.welty.nboard.gui.SignalListener -> aF:
-    void handleSignal(java.lang.Object) -> a_
+    void handleSignal(java.lang.Object) -> a
 com.welty.nboard.gui.VAlign -> aG:
     com.welty.nboard.gui.VAlign TOP -> b
     com.welty.nboard.gui.VAlign MIDDLE -> a
@@ -508,20 +512,20 @@ com.welty.nboard.gui.VAlign$2 -> aI:
 com.welty.nboard.gui.VAlign$3 -> aJ:
     int stringY(int,int,int,int) -> a
 com.welty.nboard.nboard.AnalysisData -> aK:
-    gnu.trove.map.hash.TIntDoubleHashMap scores -> b
-    com.welty.nboard.nboard.ReversiData reversiData -> c
-    com.welty.othello.gdk.COsGame game -> d
+    gnu.trove.map.hash.TIntDoubleHashMap scores -> a
+    com.welty.nboard.nboard.ReversiData reversiData -> b
+    com.welty.othello.gdk.COsGame game -> c
     void fireDataChanged() -> b
     java.util.List getPoints() -> a
     void clearData() -> c
-    void handleSignal(java.lang.Object) -> a_
+    void handleSignal(java.lang.Object) -> a
 com.welty.nboard.nboard.AnalysisData$Listener -> aL:
     com.welty.nboard.nboard.ReversiData reversiData -> a
     com.welty.nboard.nboard.AnalysisData analysisData -> b
     com.welty.nboard.nboard.EvalGraph this$0 -> c
     void dataChanged() -> a
     void handleSignal$15524fdf() -> b
-    void handleSignal(java.lang.Object) -> a_
+    void handleSignal(java.lang.Object) -> a
 com.welty.nboard.nboard.BoardPanel -> aM:
     java.awt.Rectangle boardArea -> a
     java.awt.Point leftTop(int,int,int,java.awt.Rectangle) -> b
@@ -560,9 +564,9 @@ com.welty.nboard.nboard.BoardSource -> aP:
     com.welty.othello.gdk.OsMove NextMove() -> g
     double secondsSinceLastMove() -> h
 com.welty.nboard.nboard.EngineTalker -> aQ:
-    void MayLearn() -> a
-    void TellEngineToLearn() -> b
-    java.lang.String getEngineName() -> c
+    void MayLearn() -> MayLearn
+    void TellEngineToLearn() -> TellEngineToLearn
+    java.lang.String getEngineName() -> getEngineName
 com.welty.nboard.nboard.EvalGraph -> aR:
     java.util.List extractAllSeries(com.welty.nboard.nboard.ReversiData,com.welty.nboard.nboard.AnalysisData) -> a
     java.util.List extractSeries(com.welty.othello.gdk.COsMoveList,boolean) -> a
@@ -630,7 +634,7 @@ com.welty.nboard.nboard.Hints -> ba:
     void Clear() -> c
     java.util.ArrayList calcOldHints(com.welty.othello.protocol.Depth) -> a
     boolean HasBookHint() -> d
-    void handleSignal(java.lang.Object) -> a_
+    void handleSignal(java.lang.Object) -> a
 com.welty.nboard.nboard.MoveGrid -> bb:
     com.welty.nboard.nboard.ReversiData reversiData -> c
     com.welty.nboard.gui.GridColumn[] columns -> b
@@ -640,7 +644,7 @@ com.welty.nboard.nboard.MoveGrid -> bb:
     com.welty.nboard.nboard.MoveGridTableModel access$000(com.welty.nboard.nboard.MoveGrid) -> a
 com.welty.nboard.nboard.MoveGrid$1 -> bc:
     com.welty.nboard.nboard.MoveGrid this$0 -> a
-    void handleSignal(java.lang.Object) -> a_
+    void handleSignal(java.lang.Object) -> a
 com.welty.nboard.nboard.MoveGridTableModel -> bd:
     gnu.trove.list.array.TIntArrayList m_moves -> a
     com.welty.nboard.thor.DatabaseTableModel pdd -> b
@@ -662,7 +666,7 @@ com.welty.nboard.nboard.MoveList -> be:
     com.welty.nboard.gui.GridColumn[] access$400() -> c
 com.welty.nboard.nboard.MoveList$1 -> bf:
     com.welty.nboard.nboard.MoveList this$0 -> a
-    void handleSignal(java.lang.Object) -> a_
+    void handleSignal(java.lang.Object) -> a
 com.welty.nboard.nboard.MoveList$EvalRenderer -> bg:
     java.text.DecimalFormat numberFormat -> a
     void setValue(java.lang.Object) -> setValue
@@ -697,7 +701,7 @@ com.welty.nboard.nboard.NavigationBar -> bk:
     javax.swing.JLabel access$100(com.welty.nboard.nboard.NavigationBar) -> b
 com.welty.nboard.nboard.NavigationBar$1 -> bl:
     com.welty.nboard.nboard.NavigationBar this$0 -> a
-    void handleSignal(java.lang.Object) -> a_
+    void handleSignal(java.lang.Object) -> a
 com.welty.nboard.nboard.NavigationBar$2 -> bm:
     com.welty.nboard.nboard.NavigationBar this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
@@ -718,18 +722,18 @@ com.welty.nboard.nboard.NodeCountPanel -> bq:
     void setup(javax.swing.JLabel,java.awt.Font) -> a
     void nodeStats(long,double) -> a
 com.welty.nboard.nboard.OptionSource -> br:
-    boolean ShowEvals() -> d
-    boolean UsersMove() -> e
-    boolean ViewPhotoStyle() -> f
-    boolean ViewD2() -> g
-    int IHighlight() -> h
-    boolean ViewCoordinates() -> i
-    boolean IsStudying() -> j
-    boolean ThorLookUpAll() -> k
-    boolean EngineLearnAll() -> l
-    boolean UserPlays(boolean) -> a
-    com.welty.nboard.nboard.startpos.StartPosition getStartPosition() -> m
-    boolean isAnalyzing() -> n
+    boolean ShowEvals() -> ShowEvals
+    boolean UsersMove() -> UsersMove
+    boolean ViewPhotoStyle() -> ViewPhotoStyle
+    boolean ViewD2() -> ViewD2
+    int IHighlight() -> IHighlight
+    boolean ViewCoordinates() -> ViewCoordinates
+    boolean IsStudying() -> IsStudying
+    boolean ThorLookUpAll() -> ThorLookUpAll
+    boolean EngineLearnAll() -> EngineLearnAll
+    boolean UserPlays(boolean) -> UserPlays
+    com.welty.nboard.nboard.startpos.StartPosition getStartPosition() -> getStartPosition
+    boolean isAnalyzing() -> isAnalyzing
 com.welty.nboard.nboard.ReversiBoard -> bs:
     com.welty.nboard.nboard.BoardSource boardSource -> b
     com.welty.nboard.nboard.OptionSource optionSource -> c
@@ -746,7 +750,7 @@ com.welty.nboard.nboard.ReversiBoard -> bs:
     void paintSquare(java.awt.Graphics,int,int,com.welty.othello.gdk.COsBoard) -> a
 com.welty.nboard.nboard.ReversiBoard$1 -> bt:
     com.welty.nboard.nboard.ReversiBoard this$0 -> a
-    void handleSignal(java.lang.Object) -> a_
+    void handleSignal(java.lang.Object) -> a
 com.welty.nboard.nboard.ReversiData -> bu:
     com.welty.nboard.nboard.OptionSource optionSource -> e
     com.welty.nboard.nboard.EngineTalker engineTalker -> f
@@ -774,83 +778,85 @@ com.welty.nboard.nboard.ReversiData -> bu:
     void setGameText(java.lang.String) -> a
     void setGame(com.welty.othello.gdk.COsGame,boolean) -> a
     void StartNewGame(com.welty.nboard.nboard.startpos.StartPosition) -> a
-com.welty.nboard.nboard.ReversiWindow -> bv:
-    javax.swing.JFrame frame -> b
-    com.welty.nboard.thor.DatabaseLoader databaseLoader -> c
-    com.welty.nboard.nboard.NodeCountPanel nodeCountPanel -> d
-    com.welty.nboard.nboard.ReversiData reversiData -> a
-    com.welty.nboard.nboard.engine.ReversiWindowEngine analysisEngine -> e
-    com.welty.nboard.nboard.selector.GuiOpponentSelector analysisSelector -> f
-    com.welty.nboard.nboard.engine.ReversiWindowEngine opposingEngine -> g
-    com.welty.nboard.nboard.selector.GuiOpponentSelector opponentSelector -> h
-    javax.swing.JLabel engineStatus -> i
-    com.welty.nboard.nboard.BoardPanel boardPanel -> j
-    com.welty.nboard.nboard.GameSelectionWindow gameSelectionWindow -> k
-    com.welty.nboard.nboard.Hints m_hints -> l
-    com.welty.nboard.thor.DatabaseTableModel databaseTableModel -> m
-    boolean needsLove -> n
-    javax.swing.JMenuItem viewAlwaysShowEvals -> o
-    javax.swing.JMenuItem viewD2 -> p
-    javax.swing.JMenuItem viewPhotoStyle -> q
-    javax.swing.JRadioButtonMenuItem viewHighlightLegal -> r
-    javax.swing.JRadioButtonMenuItem viewHighlightBest -> s
-    javax.swing.JMenuItem viewCoordinates -> t
-    javax.swing.JMenuItem engineLearnAll -> u
-    javax.swing.JMenuItem thorLookUpAll -> v
-    java.util.List shutdownHooks -> w
-    com.welty.nboard.gui.RadioGroup mode -> x
-    com.welty.nboard.gui.RadioGroup drawsTo -> y
-    com.welty.nboard.gui.RadioGroup engineTop -> z
-    com.welty.nboard.nboard.GgfFileChooser chooser -> A
-    com.welty.nboard.nboard.startpos.StartPositionManager startPositionManager -> B
-    com.welty.nboard.nboard.AnalysisData analysisData -> C
-    com.welty.othello.api.PingPong pingPong -> D
-    int[] engineTops -> E
-    java.awt.event.ActionListener engineUpdater -> F
-    void warn(java.lang.String,java.lang.String) -> b
-    java.lang.String GetClipboardText() -> u
+com.welty.nboard.nboard.ReversiWindow -> com.welty.nboard.nboard.ReversiWindow:
+    javax.swing.JFrame frame -> a
+    com.welty.nboard.thor.DatabaseLoader databaseLoader -> b
+    com.welty.nboard.nboard.NodeCountPanel nodeCountPanel -> c
+    com.welty.nboard.nboard.ReversiData reversiData -> reversiData
+    com.welty.nboard.nboard.engine.ReversiWindowEngine opposingEngine -> d
+    com.welty.nboard.nboard.selector.GuiOpponentSelector opponentSelector -> e
+    com.welty.nboard.nboard.engine.ReversiWindowEngine analysisEngine -> f
+    com.welty.nboard.nboard.selector.GuiOpponentSelector analysisSelector -> g
+    javax.swing.JLabel engineStatus -> h
+    com.welty.nboard.nboard.BoardPanel boardPanel -> i
+    com.welty.nboard.nboard.GameSelectionWindow gameSelectionWindow -> j
+    com.welty.nboard.nboard.Hints m_hints -> k
+    com.welty.nboard.thor.DatabaseTableModel databaseTableModel -> l
+    boolean needsLove -> m
+    javax.swing.JMenuItem viewAlwaysShowEvals -> n
+    javax.swing.JMenuItem viewD2 -> o
+    javax.swing.JMenuItem viewPhotoStyle -> p
+    javax.swing.JRadioButtonMenuItem viewHighlightLegal -> q
+    javax.swing.JRadioButtonMenuItem viewHighlightBest -> r
+    javax.swing.JMenuItem viewCoordinates -> s
+    javax.swing.JMenuItem engineLearnAll -> t
+    javax.swing.JMenuItem thorLookUpAll -> u
+    java.util.List shutdownHooks -> v
+    com.welty.nboard.gui.RadioGroup mode -> w
+    com.welty.nboard.gui.RadioGroup drawsTo -> x
+    com.welty.nboard.gui.RadioGroup engineTop -> y
+    com.welty.nboard.nboard.GgfFileChooser chooser -> z
+    com.welty.nboard.nboard.startpos.StartPositionManager startPositionManager -> A
+    com.welty.nboard.nboard.AnalysisData analysisData -> B
+    com.welty.othello.api.PingPong pingPong -> C
+    int[] engineTops -> D
+    java.awt.event.ActionListener engineUpdater -> E
+    void warn(java.lang.String,java.lang.String) -> a
+    java.lang.String GetClipboardText() -> c
     javax.swing.JMenuItem createCheckBoxMenuItem(java.lang.String,java.lang.String,boolean,java.awt.event.ActionListener[]) -> a
     javax.swing.JMenu createMenuItem(java.lang.String,javax.swing.JMenu) -> a
     void OpenFile(java.io.File) -> a
-    void MayLearn() -> a
-    boolean IsStudying() -> j
-    boolean ShowEvals() -> d
-    boolean UserPlays(boolean) -> a
-    boolean isAnalyzing() -> n
-    com.welty.nboard.nboard.startpos.StartPosition getStartPosition() -> m
-    boolean UsersMove() -> e
+    void MayLearn() -> MayLearn
+    boolean IsStudying() -> IsStudying
+    boolean AlwaysShowEvals() -> AlwaysShowEvals
+    boolean ShowEvals() -> ShowEvals
+    boolean UserPlays(boolean) -> UserPlays
+    boolean isAnalyzing() -> isAnalyzing
+    com.welty.nboard.nboard.startpos.StartPosition getStartPosition() -> getStartPosition
+    boolean UsersMove() -> UsersMove
     void SetMode(int) -> a
     void SetMode(int,boolean) -> a
-    java.lang.String getPlayerName(boolean) -> b
-    int getContempt() -> v
-    int getMaxDepth() -> w
-    int getMaxAnalysisDepth() -> x
-    void TellEngineToLearn() -> b
-    void requestAnalysis() -> o
-    void TellEngineWhatToDo() -> p
-    boolean ViewPhotoStyle() -> f
-    boolean ViewD2() -> g
-    int IHighlight() -> h
-    boolean ViewCoordinates() -> i
-    boolean ThorLookUpAll() -> k
-    boolean EngineLearnAll() -> l
-    void BringToTop() -> q
-    java.lang.String getEngineName() -> c
-    void status(java.lang.String) -> a
-    void nodeStats(long,double) -> a
-    void analysis(int,double) -> a
-    void engineMove(com.welty.othello.gdk.OsMoveListItem) -> a
-    void engineReady() -> r
-    void hint$4ba75263(boolean,java.lang.String,com.welty.othello.core.CMove,com.welty.othello.protocol.Value,int,com.welty.othello.protocol.Depth) -> a
-    void engineError(java.lang.String,java.lang.String) -> a
-    void repaint() -> s
+    java.lang.String getPlayerName(boolean) -> a
+    int getContempt() -> d
+    int getMaxDepth() -> e
+    int getMaxAnalysisDepth() -> f
+    void TellEngineToLearn() -> TellEngineToLearn
+    void requestAnalysis() -> requestAnalysis
+    void TellEngineWhatToDo() -> a
+    boolean ViewPhotoStyle() -> ViewPhotoStyle
+    boolean ViewD2() -> ViewD2
+    int IHighlight() -> IHighlight
+    boolean ViewCoordinates() -> ViewCoordinates
+    boolean ThorLookUpAll() -> ThorLookUpAll
+    boolean EngineLearnAll() -> EngineLearnAll
+    void BringToTop() -> BringToTop
+    java.lang.String getEngineName() -> getEngineName
+    void status(java.lang.String) -> status
+    void nameChanged(java.lang.String) -> nameChanged
+    void nodeStats(long,double) -> nodeStats
+    void analysis(int,double) -> analysis
+    void engineMove(com.welty.othello.gdk.OsMoveListItem) -> engineMove
+    void engineReady() -> engineReady
+    void hint(boolean,java.lang.String,com.welty.othello.core.CMove,com.welty.othello.protocol.Value,int,com.welty.othello.protocol.Depth,java.lang.String) -> hint
+    void engineError(java.lang.String,java.lang.String) -> engineError
+    void repaint() -> repaint
     boolean access$002(com.welty.nboard.nboard.ReversiWindow,boolean) -> a
     java.util.List access$100(com.welty.nboard.nboard.ReversiWindow) -> a
     com.welty.nboard.thor.DatabaseLoader access$200(com.welty.nboard.nboard.ReversiWindow) -> b
     com.welty.nboard.thor.DatabaseTableModel access$300(com.welty.nboard.nboard.ReversiWindow) -> c
     com.welty.nboard.nboard.BoardPanel access$400(com.welty.nboard.nboard.ReversiWindow) -> d
-    void access$500(java.lang.String) -> b
-    java.lang.String access$600() -> t
+    void access$500(java.lang.String) -> a
+    java.lang.String access$600() -> b
     void access$700(com.welty.nboard.nboard.ReversiWindow,java.lang.String,java.lang.String) -> a
     com.welty.nboard.gui.RadioGroup access$800(com.welty.nboard.nboard.ReversiWindow) -> e
     com.welty.nboard.nboard.GgfFileChooser access$900(com.welty.nboard.nboard.ReversiWindow) -> f
@@ -858,128 +864,128 @@ com.welty.nboard.nboard.ReversiWindow -> bv:
     javax.swing.JFrame access$1100(com.welty.nboard.nboard.ReversiWindow) -> g
     com.welty.nboard.nboard.selector.GuiOpponentSelector access$1200(com.welty.nboard.nboard.ReversiWindow) -> h
     com.welty.nboard.nboard.selector.GuiOpponentSelector access$1300(com.welty.nboard.nboard.ReversiWindow) -> i
-com.welty.nboard.nboard.ReversiWindow$1 -> bw:
+com.welty.nboard.nboard.ReversiWindow$1 -> bv:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
-    void handleSignal(java.lang.Object) -> a_
-com.welty.nboard.nboard.ReversiWindow$10 -> bx:
-    com.welty.nboard.nboard.ReversiWindow this$0 -> a
-    void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$11 -> by:
+    void handleSignal(java.lang.Object) -> a
+com.welty.nboard.nboard.ReversiWindow$10 -> bw:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$12 -> bz:
+com.welty.nboard.nboard.ReversiWindow$11 -> bx:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$13 -> bA:
+com.welty.nboard.nboard.ReversiWindow$12 -> by:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$14 -> bB:
+com.welty.nboard.nboard.ReversiWindow$13 -> bz:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$15 -> bC:
+com.welty.nboard.nboard.ReversiWindow$14 -> bA:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$16 -> bD:
+com.welty.nboard.nboard.ReversiWindow$15 -> bB:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$17 -> bE:
+com.welty.nboard.nboard.ReversiWindow$16 -> bC:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$19 -> bF:
+com.welty.nboard.nboard.ReversiWindow$17 -> bD:
+    com.welty.nboard.nboard.ReversiWindow this$0 -> a
+    void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
+com.welty.nboard.nboard.ReversiWindow$19 -> bE:
     com.welty.nboard.nboard.SetUpWindow val$setUpWindow -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$1BoardFlipper -> bG:
+com.welty.nboard.nboard.ReversiWindow$1BoardFlipper -> bF:
     int iReflection -> a
     com.welty.nboard.nboard.ReversiWindow this$0 -> b
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
     java.lang.String getMenuText() -> a
-com.welty.nboard.nboard.ReversiWindow$2 -> bH:
+com.welty.nboard.nboard.ReversiWindow$2 -> bG:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void windowClosing(java.awt.event.WindowEvent) -> windowClosing
-com.welty.nboard.nboard.ReversiWindow$21 -> bI:
+com.welty.nboard.nboard.ReversiWindow$21 -> bH:
     com.welty.nboard.nboard.transcript.EnterTranscriptWindow val$enterTranscriptWindow -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$22 -> bJ:
+com.welty.nboard.nboard.ReversiWindow$22 -> bI:
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$23 -> bK:
+com.welty.nboard.nboard.ReversiWindow$23 -> bJ:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$24 -> bL:
+com.welty.nboard.nboard.ReversiWindow$24 -> bK:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$25 -> bM:
+com.welty.nboard.nboard.ReversiWindow$25 -> bL:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$26 -> bN:
+com.welty.nboard.nboard.ReversiWindow$26 -> bM:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$27 -> bO:
+com.welty.nboard.nboard.ReversiWindow$27 -> bN:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$28 -> bP:
+com.welty.nboard.nboard.ReversiWindow$28 -> bO:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$29 -> bQ:
+com.welty.nboard.nboard.ReversiWindow$29 -> bP:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$3 -> bR:
+com.welty.nboard.nboard.ReversiWindow$3 -> bQ:
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$30 -> bS:
+com.welty.nboard.nboard.ReversiWindow$30 -> bR:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$31 -> bT:
+com.welty.nboard.nboard.ReversiWindow$31 -> bS:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$32 -> bU:
+com.welty.nboard.nboard.ReversiWindow$32 -> bT:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$33 -> bV:
+com.welty.nboard.nboard.ReversiWindow$33 -> bU:
     com.welty.nboard.nboard.ReversiWindow this$0 -> c
     int readIndex() -> a
-com.welty.nboard.nboard.ReversiWindow$34 -> bW:
+com.welty.nboard.nboard.ReversiWindow$34 -> bV:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$35 -> bX:
+com.welty.nboard.nboard.ReversiWindow$35 -> bW:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$36 -> bY:
+com.welty.nboard.nboard.ReversiWindow$36 -> bX:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$37 -> bZ:
+com.welty.nboard.nboard.ReversiWindow$37 -> bY:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$38 -> ca:
+com.welty.nboard.nboard.ReversiWindow$38 -> bZ:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$39 -> cb:
+com.welty.nboard.nboard.ReversiWindow$39 -> ca:
     javax.swing.JMenu val$flipMenu -> a
-    void handleSignal(java.lang.Object) -> a_
-com.welty.nboard.nboard.ReversiWindow$4 -> cc:
+    void handleSignal(java.lang.Object) -> a
+com.welty.nboard.nboard.ReversiWindow$4 -> cb:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$40 -> cd:
+com.welty.nboard.nboard.ReversiWindow$40 -> cc:
     java.lang.String val$key -> a
     javax.swing.JCheckBoxMenuItem val$menuItem -> b
     void run() -> run
-com.welty.nboard.nboard.ReversiWindow$41 -> ce:
+com.welty.nboard.nboard.ReversiWindow$41 -> cd:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$5 -> cf:
+com.welty.nboard.nboard.ReversiWindow$5 -> ce:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$6 -> cg:
+com.welty.nboard.nboard.ReversiWindow$6 -> cf:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$7 -> ch:
+com.welty.nboard.nboard.ReversiWindow$7 -> cg:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$8 -> ci:
+com.welty.nboard.nboard.ReversiWindow$8 -> ch:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ReversiWindow$9 -> cj:
+com.welty.nboard.nboard.ReversiWindow$9 -> ci:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ScoreWindow -> ck:
+com.welty.nboard.nboard.ScoreWindow -> cj:
     com.welty.nboard.nboard.ReversiData reversiData -> a
     com.welty.nboard.nboard.OptionSource optionSource -> b
     com.welty.nboard.nboard.ScoreWindow$PlayerPanel blackPanel -> c
@@ -989,60 +995,60 @@ com.welty.nboard.nboard.ScoreWindow -> ck:
     com.welty.nboard.nboard.ScoreWindow$PlayerPanel access$200(com.welty.nboard.nboard.ScoreWindow) -> c
     void access$300(com.welty.nboard.nboard.ScoreWindow) -> d
     javax.swing.JLabel access$400(int,java.lang.String) -> a
-com.welty.nboard.nboard.ScoreWindow$1 -> cl:
+com.welty.nboard.nboard.ScoreWindow$1 -> ck:
     com.welty.nboard.nboard.ScoreWindow$EmptiesPanel val$emptiesPanel -> a
     com.welty.nboard.nboard.ScoreWindow this$0 -> b
-    void handleSignal(java.lang.Object) -> a_
-com.welty.nboard.nboard.ScoreWindow$2 -> cm:
+    void handleSignal(java.lang.Object) -> a
+com.welty.nboard.nboard.ScoreWindow$2 -> cl:
     com.welty.nboard.nboard.ScoreWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.ScoreWindow$EmptiesPanel -> cn:
+com.welty.nboard.nboard.ScoreWindow$EmptiesPanel -> cm:
     javax.swing.JLabel score -> a
-com.welty.nboard.nboard.ScoreWindow$PlayerPanel -> co:
+com.welty.nboard.nboard.ScoreWindow$PlayerPanel -> cn:
     javax.swing.JLabel score -> a
     javax.swing.JLabel player -> b
     javax.swing.JLabel clock -> c
     void setClock(com.welty.othello.gdk.OsClock) -> a
-com.welty.nboard.nboard.SetUpData -> cp:
+com.welty.nboard.nboard.SetUpData -> co:
     char[] pieces -> a
-com.welty.nboard.nboard.SetUpPanel -> cq:
+com.welty.nboard.nboard.SetUpPanel -> cp:
     com.welty.nboard.nboard.SetUpData data -> f
     void paintSquare(java.awt.Graphics,int,int,com.welty.othello.gdk.COsBoard) -> a
     com.welty.othello.gdk.COsBoard getBoard() -> d
     void access$000(com.welty.nboard.nboard.SetUpPanel,char) -> a
-com.welty.nboard.nboard.SetUpPanel$1 -> cr:
+com.welty.nboard.nboard.SetUpPanel$1 -> cq:
     com.welty.nboard.nboard.SetUpData val$data -> a
     com.welty.nboard.nboard.SetUpWindow val$window -> b
     com.welty.nboard.nboard.SetUpPanel this$0 -> c
     void keyPressed(java.awt.event.KeyEvent) -> keyPressed
     void keyTyped(java.awt.event.KeyEvent) -> keyTyped
-com.welty.nboard.nboard.SetUpWindow -> cs:
+com.welty.nboard.nboard.SetUpWindow -> cr:
     javax.swing.JFrame window -> a
     com.welty.nboard.nboard.SetUpWindow$Listener listener -> c
     javax.swing.JCheckBox moverSelector -> d
     com.welty.nboard.nboard.BoardSelectionPanel setUpPanel -> b
     void cancel() -> a
     void ok(com.welty.nboard.nboard.SetUpData) -> a
-com.welty.nboard.nboard.SetUpWindow$1 -> ct:
+com.welty.nboard.nboard.SetUpWindow$1 -> cs:
     com.welty.nboard.nboard.SetUpData val$data -> a
     com.welty.nboard.nboard.SetUpWindow this$0 -> b
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.SetUpWindow$2 -> cu:
+com.welty.nboard.nboard.SetUpWindow$2 -> ct:
     com.welty.nboard.nboard.SetUpWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.SetUpWindow$3 -> cv:
+com.welty.nboard.nboard.SetUpWindow$3 -> cu:
     com.welty.nboard.nboard.SetUpWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.SetUpWindow$Listener -> cw:
+com.welty.nboard.nboard.SetUpWindow$Listener -> cv:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void setUpBoard(com.welty.novello.core.Position) -> a
-com.welty.nboard.nboard.TimeGraph -> cx:
+com.welty.nboard.nboard.TimeGraph -> cw:
     java.util.List extractSeries(com.welty.nboard.nboard.ReversiData) -> a
-com.welty.nboard.nboard.TimeGraph$MyListener -> cy:
+com.welty.nboard.nboard.TimeGraph$MyListener -> cx:
     com.welty.nboard.nboard.ReversiData reversiData -> a
     com.welty.nboard.nboard.TimeGraph this$0 -> b
-    void handleSignal(java.lang.Object) -> a_
-com.welty.nboard.nboard.TipOfTheDayTlw -> cz:
+    void handleSignal(java.lang.Object) -> a
+com.welty.nboard.nboard.TipOfTheDayTlw -> cy:
     int m_id -> a
     java.lang.String m_sRegKey -> b
     java.util.ArrayList tips -> c
@@ -1051,7 +1057,7 @@ com.welty.nboard.nboard.TipOfTheDayTlw -> cz:
     void Next() -> b
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
     void setText() -> c
-com.welty.nboard.nboard.engine.EngineSynchronizer -> cA:
+com.welty.nboard.nboard.engine.EngineSynchronizer -> cz:
     com.welty.othello.api.PingPong pingPong -> d
     com.welty.nboard.nboard.engine.MultiEngine multiEngine -> a
     com.welty.othello.api.OpponentSelector opponentSelector -> e
@@ -1068,15 +1074,15 @@ com.welty.nboard.nboard.engine.EngineSynchronizer -> cA:
     void opponentChanged() -> c
     boolean isCurrent(int) -> a
     void verifyEdt() -> d
-com.welty.nboard.nboard.engine.EngineSynchronizer$MyResponder -> cB:
+com.welty.nboard.nboard.engine.EngineSynchronizer$MyResponder -> cA:
     boolean debug -> a
     com.welty.nboard.nboard.engine.EngineSynchronizer this$0 -> b
     void handle(java.lang.Object) -> a
-com.welty.nboard.nboard.engine.EngineSynchronizer$ResponseRunner -> cC:
+com.welty.nboard.nboard.engine.EngineSynchronizer$ResponseRunner -> cB:
     com.welty.othello.protocol.NBoardResponse response -> a
     com.welty.nboard.nboard.engine.EngineSynchronizer this$0 -> b
     void run() -> run
-com.welty.nboard.nboard.engine.MultiEngine -> cD:
+com.welty.nboard.nboard.engine.MultiEngine -> cC:
     com.welty.othello.api.StatelessEngine engine -> a
     void setEngine(com.welty.othello.api.PingPong,com.welty.othello.api.StatelessEngine) -> a
     void learn(com.welty.othello.api.PingPong,com.welty.othello.api.NBoardState) -> a
@@ -1086,93 +1092,102 @@ com.welty.nboard.nboard.engine.MultiEngine -> cD:
     java.lang.String getName() -> a
     java.lang.String getStatus() -> b
     boolean isReady() -> c
-com.welty.nboard.nboard.engine.ReversiWindowEngine -> cE:
+com.welty.nboard.nboard.engine.ReversiWindowEngine -> cD:
     java.lang.String getName() -> a
     boolean isReady() -> b
     void learn(com.welty.othello.api.NBoardState) -> a
     void requestAnalysis(com.welty.othello.api.NBoardState) -> b
     void requestHints(com.welty.othello.api.NBoardState,int) -> a
     void requestMove(com.welty.othello.api.NBoardState) -> c
-com.welty.nboard.nboard.engine.ReversiWindowEngine$Listener -> cF:
-    void status(java.lang.String) -> a
-    void engineMove(com.welty.othello.gdk.OsMoveListItem) -> a
-    void engineReady() -> r
-    void hint$4ba75263(boolean,java.lang.String,com.welty.othello.core.CMove,com.welty.othello.protocol.Value,int,com.welty.othello.protocol.Depth) -> a
-    void engineError(java.lang.String,java.lang.String) -> a
-    void nodeStats(long,double) -> a
-    void analysis(int,double) -> a
-com.welty.nboard.nboard.selector.AddEngineDialog -> cG:
-com.welty.nboard.nboard.selector.AddEngineDialog$1 -> cH:
+com.welty.nboard.nboard.engine.ReversiWindowEngine$Listener -> cE:
+    void status(java.lang.String) -> status
+    void engineMove(com.welty.othello.gdk.OsMoveListItem) -> engineMove
+    void engineReady() -> engineReady
+    void hint(boolean,java.lang.String,com.welty.othello.core.CMove,com.welty.othello.protocol.Value,int,com.welty.othello.protocol.Depth,java.lang.String) -> hint
+    void engineError(java.lang.String,java.lang.String) -> engineError
+    void nameChanged(java.lang.String) -> nameChanged
+    void nodeStats(long,double) -> nodeStats
+    void analysis(int,double) -> analysis
+com.welty.nboard.nboard.selector.AddEngineDialog -> cF:
+com.welty.nboard.nboard.selector.AddEngineDialog$1 -> cG:
     com.orbanova.common.jsb.JsbTextField val$nameField -> a
     com.orbanova.common.jsb.JsbTextField val$wdField -> b
     com.orbanova.common.jsb.JsbTextField val$commandField -> c
     com.welty.nboard.nboard.selector.AddEngineDialog this$0 -> d
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.selector.AddEngineDialog$2 -> cI:
+com.welty.nboard.nboard.selector.AddEngineDialog$2 -> cH:
     com.welty.nboard.nboard.selector.AddEngineDialog this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.selector.EngineListModel -> cJ:
+com.welty.nboard.nboard.selector.EngineListModel -> cI:
     void put(com.welty.othello.gui.selector.EngineSelector) -> a
     int find(java.lang.String) -> a
-com.welty.nboard.nboard.selector.GuiOpponentSelector -> cK:
-    com.welty.othello.gui.prefs.PrefInt levelPref -> b
-    com.welty.othello.gui.prefs.PrefString enginePref -> c
-    javax.swing.JDialog frame -> d
-    javax.swing.JList levels -> e
-    com.welty.nboard.nboard.selector.EngineListModel engineListModel -> f
-    javax.swing.JList engineSelectors -> g
+com.welty.nboard.nboard.selector.GuiOpponentSelector -> com.welty.nboard.nboard.selector.GuiOpponentSelector:
+    com.welty.othello.gui.prefs.PrefInt levelPref -> a
+    com.welty.othello.gui.prefs.PrefString enginePref -> b
+    javax.swing.JDialog frame -> c
+    javax.swing.JList levels -> d
+    com.welty.nboard.nboard.selector.EngineListModel engineListModel -> e
+    javax.swing.JList engineSelectors -> f
+    javax.swing.JLabel strengthLabel -> g
     int selectedLevel -> h
     com.welty.othello.gui.selector.EngineSelector selectedEngine -> i
+    void setSelectedEngine() -> a
+    void setStrength() -> b
     javax.swing.JComponent wrap(java.lang.String,javax.swing.JList) -> a
     void setLevelElements(javax.swing.DefaultListModel,java.lang.Integer[]) -> b
     int findNearestLevel(int,java.lang.Integer[]) -> b
     void setUpList(javax.swing.JList) -> a
-    void show() -> a
-    com.welty.othello.api.OpponentSelection getOpponent() -> b
-    javax.swing.JList access$000(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> a
-    void access$100(javax.swing.DefaultListModel,java.lang.Integer[]) -> a
-    int access$200(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> b
-    int access$300(int,java.lang.Integer[]) -> a
-    javax.swing.JList access$400(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> c
-    javax.swing.JDialog access$500(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> d
-    int access$202(com.welty.nboard.nboard.selector.GuiOpponentSelector,int) -> a
-    com.welty.othello.gui.prefs.PrefInt access$600(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> e
-    com.welty.othello.gui.selector.EngineSelector access$702(com.welty.nboard.nboard.selector.GuiOpponentSelector,com.welty.othello.gui.selector.EngineSelector) -> a
-    com.welty.othello.gui.selector.EngineSelector access$700(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> f
-    com.welty.othello.gui.prefs.PrefString access$800(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> g
-    void access$900(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> h
-    com.welty.nboard.nboard.selector.EngineListModel access$1000(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> i
-com.welty.nboard.nboard.selector.GuiOpponentSelector$1 -> cL:
+    void show() -> show
+    void main(java.lang.String[]) -> main
+    com.welty.othello.api.OpponentSelection getOpponent() -> getOpponent
+    void access$000(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> a
+    javax.swing.JList access$100(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> b
+    void access$200(javax.swing.DefaultListModel,java.lang.Integer[]) -> a
+    int access$300(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> c
+    int access$400(int,java.lang.Integer[]) -> a
+    javax.swing.JList access$500(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> d
+    javax.swing.JDialog access$600(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> e
+    int access$302(com.welty.nboard.nboard.selector.GuiOpponentSelector,int) -> a
+    com.welty.othello.gui.prefs.PrefInt access$700(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> f
+    void access$800(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> g
+    com.welty.othello.gui.selector.EngineSelector access$900(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> h
+    com.welty.othello.gui.prefs.PrefString access$1000(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> i
+    void access$1100(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> j
+    com.welty.nboard.nboard.selector.EngineListModel access$1200(com.welty.nboard.nboard.selector.GuiOpponentSelector) -> access$1200
+com.welty.nboard.nboard.selector.GuiOpponentSelector$1 -> cJ:
+    com.welty.nboard.nboard.selector.GuiOpponentSelector this$0 -> a
+    void valueChanged(javax.swing.event.ListSelectionEvent) -> valueChanged
+com.welty.nboard.nboard.selector.GuiOpponentSelector$2 -> cK:
     javax.swing.DefaultListModel val$levelModel -> a
     com.welty.nboard.nboard.selector.GuiOpponentSelector this$0 -> b
     void valueChanged(javax.swing.event.ListSelectionEvent) -> valueChanged
-com.welty.nboard.nboard.selector.GuiOpponentSelector$2 -> cM:
+com.welty.nboard.nboard.selector.GuiOpponentSelector$3 -> cL:
     com.welty.nboard.nboard.selector.GuiOpponentSelector this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.selector.GuiOpponentSelector$3 -> cN:
+com.welty.nboard.nboard.selector.GuiOpponentSelector$4 -> cM:
     com.welty.nboard.nboard.selector.GuiOpponentSelector this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.selector.GuiOpponentSelector$4 -> cO:
+com.welty.nboard.nboard.selector.GuiOpponentSelector$5 -> cN:
     com.welty.nboard.nboard.selector.GuiOpponentSelector this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.startpos.StartPosition -> cP:
+com.welty.nboard.nboard.startpos.StartPosition -> cO:
     com.welty.novello.core.Position initialPosition -> a
     com.welty.othello.gdk.OsMove[] moves -> b
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     java.lang.String toString() -> toString
-com.welty.nboard.nboard.startpos.StartPositionChooser -> cQ:
+com.welty.nboard.nboard.startpos.StartPositionChooser -> cP:
     com.welty.nboard.nboard.startpos.StartPositionChooser$XotChooser xotChooser -> a
     com.welty.nboard.nboard.startpos.StartPosition next(java.lang.String) -> a
-com.welty.nboard.nboard.startpos.StartPositionChooser$XotChooser -> cR:
+com.welty.nboard.nboard.startpos.StartPositionChooser$XotChooser -> cQ:
     java.util.List xots -> a
     int lastIndex -> b
     com.welty.nboard.nboard.startpos.StartPosition next() -> a
-com.welty.nboard.nboard.startpos.StartPositionManager -> cS:
+com.welty.nboard.nboard.startpos.StartPositionManager -> cR:
     com.welty.othello.gui.MenuButtonGroup startPosition -> a
     com.welty.nboard.nboard.startpos.StartPosition getStartPosition() -> a
     void addChoicesToMenu(javax.swing.JMenu) -> a
-com.welty.nboard.nboard.transcript.EnterTranscriptPanel -> cT:
+com.welty.nboard.nboard.transcript.EnterTranscriptPanel -> cS:
     com.welty.nboard.nboard.transcript.TranscriptData data -> f
     boolean hasFirstDigit -> g
     java.awt.Color errorColor -> h
@@ -1200,66 +1215,66 @@ com.welty.nboard.nboard.transcript.EnterTranscriptPanel -> cT:
     boolean access$1302(com.welty.nboard.nboard.transcript.EnterTranscriptPanel,boolean) -> a
     int access$1400(com.welty.nboard.nboard.transcript.EnterTranscriptPanel) -> m
     int access$1500(com.welty.nboard.nboard.transcript.EnterTranscriptPanel) -> n
-com.welty.nboard.nboard.transcript.EnterTranscriptPanel$1 -> cU:
+com.welty.nboard.nboard.transcript.EnterTranscriptPanel$1 -> cT:
     com.welty.nboard.nboard.transcript.TranscriptData val$data -> a
     java.awt.event.KeyListener val$chainedListener -> b
     com.welty.nboard.nboard.transcript.EnterTranscriptPanel this$0 -> c
     void keyPressed(java.awt.event.KeyEvent) -> keyPressed
     void keyTyped(java.awt.event.KeyEvent) -> keyTyped
     void keyReleased(java.awt.event.KeyEvent) -> keyReleased
-com.welty.nboard.nboard.transcript.EnterTranscriptWindow -> cV:
+com.welty.nboard.nboard.transcript.EnterTranscriptWindow -> cU:
     javax.swing.JFrame window -> a
     com.welty.nboard.nboard.transcript.TranscriptData data -> b
     com.welty.nboard.nboard.transcript.EnterTranscriptPanel panel -> c
     void access$000(com.welty.nboard.nboard.transcript.EnterTranscriptWindow,com.welty.nboard.nboard.transcript.EnterTranscriptWindow$Listener) -> a
     void access$100(com.welty.nboard.nboard.transcript.EnterTranscriptWindow) -> a
-com.welty.nboard.nboard.transcript.EnterTranscriptWindow$1 -> cW:
+com.welty.nboard.nboard.transcript.EnterTranscriptWindow$1 -> cV:
     com.welty.nboard.nboard.transcript.EnterTranscriptWindow$Listener val$listener -> a
     com.welty.nboard.nboard.transcript.EnterTranscriptWindow this$0 -> b
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.transcript.EnterTranscriptWindow$2 -> cX:
+com.welty.nboard.nboard.transcript.EnterTranscriptWindow$2 -> cW:
     com.welty.nboard.nboard.transcript.EnterTranscriptWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.transcript.EnterTranscriptWindow$3 -> cY:
+com.welty.nboard.nboard.transcript.EnterTranscriptWindow$3 -> cX:
     com.welty.nboard.nboard.transcript.EnterTranscriptWindow this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.nboard.nboard.transcript.EnterTranscriptWindow$4 -> cZ:
+com.welty.nboard.nboard.transcript.EnterTranscriptWindow$4 -> cY:
     com.welty.nboard.nboard.transcript.EnterTranscriptWindow$Listener val$listener -> a
     com.welty.nboard.nboard.transcript.EnterTranscriptWindow this$0 -> b
     void keyPressed(java.awt.event.KeyEvent) -> keyPressed
-com.welty.nboard.nboard.transcript.EnterTranscriptWindow$Listener -> da:
+com.welty.nboard.nboard.transcript.EnterTranscriptWindow$Listener -> cZ:
     com.welty.nboard.nboard.ReversiWindow this$0 -> a
     void setGame(com.welty.othello.gdk.COsGame) -> a
-com.welty.nboard.nboard.transcript.ErrorLabel -> db:
+com.welty.nboard.nboard.transcript.ErrorLabel -> da:
     com.welty.nboard.nboard.transcript.TranscriptData data -> a
     void transcriptDataUpdated() -> f
-com.welty.nboard.nboard.transcript.TranscriptData -> dc:
-    int[] moveNumbers -> b
-    com.welty.nboard.nboard.transcript.TranscriptData$CalcResult calcResult -> c
+com.welty.nboard.nboard.transcript.TranscriptData -> db:
+    int[] moveNumbers -> a
+    com.welty.nboard.nboard.transcript.TranscriptData$CalcResult calcResult -> b
     int getSquare(int) -> a
     void recalculate() -> a
-com.welty.nboard.nboard.transcript.TranscriptData$CalcResult -> dd:
+com.welty.nboard.nboard.transcript.TranscriptData$CalcResult -> dc:
     com.welty.othello.gdk.COsGame game -> a
     java.util.ArrayList errors -> b
     int errorMoveNumber -> c
-com.welty.nboard.nboard.transcript.TranscriptData$Listener -> de:
+com.welty.nboard.nboard.transcript.TranscriptData$Listener -> dd:
     void transcriptDataUpdated() -> f
-com.welty.nboard.thor.DatabaseData -> df:
-    java.util.ArrayList m_tgis -> b
-    java.util.ArrayList m_players -> c
-    java.util.ArrayList m_tournaments -> d
-    int m_nThorGames -> e
-    java.util.ArrayList m_ggfGames -> f
+com.welty.nboard.thor.DatabaseData -> de:
+    java.util.ArrayList m_tgis -> a
+    java.util.ArrayList m_players -> b
+    java.util.ArrayList m_tournaments -> c
+    int m_nThorGames -> d
+    java.util.ArrayList m_ggfGames -> e
     java.lang.String GameItemText(int,int) -> a
     java.lang.String playerFromPlayerNumber(char) -> a
     java.lang.String tournamentFromTournamentNumber(char) -> b
     void setGames(java.util.ArrayList) -> a
     void addGgfGames(java.util.ArrayList) -> b
     void fireDatabaseChanged() -> a
-com.welty.nboard.thor.DatabaseData$Listener -> dg:
+com.welty.nboard.thor.DatabaseData$Listener -> df:
     com.welty.nboard.thor.DatabaseTableModel this$0 -> a
     void databaseChanged() -> a
-com.welty.nboard.thor.DatabaseLoader -> dh:
+com.welty.nboard.thor.DatabaseLoader -> dg:
     com.welty.nboard.thor.ThorFileChooser thorFileChooser -> a
     java.lang.String m_fnThorTournaments -> b
     java.lang.String m_fnThorPlayers -> c
@@ -1271,12 +1286,12 @@ com.welty.nboard.thor.DatabaseLoader -> dh:
     void LoadPlayers(java.lang.String) -> a
     void LoadTournaments(java.lang.String) -> b
     boolean SaveOpeningFrequencies() -> c
-com.welty.nboard.thor.DatabaseTable -> di:
+com.welty.nboard.thor.DatabaseTable -> dh:
     com.welty.nboard.nboard.ReversiData reversiData -> b
     com.welty.nboard.thor.DatabaseTableModel dtm -> c
     com.welty.nboard.nboard.ReversiWindow reversiWindow -> d
     void selectionChanged$255f295(int) -> a
-com.welty.nboard.thor.DatabaseTableModel -> dj:
+com.welty.nboard.thor.DatabaseTableModel -> di:
     com.welty.nboard.thor.DatabaseData databaseData -> b
     com.welty.nboard.gui.GridColumn[] columns -> c
     com.welty.nboard.nboard.OptionSource optionSource -> d
@@ -1294,18 +1309,18 @@ com.welty.nboard.thor.DatabaseTableModel -> dj:
     int getRowCount() -> getRowCount
     java.lang.String getStatusString() -> d
     java.lang.Object getValueAt(int,int) -> getValueAt
-com.welty.nboard.thor.DatabaseTableModel$1 -> dk:
+com.welty.nboard.thor.DatabaseTableModel$1 -> dj:
     com.welty.nboard.thor.DatabaseTableModel this$0 -> a
-    void handleSignal(java.lang.Object) -> a_
-com.welty.nboard.thor.DatabaseUiPack -> dl:
+    void handleSignal(java.lang.Object) -> a
+com.welty.nboard.thor.DatabaseUiPack -> dk:
     com.welty.nboard.thor.DatabaseLoader loader -> a
     com.welty.nboard.thor.DatabaseTableModel tableModel -> b
-com.welty.nboard.thor.DatabaseWindow -> dm:
+com.welty.nboard.thor.DatabaseWindow -> dl:
     com.welty.nboard.thor.DatabaseTable table -> a
     com.welty.nboard.thor.DatabaseTableModel tableModel -> b
     com.orbanova.common.jsb.Grid createFilterBoxes() -> a
     void tableChanged(javax.swing.event.TableModelEvent) -> tableChanged
-com.welty.nboard.thor.DatabaseWindow$FilterBoxListener -> dn:
+com.welty.nboard.thor.DatabaseWindow$FilterBoxListener -> dm:
     com.welty.nboard.thor.DatabaseTableModel dtm -> a
     int field -> b
     javax.swing.JTextField input -> c
@@ -1313,9 +1328,9 @@ com.welty.nboard.thor.DatabaseWindow$FilterBoxListener -> dn:
     void removeUpdate(javax.swing.event.DocumentEvent) -> removeUpdate
     void changedUpdate(javax.swing.event.DocumentEvent) -> changedUpdate
     void handle() -> a
-com.welty.nboard.thor.ErrorDisplayer -> do:
+com.welty.nboard.thor.ErrorDisplayer -> dn:
     void notify(java.lang.String,java.lang.String) -> a
-com.welty.nboard.thor.IndeterminateProgressTracker -> dp:
+com.welty.nboard.thor.IndeterminateProgressTracker -> do:
     long progress -> a
     javax.swing.JLabel label -> b
     javax.swing.JDialog dialog -> c
@@ -1324,34 +1339,34 @@ com.welty.nboard.thor.IndeterminateProgressTracker -> dp:
     void increment() -> a
     void update() -> b
     void close() -> close
-com.welty.nboard.thor.TextFileChooser -> dq:
+com.welty.nboard.thor.TextFileChooser -> dp:
     javax.swing.JFileChooser chooser -> a
-com.welty.nboard.thor.TextFileChooser$TextFileFilter -> dr:
+com.welty.nboard.thor.TextFileChooser$TextFileFilter -> dq:
     boolean accept(java.io.File) -> accept
     java.lang.String getDescription() -> getDescription
-com.welty.nboard.thor.Thor$MatchingPositions -> ds:
+com.welty.nboard.thor.Thor$MatchingPositions -> dr:
     gnu.trove.list.array.TIntArrayList index -> a
     gnu.trove.list.array.TIntArrayList iReflections -> b
-com.welty.nboard.thor.ThorFileChooser -> dt:
+com.welty.nboard.thor.ThorFileChooser -> ds:
     javax.swing.JFileChooser chooser -> a
     java.io.File open(java.lang.String,java.lang.String,java.lang.String) -> a
     void setFileFilter(java.lang.String,java.lang.String,boolean) -> a
     void setSelectedFile(java.lang.String) -> a
-com.welty.nboard.thor.ThorFileChooser$MyFileFilter -> du:
+com.welty.nboard.thor.ThorFileChooser$MyFileFilter -> dt:
     java.lang.String description -> a
     java.lang.String[] extensions -> b
     boolean accept(java.io.File) -> accept
     java.lang.String getDescription() -> getDescription
-com.welty.nboard.thor.ThorGame8 -> dv:
+com.welty.nboard.thor.ThorGame8 -> du:
     char iTournament -> a
     char iBlackPlayer -> b
     char iWhitePlayer -> c
     byte nBlackDiscs -> d
     byte[] moves -> e
-com.welty.nboard.thor.ThorGameInternal -> dw:
+com.welty.nboard.thor.ThorGameInternal -> dv:
     char year -> f
     char openingCode -> g
-com.welty.nboard.thor.ThorHeader -> dx:
+com.welty.nboard.thor.ThorHeader -> dw:
     byte crMonth -> a
     byte crDay -> b
     int n1 -> c
@@ -1360,7 +1375,7 @@ com.welty.nboard.thor.ThorHeader -> dx:
     byte boardSize -> f
     boolean fSolitaire -> g
     byte nPerfectPlay -> h
-com.welty.nboard.thor.ThorOpeningMap -> dy:
+com.welty.nboard.thor.ThorOpeningMap -> dx:
     gnu.trove.map.hash.TObjectIntHashMap openingMap -> a
     java.util.ArrayList names -> b
     com.welty.nboard.thor.ThorOpeningMap tom -> c
@@ -1370,21 +1385,21 @@ com.welty.nboard.thor.ThorOpeningMap -> dy:
     int NOpenings() -> a
     int OpeningCodeFromGgf(java.lang.String) -> a
     byte[] moveBytesFromGgf(java.lang.String) -> b
-com.welty.nboard.thor.ThorOpeningMap$1 -> dz:
+com.welty.nboard.thor.ThorOpeningMap$1 -> dy:
     boolean y(java.lang.Object) -> a
-com.welty.nboard.thor.ThorSummary -> dA:
-com.welty.nboard.thor.ThorSummaryData -> dB:
+com.welty.nboard.thor.ThorSummary -> dz:
+com.welty.nboard.thor.ThorSummaryData -> dA:
     int nBlackWins -> a
     int nWhiteWins -> b
     int nPlayed -> c
     float score -> d
     void CalcScore(boolean) -> a
     void CalcFrequency(int) -> a
-com.welty.novello.core.Counts -> dC:
+com.welty.novello.core.Counts -> dB:
     long nFlips -> a
     long nEvals -> b
     java.lang.String toString() -> toString
-com.welty.novello.core.FlipperULDR -> dD:
+com.welty.novello.core.FlipperULDR -> dC:
     long diagonal -> a
     long shift -> b
     int length -> c
@@ -1395,7 +1410,7 @@ com.welty.novello.core.FlipperULDR -> dD:
     long flips(long,long) -> a
     int calcIndex(long,long) -> b
     int bbIndex(long) -> a
-com.welty.novello.core.FlipperURDL -> dE:
+com.welty.novello.core.FlipperURDL -> dD:
     long diagonal -> a
     long shift -> b
     int length -> c
@@ -1406,21 +1421,21 @@ com.welty.novello.core.FlipperURDL -> dE:
     long flips(long,long) -> a
     int calcIndex(long,long) -> b
     int bbIndex(long) -> a
-com.welty.novello.core.KindergartenEastWest -> dF:
+com.welty.novello.core.KindergartenEastWest -> dE:
     long[] flipTable -> a
     int index(int,int,int) -> a
     long flips(int,long,long) -> a
-com.welty.novello.core.KindergartenUpDown -> dG:
+com.welty.novello.core.KindergartenUpDown -> dF:
     long[] flipTable -> a
     int indexFromBitBoard(int,long,long) -> b
     long flips(int,long,long) -> a
-com.welty.novello.core.MoveScore -> dH:
+com.welty.novello.core.MoveScore -> dG:
     int sq -> a
     int centidisks -> b
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.novello.core.Position -> dI:
+com.welty.novello.core.Position -> dH:
     com.welty.novello.core.Position START_POSITION -> a
     com.welty.novello.core.Position ALTERNATE_START_POSITION -> b
     long black -> d
@@ -1441,7 +1456,7 @@ com.welty.novello.core.Position -> dI:
     int nEmpty() -> e
     long calcMoves() -> f
     int compareTo(java.lang.Object) -> compareTo
-com.welty.novello.core.Square -> dJ:
+com.welty.novello.core.Square -> dI:
     com.welty.novello.core.Square[] squares -> c
     int sq -> a
     long parityRegion -> b
@@ -1451,14 +1466,14 @@ com.welty.novello.core.Square -> dJ:
     long calcFlips(long,long) -> a
     long placement() -> a
     java.lang.String toString() -> toString
-com.welty.novello.eval.Base3 -> dK:
+com.welty.novello.eval.Base3 -> dJ:
     char[] output -> a
     int[] base3FromBase2 -> b
     int base2ToBase3(int,int) -> a
     int reverse(int,int) -> b
     int nInstances(int) -> a
     java.lang.String description(int,int) -> c
-com.welty.novello.eval.CoefficientEval -> dL:
+com.welty.novello.eval.CoefficientEval -> dK:
     com.welty.novello.eval.CoefficientSet coefficientSet -> b
     com.welty.novello.eval.EvalStrategy evalStrategy -> c
     com.welty.novello.eval.Mpc mpc -> a
@@ -1466,20 +1481,20 @@ com.welty.novello.eval.CoefficientEval -> dL:
     int eval(long,long) -> a
     int eval(long,long,long,long) -> a
     java.lang.String toString() -> toString
-com.welty.novello.eval.CoefficientSet -> dM:
+com.welty.novello.eval.CoefficientSet -> dL:
     short[][][] slices -> a
     java.lang.String name -> b
     short[][][] readSlices(com.welty.novello.eval.EvalStrategy,java.lang.String) -> a
     java.lang.String toString() -> toString
-com.welty.novello.eval.ColTerm -> dN:
+com.welty.novello.eval.ColTerm -> dM:
     com.welty.novello.eval.ColTerm[] internalTerms -> a
     com.welty.novello.eval.ColTerm[] terms -> b
     int col -> c
     int colOrid(long,long,int) -> a
     int instance(long,long,long,long) -> a
-com.welty.novello.eval.Corner2x4Feature -> dO:
+com.welty.novello.eval.Corner2x4Feature -> dN:
     java.lang.String[] oridDescriptions -> a
-com.welty.novello.eval.Corner2x4Term -> dP:
+com.welty.novello.eval.Corner2x4Term -> dO:
     boolean isRow -> b
     boolean isLeft -> c
     int row -> d
@@ -1495,9 +1510,9 @@ com.welty.novello.eval.Corner2x4Term -> dP:
     java.lang.String toString() -> toString
     com.welty.novello.eval.Feature getFeature() -> a
     int orid(long,long,long,long) -> b
-com.welty.novello.eval.Corner2x5Feature -> dQ:
+com.welty.novello.eval.Corner2x5Feature -> dP:
     java.lang.String[] oridDescriptions -> a
-com.welty.novello.eval.Corner2x5Term -> dR:
+com.welty.novello.eval.Corner2x5Term -> dQ:
     boolean isRow -> b
     boolean isLeft -> c
     int row -> d
@@ -1513,16 +1528,16 @@ com.welty.novello.eval.Corner2x5Term -> dR:
     java.lang.String toString() -> toString
     com.welty.novello.eval.Feature getFeature() -> a
     int orid(long,long,long,long) -> b
-com.welty.novello.eval.CornerBlockFeature -> dS:
+com.welty.novello.eval.CornerBlockFeature -> dR:
     com.welty.novello.eval.CornerBlockFeature instance -> a
-com.welty.novello.eval.CornerBlockFeature$OridCalc -> dT:
+com.welty.novello.eval.CornerBlockFeature$OridCalc -> dS:
     int[] reversal -> c
     int[] trits -> d
     int orid -> e
     int[] orids -> a
     java.lang.String[] descriptions -> b
     void update(int) -> a
-com.welty.novello.eval.CornerBlockTerm -> dU:
+com.welty.novello.eval.CornerBlockTerm -> dT:
     com.welty.novello.eval.CornerBlockTerm[] terms -> a
     boolean top -> b
     boolean left -> c
@@ -1530,11 +1545,11 @@ com.welty.novello.eval.CornerBlockTerm -> dU:
     int orid(long,long,boolean,boolean) -> a
     int instance(long,long,boolean,boolean) -> b
     int row(long,boolean,boolean) -> a
-com.welty.novello.eval.CornerTerm -> dV:
+com.welty.novello.eval.CornerTerm -> dU:
     int sq -> a
     int instance(long,long,long,long) -> a
     int bit(long) -> a
-com.welty.novello.eval.CornerTerm2 -> dW:
+com.welty.novello.eval.CornerTerm2 -> dV:
     int sq -> b
     com.welty.novello.eval.CornerTerm2[] terms -> a
     int instance(long,long,long,long) -> a
@@ -1542,16 +1557,16 @@ com.welty.novello.eval.CornerTerm2 -> dW:
     java.lang.String toString() -> toString
     com.welty.novello.eval.Feature getFeature() -> a
     int orid(long,long,long,long) -> b
-com.welty.novello.eval.CornerTriangleFeature -> dX:
+com.welty.novello.eval.CornerTriangleFeature -> dW:
     com.welty.novello.eval.CornerTriangleFeature instance -> a
-com.welty.novello.eval.CornerTriangleFeature$OridCalc -> dY:
+com.welty.novello.eval.CornerTriangleFeature$OridCalc -> dX:
     int[] reversal -> c
     int[] trits -> d
     int orid -> e
     int[] orids -> a
     java.lang.String[] descriptions -> b
     void update(int) -> a
-com.welty.novello.eval.CornerTriangleTerm -> dZ:
+com.welty.novello.eval.CornerTriangleTerm -> dY:
     boolean top -> b
     boolean left -> c
     com.welty.novello.eval.CornerTriangleTerm[] terms -> a
@@ -1559,7 +1574,7 @@ com.welty.novello.eval.CornerTriangleTerm -> dZ:
     int orid(long,long,boolean,boolean) -> a
     int instance(long,long,boolean,boolean) -> b
     int row(long,boolean,boolean) -> a
-com.welty.novello.eval.DiagonalTerm -> ea:
+com.welty.novello.eval.DiagonalTerm -> dZ:
     com.welty.novello.eval.Feature[] features -> a
     int shift -> b
     long mask -> c
@@ -1570,7 +1585,7 @@ com.welty.novello.eval.DiagonalTerm -> ea:
     java.lang.String toString() -> toString
     com.welty.novello.eval.Feature getFeature() -> a
     int orid(long,long,long,long) -> b
-com.welty.novello.eval.Edge2XTerm -> eb:
+com.welty.novello.eval.Edge2XTerm -> ea:
     com.welty.novello.eval.Feature feature -> b
     com.welty.novello.eval.Edge2XTerm[] terms -> a
     int direction -> c
@@ -1583,15 +1598,38 @@ com.welty.novello.eval.Edge2XTerm -> eb:
     int extractTop(long) -> b
     int extractLeft(long) -> c
     int extractRight(long) -> d
-com.welty.novello.eval.EvalStrategies -> ec:
+com.welty.novello.eval.Edge3XFeature -> eb:
+    com.welty.novello.eval.Edge3XFeature instance -> a
+com.welty.novello.eval.Edge3XFeature$OridCalc -> ec:
+    int[] reversal -> c
+    int[] trits -> d
+    int orid -> e
+    int[] orids -> a
+    java.lang.String[] descriptions -> b
+    void update(int) -> a
+com.welty.novello.eval.Edge3XTerm -> ed:
+    com.welty.novello.eval.Feature feature -> b
+    com.welty.novello.eval.Edge3XTerm[] terms -> a
+    int[] secondRowValues -> c
+    int direction -> d
+    int instance(long,long,long,long) -> a
+    int instance0(long,long) -> a
+    int instance1(long,long) -> b
+    int instance2(long,long) -> c
+    int instance3(long,long) -> d
+    int extractBottom(long) -> a
+    int extractTop(long) -> b
+    int extractLeft(long) -> c
+    int extractRight(long) -> d
+com.welty.novello.eval.EvalStrategies -> ee:
     com.welty.novello.eval.EvalStrategies$StrategyStore store -> a
     com.welty.novello.eval.EvalStrategy strategy(java.lang.String) -> a
     void addStrategy(java.lang.String,com.welty.novello.eval.EvalStrategy) -> a
-com.welty.novello.eval.EvalStrategies$StrategyStore -> ed:
+com.welty.novello.eval.EvalStrategies$StrategyStore -> ef:
     java.util.HashMap strategyFromName -> a
     void putStrategy(java.lang.String,com.welty.novello.eval.EvalStrategy) -> a
     com.welty.novello.eval.EvalStrategy getStrategy(java.lang.String) -> a
-com.welty.novello.eval.EvalStrategy -> ee:
+com.welty.novello.eval.EvalStrategy -> eg:
     java.lang.String name -> a
     com.welty.novello.eval.Term[] terms -> b
     java.nio.file.Path rootDirectory -> c
@@ -1606,34 +1644,38 @@ com.welty.novello.eval.EvalStrategy -> ee:
     int evalByTerms(long,long,long,long,short[][],boolean) -> a
     com.welty.novello.eval.Feature getFeature(int) -> a
     java.lang.String toString() -> toString
-com.welty.novello.eval.EvalStrategyC -> ef:
+com.welty.novello.eval.EvalStrategyC -> eh:
     boolean $assertionsDisabled -> a
     int eval(long,long,long,long,com.welty.novello.eval.CoefficientSet) -> a
     com.welty.novello.eval.Term[] flatten(java.lang.Object[]) -> a
-com.welty.novello.eval.EvalStrategyD -> eg:
+com.welty.novello.eval.EvalStrategyD -> ei:
     boolean $assertionsDisabled -> a
     int eval(long,long,long,long,com.welty.novello.eval.CoefficientSet) -> a
     com.welty.novello.eval.Term[] flatten(java.lang.Object[]) -> a
-com.welty.novello.eval.EvalStrategyE -> eh:
+com.welty.novello.eval.EvalStrategyE -> ej:
     boolean $assertionsDisabled -> a
     int eval(long,long,long,long,com.welty.novello.eval.CoefficientSet) -> a
     com.welty.novello.eval.Term[] flatten(java.lang.Object[]) -> a
-com.welty.novello.eval.EvalStrategyF -> ei:
+com.welty.novello.eval.EvalStrategyF -> ek:
     java.lang.Object[] allTerms -> a
     boolean $assertionsDisabled -> b
     int eval(long,long,long,long,com.welty.novello.eval.CoefficientSet) -> a
     com.welty.novello.eval.Term[] flatten(java.lang.Object[]) -> a
-com.welty.novello.eval.EvalStrategyJ -> ej:
+com.welty.novello.eval.EvalStrategyG -> el:
+    boolean $assertionsDisabled -> a
+    int eval(long,long,long,long,com.welty.novello.eval.CoefficientSet) -> a
+    com.welty.novello.eval.Term[] flatten(java.lang.Object[]) -> a
+com.welty.novello.eval.EvalStrategyJ -> em:
     java.lang.Object[] allTerms -> a
     com.orbanova.common.misc.Vec ntestEval$68ec729e -> b
     boolean $assertionsDisabled -> c
     com.orbanova.common.misc.Vec getNtestEval$8e5abff() -> a
     int eval(long,long,long,long,com.welty.novello.eval.CoefficientSet) -> a
     com.welty.novello.eval.Term[] flatten(java.lang.Object[]) -> a
-com.welty.novello.eval.Feature -> ek:
+com.welty.novello.eval.Feature -> en:
     int nOrids() -> a
     int orid(int) -> a
-com.welty.novello.eval.Features -> el:
+com.welty.novello.eval.Features -> eo:
     com.welty.novello.eval.SoloFeature cornerFeature -> a
     com.welty.novello.eval.SoloFeature corner2Feature -> b
     com.welty.novello.eval.SoloFeature moverDisks -> c
@@ -1649,9 +1691,9 @@ com.welty.novello.eval.Features -> el:
     com.welty.novello.eval.SoloFeature moverPotMobs2 -> m
     com.welty.novello.eval.SoloFeature enemyPotMobs2 -> n
     com.welty.novello.eval.SoloFeature parity -> o
-com.welty.novello.eval.GridFeature -> em:
+com.welty.novello.eval.GridFeature -> ep:
     java.lang.String[] grid(java.lang.String,int) -> a
-com.welty.novello.eval.Mpc -> en:
+com.welty.novello.eval.Mpc -> eq:
     com.orbanova.common.misc.Logger log -> c
     com.welty.novello.eval.Mpc$Slice[] slices -> d
     int[][] cutDepths -> a
@@ -1660,23 +1702,23 @@ com.welty.novello.eval.Mpc -> en:
     java.util.ArrayList[] readSliceData(java.nio.file.Path) -> a
     com.welty.novello.eval.Mpc$Cutter[] cutters(int,int) -> a
     java.lang.String toString() -> toString
-com.welty.novello.eval.Mpc$Cutter -> eo:
+com.welty.novello.eval.Mpc$Cutter -> er:
     double a -> a
     double b -> b
     double shallowSd -> c
     int shallowDepth -> d
     java.lang.String toString() -> toString
-com.welty.novello.eval.Mpc$Slice -> ep:
+com.welty.novello.eval.Mpc$Slice -> es:
     com.welty.novello.eval.Mpc$Cutter[][] cutters -> a
     java.lang.String toString() -> toString
-com.welty.novello.eval.MultiFeature -> eq:
+com.welty.novello.eval.MultiFeature -> et:
     int[] orids -> b
     java.lang.String[] oridDescriptions -> a
     java.lang.String name -> c
     int nOrids() -> a
     int orid(int) -> a
     java.lang.String toString() -> toString
-com.welty.novello.eval.OridTable -> er:
+com.welty.novello.eval.OridTable -> eu:
     int[] orid10 -> a
     int[] orid8 -> b
     int[] orid7 -> c
@@ -1690,7 +1732,7 @@ com.welty.novello.eval.OridTable -> er:
     int orid5(int) -> e
     int orid4(int) -> f
     int[] calcOrids(int) -> g
-com.welty.novello.eval.RowTerm -> es:
+com.welty.novello.eval.RowTerm -> ev:
     com.welty.novello.eval.Feature[] features -> c
     com.welty.novello.eval.RowTerm[] internalTerms -> a
     com.welty.novello.eval.RowTerm[] terms -> b
@@ -1698,19 +1740,19 @@ com.welty.novello.eval.RowTerm -> es:
     com.welty.novello.eval.Feature getRowFeature(int) -> a
     int rowOrid(long,long,int) -> a
     int instance(long,long,long,long) -> a
-com.welty.novello.eval.SoloFeature -> et:
+com.welty.novello.eval.SoloFeature -> ew:
     java.lang.String name -> a
     java.lang.String[] oridDescriptions -> b
     int orid(int) -> a
     int nOrids() -> a
     java.lang.String toString() -> toString
-com.welty.novello.eval.Term -> eu:
+com.welty.novello.eval.Term -> ex:
     com.welty.novello.eval.Feature feature -> a
     int instance(long,long,long,long) -> a
     int orid(long,long,long,long) -> b
     com.welty.novello.eval.Feature getFeature() -> a
     java.lang.String toString() -> toString
-com.welty.novello.eval.Terms -> ev:
+com.welty.novello.eval.Terms -> ey:
     com.welty.novello.eval.Term moverDisks -> a
     com.welty.novello.eval.Term enemyDisks -> b
     com.welty.novello.eval.Term moverMobilities -> c
@@ -1724,39 +1766,39 @@ com.welty.novello.eval.Terms -> ev:
     com.welty.novello.eval.Term moverPotMobs2 -> k
     com.welty.novello.eval.Term enemyPotMobs2 -> l
     com.welty.novello.eval.Term parity -> m
-com.welty.novello.eval.Terms$1 -> ew:
+com.welty.novello.eval.Terms$1 -> ez:
     int instance(long,long,long,long) -> a
-com.welty.novello.eval.Terms$10 -> ex:
-    int instance(long,long,long,long) -> a
-    java.lang.String toString() -> toString
-com.welty.novello.eval.Terms$11 -> ey:
-    int instance(long,long,long,long) -> a
-com.welty.novello.eval.Terms$12 -> ez:
-    int instance(long,long,long,long) -> a
-com.welty.novello.eval.Terms$13 -> eA:
-    int instance(long,long,long,long) -> a
-com.welty.novello.eval.Terms$2 -> eB:
-    int instance(long,long,long,long) -> a
-com.welty.novello.eval.Terms$3 -> eC:
-    int instance(long,long,long,long) -> a
-com.welty.novello.eval.Terms$4 -> eD:
-    int instance(long,long,long,long) -> a
-com.welty.novello.eval.Terms$5 -> eE:
-    int instance(long,long,long,long) -> a
-com.welty.novello.eval.Terms$6 -> eF:
-    int instance(long,long,long,long) -> a
-com.welty.novello.eval.Terms$7 -> eG:
-    int instance(long,long,long,long) -> a
-com.welty.novello.eval.Terms$8 -> eH:
-    int instance(long,long,long,long) -> a
-com.welty.novello.eval.Terms$9 -> eI:
+com.welty.novello.eval.Terms$10 -> eA:
     int instance(long,long,long,long) -> a
     java.lang.String toString() -> toString
-com.welty.novello.eval.UldrTerm -> eJ:
+com.welty.novello.eval.Terms$11 -> eB:
+    int instance(long,long,long,long) -> a
+com.welty.novello.eval.Terms$12 -> eC:
+    int instance(long,long,long,long) -> a
+com.welty.novello.eval.Terms$13 -> eD:
+    int instance(long,long,long,long) -> a
+com.welty.novello.eval.Terms$2 -> eE:
+    int instance(long,long,long,long) -> a
+com.welty.novello.eval.Terms$3 -> eF:
+    int instance(long,long,long,long) -> a
+com.welty.novello.eval.Terms$4 -> eG:
+    int instance(long,long,long,long) -> a
+com.welty.novello.eval.Terms$5 -> eH:
+    int instance(long,long,long,long) -> a
+com.welty.novello.eval.Terms$6 -> eI:
+    int instance(long,long,long,long) -> a
+com.welty.novello.eval.Terms$7 -> eJ:
+    int instance(long,long,long,long) -> a
+com.welty.novello.eval.Terms$8 -> eK:
+    int instance(long,long,long,long) -> a
+com.welty.novello.eval.Terms$9 -> eL:
+    int instance(long,long,long,long) -> a
+    java.lang.String toString() -> toString
+com.welty.novello.eval.UldrTerm -> eM:
     com.welty.novello.eval.UldrTerm[] terms -> a
-com.welty.novello.eval.UrdlTerm -> eK:
+com.welty.novello.eval.UrdlTerm -> eN:
     com.welty.novello.eval.UrdlTerm[] terms -> a
-com.welty.novello.hash.HashTables -> eL:
+com.welty.novello.hash.HashTables -> eO:
     com.welty.novello.hash.HashTables$HashTable[] tables -> f
     long nFinds -> g
     long nStores -> a
@@ -1766,16 +1808,16 @@ com.welty.novello.hash.HashTables -> eL:
     long nUselessFind -> e
     com.welty.novello.hash.HashTables$Entry find(long,long) -> a
     com.welty.novello.hash.HashTables$Entry getEntry(long,long) -> b
-com.welty.novello.hash.HashTables$Entry -> eM:
+com.welty.novello.hash.HashTables$Entry -> eP:
     long mover -> a
     long enemy -> b
     int min -> c
     int max -> d
     boolean matches(long,long) -> a
     boolean cutsOff(int,int) -> a
-com.welty.novello.hash.HashTables$HashTable -> eN:
+com.welty.novello.hash.HashTables$HashTable -> eQ:
     com.welty.novello.hash.HashTables$Entry[] entries -> a
-com.welty.novello.hash.MidgameHashTables -> eO:
+com.welty.novello.hash.MidgameHashTables -> eR:
     com.orbanova.common.misc.Logger log -> a
     com.welty.novello.hash.MidgameHashTables$HashTable[] tables -> b
     long nFinds -> c
@@ -1785,7 +1827,7 @@ com.welty.novello.hash.MidgameHashTables -> eO:
     com.welty.novello.hash.MidgameHashTables$Entry find(long,long) -> a
     com.welty.novello.hash.MidgameHashTables$Entry getEntry(long,long) -> b
     void store(long,long,int,int,int,int,int) -> a
-com.welty.novello.hash.MidgameHashTables$Entry -> eP:
+com.welty.novello.hash.MidgameHashTables$Entry -> eS:
     long mover -> a
     long enemy -> b
     int min -> c
@@ -1800,49 +1842,48 @@ com.welty.novello.hash.MidgameHashTables$Entry -> eP:
     int getMax() -> b
     int getDepth() -> c
     int getBestMove() -> d
-com.welty.novello.hash.MidgameHashTables$HashTable -> eQ:
+com.welty.novello.hash.MidgameHashTables$HashTable -> eT:
     com.welty.novello.hash.MidgameHashTables$Entry[] entries -> a
-com.welty.novello.selfplay.EvalSyncEngine -> eR:
-    com.orbanova.common.misc.Vec eval$68ec729e -> d
+com.welty.novello.selfplay.EvalSyncEngine -> eU:
     com.welty.novello.solver.MidgameSearcher$Options midgameOptions -> a
-    java.lang.String options -> e
     com.welty.novello.solver.MidgameSearcher searcher -> b
     com.welty.novello.solver.Solver solver -> c
+    java.lang.String name -> d
     java.lang.String toString() -> toString
     com.welty.novello.core.MoveScore calcMove(com.welty.novello.core.Position,com.welty.othello.gdk.OsClock,int,com.welty.othello.api.AbortCheck,com.welty.novello.selfplay.EvalSyncEngine$Listener) -> a
     double calcTargetTime(com.welty.othello.gdk.OsClock,int) -> a
     int moverSign(com.welty.othello.gdk.COsBoard) -> a
     void insertSorted(java.util.ArrayList,int,com.welty.novello.core.MoveScore) -> a
-com.welty.novello.selfplay.EvalSyncEngine$Listener -> eS:
+com.welty.novello.selfplay.EvalSyncEngine$Listener -> eV:
     com.welty.novello.selfplay.EvalSyncEngine$Listener NULL -> a
     void updateStatus(java.lang.String) -> a
     void updateNodeStats(long,long) -> a
     void hint(com.welty.novello.core.MoveScore,com.welty.othello.protocol.Depth) -> a
     void analysis(int,double) -> a
-com.welty.novello.selfplay.EvalSyncEngine$Listener$1 -> eT:
+com.welty.novello.selfplay.EvalSyncEngine$Listener$1 -> eW:
     void updateStatus(java.lang.String) -> a
     void updateNodeStats(long,long) -> a
     void hint(com.welty.novello.core.MoveScore,com.welty.othello.protocol.Depth) -> a
     void analysis(int,double) -> a
-com.welty.novello.selfplay.EvalSyncEngine$MyStatsListener -> eU:
+com.welty.novello.selfplay.EvalSyncEngine$MyStatsListener -> eX:
     com.welty.novello.selfplay.EvalSyncEngine$Listener listener -> b
     long n0 -> c
     long t0 -> d
     com.welty.novello.solver.Solver solver -> e
     long nextUpdateMillis -> f
     void update() -> a
-com.welty.novello.selfplay.EvalSyncEngine$TimeAbortCheck -> eV:
+com.welty.novello.selfplay.EvalSyncEngine$TimeAbortCheck -> eY:
     com.welty.othello.api.AbortCheck chainedAbortCheck -> b
     long tNoMoreRounds -> c
     long tHardAbort -> d
     long cap(double,double) -> a
     boolean shouldAbort() -> a
     boolean abortNextRound() -> b
-com.welty.novello.selfplay.Players -> eW:
+com.welty.novello.selfplay.Players -> eZ:
     com.orbanova.common.misc.Vec currentEval$68ec729e -> a
     com.orbanova.common.misc.Vec eval$1a21978b(java.lang.String) -> a
     com.orbanova.common.misc.Vec currentEval$8e5abff() -> a
-com.welty.novello.selfplay.SearchDepth -> eX:
+com.welty.novello.selfplay.SearchDepth -> fa:
     boolean solve -> a
     int depth -> b
     int probableSolveDepth -> c
@@ -1852,11 +1893,11 @@ com.welty.novello.selfplay.SearchDepth -> eX:
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     java.lang.String toString() -> toString
-com.welty.novello.selfplay.SearchDepth$SearchDepthFeed -> eY:
+com.welty.novello.selfplay.SearchDepth$SearchDepthFeed -> fb:
     com.welty.novello.selfplay.SearchDepth max -> a
     com.welty.novello.selfplay.SearchDepth last -> b
     java.lang.Object next() -> a
-com.welty.novello.solver.Counter -> eZ:
+com.welty.novello.solver.Counter -> fc:
     com.orbanova.common.misc.Vec eval$68ec729e -> b
     long nEvals -> c
     long nFlips -> d
@@ -1865,33 +1906,33 @@ com.welty.novello.solver.Counter -> eZ:
     long calcFlips(com.welty.novello.core.Square,long,long) -> a
     int eval(long,long) -> a
     com.welty.novello.core.Counts getNodeStats() -> a
-com.welty.novello.solver.CutoffStatistics -> fa:
+com.welty.novello.solver.CutoffStatistics -> fd:
     com.welty.novello.solver.CutoffStatistics$Statistic[] aboveBeta -> a
     com.welty.novello.solver.CutoffStatistics$Statistic[] belowAlpha -> b
     com.welty.novello.solver.CutoffStatistics$Statistic pvCutoffs -> c
     com.welty.novello.solver.CutoffStatistics$Statistic[] predictedType -> d
     com.welty.novello.solver.CutoffStatistics$Statistic[] createStatistics(int) -> a
     java.lang.String toString() -> toString
-com.welty.novello.solver.CutoffStatistics$Statistic -> fb:
+com.welty.novello.solver.CutoffStatistics$Statistic -> fe:
     java.lang.String toString() -> toString
     void append(java.lang.StringBuilder,java.lang.String) -> a
     int percent(long) -> a
-com.welty.novello.solver.FixedMoveOrdering -> fc:
+com.welty.novello.solver.FixedMoveOrdering -> ff:
     int[] squareValueTable -> b
     long[] masks -> a
     int[] values -> c
     int getValue(int) -> a
     void setValue(long,int) -> a
-com.welty.novello.solver.ListOfEmpties -> fd:
+com.welty.novello.solver.ListOfEmpties -> fg:
     com.welty.novello.solver.ListOfEmpties$Node end -> a
     long calcParity() -> a
-com.welty.novello.solver.ListOfEmpties$Node -> fe:
+com.welty.novello.solver.ListOfEmpties$Node -> fh:
     com.welty.novello.core.Square square -> a
     com.welty.novello.solver.ListOfEmpties$Node prev -> b
     com.welty.novello.solver.ListOfEmpties$Node next -> c
     void remove() -> a
     void restore() -> b
-com.welty.novello.solver.MidgameSearcher -> ff:
+com.welty.novello.solver.MidgameSearcher -> fi:
     com.welty.novello.hash.MidgameHashTables midgameHashTables -> a
     com.welty.novello.solver.MidgameSearcher$Options options -> b
     com.welty.novello.solver.Counter counter -> c
@@ -1914,17 +1955,16 @@ com.welty.novello.solver.MidgameSearcher -> ff:
     int treeScore(long,long,long,int,int,int) -> c
     com.welty.novello.solver.MidgameSearcher$BA mpcMove(long,long,long,int,int,int) -> d
     java.lang.String indent(int) -> a
-com.welty.novello.solver.MidgameSearcher$BA -> fg:
+com.welty.novello.solver.MidgameSearcher$BA -> fj:
     int bestMove -> a
     int score -> b
     boolean isValid(int) -> a
-com.welty.novello.solver.MidgameSearcher$Options -> fh:
+com.welty.novello.solver.MidgameSearcher$Options -> fk:
     boolean mpc -> a
-    boolean useSolver -> b
-    boolean printSearch -> c
-    boolean useNtestSearchDepths -> d
-    boolean experimental -> e
-com.welty.novello.solver.MoveSorter -> fi:
+    boolean variableEndgame -> b
+    boolean variableMidgame -> c
+    boolean printSearch -> d
+com.welty.novello.solver.MoveSorter -> fl:
     int MOBILITY_WEIGHT -> b
     int MOVER_POT_MOB_WEIGHT -> c
     int ENEMY_POT_MOB_WEIGHT -> d
@@ -1943,14 +1983,14 @@ com.welty.novello.solver.MoveSorter -> fi:
     int nPotMobs(long,long) -> a
     void insert(int,int,long,long,com.welty.novello.solver.ListOfEmpties$Node) -> a
     int sq(int) -> a
-com.welty.novello.solver.MoveSorters -> fj:
+com.welty.novello.solver.MoveSorters -> fm:
     com.welty.novello.solver.MoveSorter[] sorters -> a
-com.welty.novello.solver.NodeCounts -> fk:
+com.welty.novello.solver.NodeCounts -> fn:
     long[] nNodes -> a
     long[][] nNodesByDepthAndType -> b
     long[][] nNodesByCutIndex -> c
-com.welty.novello.solver.SearchAbortedException -> fl:
-com.welty.novello.solver.Solver -> fm:
+com.welty.novello.solver.SearchAbortedException -> fo:
+com.welty.novello.solver.Solver -> fp:
     int MIN_SORT_DEPTH -> b
     com.welty.novello.solver.MoveSorters moveSorters -> c
     com.welty.novello.solver.Solver$TreeSearchResult[] treeSearchResults -> d
@@ -1970,17 +2010,17 @@ com.welty.novello.solver.Solver -> fm:
     int moverResultDeep(long,long,int,int,int,long,int,long) -> b
     void moverResultWithSorting(com.welty.novello.solver.Solver$TreeSearchResult,long,long,int,int,int,long,int,long) -> a
     com.welty.novello.core.Counts getCounts() -> a
-com.welty.novello.solver.Solver$TreeSearchResult -> fn:
+com.welty.novello.solver.Solver$TreeSearchResult -> fq:
     int score -> a
     int iBestMove -> b
-com.welty.novello.solver.SorterMove -> fo:
+com.welty.novello.solver.SorterMove -> fr:
     int sq -> a
     int score -> b
     long flips -> c
     long enemyMoves -> d
     com.welty.novello.solver.ListOfEmpties$Node node -> e
     java.lang.String toString() -> toString
-com.welty.novello.solver.Stable -> fp:
+com.welty.novello.solver.Stable -> fs:
     long[] row0Stable -> a
     long[] row7Stable -> b
     long[] col0Stable -> c
@@ -1988,19 +2028,19 @@ com.welty.novello.solver.Stable -> fp:
     long edgeStable(long,long) -> a
     long stable(long,long) -> b
     long subStable(int,int,long[],int,int) -> a
-com.welty.novello.solver.StableStatistics -> fq:
+com.welty.novello.solver.StableStatistics -> ft:
     long[] counts -> a
     long alphaCuts -> b
     long betaCuts -> c
     long fails -> d
     long uncalculated -> e
     java.lang.String toString() -> toString
-com.welty.novello.solver.StatsListener -> fr:
+com.welty.novello.solver.StatsListener -> fu:
     com.welty.novello.solver.StatsListener NULL -> a
     void update() -> a
-com.welty.novello.solver.StatsListener$1 -> fs:
+com.welty.novello.solver.StatsListener$1 -> fv:
     void update() -> a
-com.welty.ntestj.CEvaluatorJ -> ft:
+com.welty.ntestj.CEvaluatorJ -> fw:
     com.welty.ntestj.CEvaluatorJ instance -> a
     int[] triangleReorder -> b
     int[] c2x5Reorder -> c
@@ -2020,14 +2060,14 @@ com.welty.ntestj.CEvaluatorJ -> ft:
     int ConfigPMValue$76412d8d(int[],int,int) -> d
     int eval(long,long) -> a
     java.lang.String toString() -> toString
-com.welty.ntestj.CMap -> fu:
+com.welty.ntestj.CMap -> fx:
     com.welty.ntestj.CMap$TIdType idType -> a
     char size -> b
     char NIDs() -> a
     char NConfigs() -> b
-com.welty.ntestj.CMap$1 -> fv:
+com.welty.ntestj.CMap$1 -> fy:
     int[] $SwitchMap$com$welty$ntestj$CMap$TIdType -> a
-com.welty.ntestj.CMap$TIdType -> fw:
+com.welty.ntestj.CMap$TIdType -> fz:
     com.welty.ntestj.CMap$TIdType kBase3 -> a
     com.welty.ntestj.CMap$TIdType kORID -> b
     com.welty.ntestj.CMap$TIdType kCRID -> c
@@ -2037,13 +2077,13 @@ com.welty.ntestj.CMap$TIdType -> fw:
     com.welty.ntestj.CMap$TIdType kNumber -> g
     com.welty.ntestj.CMap$TIdType[] $VALUES -> h
     com.welty.ntestj.CMap$TIdType[] values() -> a
-com.welty.ntestj.Heights -> fx:
+com.welty.ntestj.Heights -> fA:
     int[] hWLD -> a
     int hMidgame -> b
     java.lang.String toString() -> toString
     int getFullWidthHeight() -> a
     int getProbableSolveHeight() -> b
-com.welty.ntestj.PatternUtils -> fy:
+com.welty.ntestj.PatternUtils -> fB:
     char[] nBase3s -> a
     int maxBase3PatternSize -> b
     void ConfigToTrits(int,int,int[]) -> a
@@ -2051,23 +2091,23 @@ com.welty.ntestj.PatternUtils -> fy:
     int TritsToRConfig(int[],int) -> b
     int TritsToRConfig(int[],int,int) -> a
     char ReorderedConfig(char,int,int[]) -> a
-com.welty.ntestj.table.Base2ToBase3Table -> fz:
+com.welty.ntestj.table.Base2ToBase3Table -> fC:
     short[] base2ToBase3Table -> a
     short[] base2ToBase3FlipTable -> b
     int base2ToBase3(int,int) -> a
-com.welty.ntestj.table.Base3ToBase2Table -> fA:
+com.welty.ntestj.table.Base3ToBase2Table -> fD:
     char[] base3ToBase2Table -> a
     char base3ToBase2(int) -> a
-com.welty.ntestj.table.ConfigToPotMobTable -> fB:
+com.welty.ntestj.table.ConfigToPotMobTable -> fE:
     int[][][] configToPotMob -> a
     int[][][] configToMob -> c
     int[][] configToPotMobTriangle -> b
     int[][] configToMobTriangle -> d
     int PotMob(byte,byte,int) -> a
     int Mob(byte,byte,int) -> b
-com.welty.ntestj.table.Configs2x5To2x4Table -> fC:
+com.welty.ntestj.table.Configs2x5To2x4Table -> fF:
     int[] configs2x5To2x4 -> a
-com.welty.ntestj.table.CridTable -> fD:
+com.welty.ntestj.table.CridTable -> fG:
     char[] nCRIDs -> a
     int maxCRIDPatternSize -> b
     char[][] base3ToCRIDTable -> c
@@ -2075,56 +2115,56 @@ com.welty.ntestj.table.CridTable -> fD:
     int[] CRID6 -> e
     int[] CRID10 -> f
     char Base3ToCRID(char,char) -> a
-com.welty.ntestj.table.OridTable -> fE:
+com.welty.ntestj.table.OridTable -> fH:
     char[] nORIDs -> a
     int maxORIDPatternSize -> b
     char[][] oRIDToBase3Table -> c
     char[][] base3ToORIDTable -> d
     char Base3ToORID(char,char) -> a
-com.welty.ntestj.table.R33Table -> fF:
+com.welty.ntestj.table.R33Table -> fI:
     char[] base3ToR33IDTable -> a
     char[] r33IDToBase3Table -> b
     int[] R33ID -> c
     char Base3ToR33ID(char) -> a
-com.welty.ntestj.table.RowTo2x5Table -> fG:
+com.welty.ntestj.table.RowTo2x5Table -> fJ:
     int[] row2To2x5 -> a
     int[] row1To2x5 -> b
     int getConfigs(int,int) -> a
-com.welty.ntestj.table.RowToTriangleTable -> fH:
+com.welty.ntestj.table.RowToTriangleTable -> fK:
     int[] row1ToTriangle -> a
     int[] row2ToTriangle -> b
     int[] row3ToTriangle -> c
     int[] row4ToTriangle -> d
     int getConfigs(int,int,int,int) -> a
-com.welty.ntestj.table.RowToXXTable -> fI:
+com.welty.ntestj.table.RowToXXTable -> fL:
     int[] row2ToXX -> a
     int getConfig(int,int) -> a
-com.welty.othello.api.AbortCheck -> fJ:
+com.welty.othello.api.AbortCheck -> fM:
     com.welty.othello.api.AbortCheck NEVER -> a
     boolean shouldAbort() -> a
     boolean abortNextRound() -> b
-com.welty.othello.api.AbortCheck$1 -> fK:
+com.welty.othello.api.AbortCheck$1 -> fN:
     boolean shouldAbort() -> a
     boolean abortNextRound() -> b
-com.welty.othello.api.AbortCheck$2 -> fL:
+com.welty.othello.api.AbortCheck$2 -> fO:
     boolean shouldAbort() -> a
     boolean abortNextRound() -> b
-com.welty.othello.api.NBoardEngine -> fM:
+com.welty.othello.api.NBoardEngine -> fP:
     void sendCommand(java.lang.String) -> a
-com.welty.othello.api.NBoardState -> fN:
+com.welty.othello.api.NBoardState -> fQ:
     com.welty.othello.gdk.COsGame game -> a
     int maxDepth -> b
     int contempt -> c
-com.welty.othello.api.OpponentSelection -> fO:
+com.welty.othello.api.OpponentSelection -> fR:
     com.welty.othello.gui.selector.EngineSelector engineSelector -> b
     int level -> a
     com.welty.othello.api.StatelessEngine getOrCreateEngine$3fa324cc(com.orbanova.common.feed.Handler) -> a
     java.lang.String toString() -> toString
-com.welty.othello.api.OpponentSelector -> fP:
-    com.welty.othello.api.OpponentSelection getOpponent() -> b
-com.welty.othello.api.OpponentSelector$Listener -> fQ:
+com.welty.othello.api.OpponentSelector -> fS:
+    com.welty.othello.api.OpponentSelection getOpponent() -> getOpponent
+com.welty.othello.api.OpponentSelector$Listener -> fT:
     void opponentChanged() -> c
-com.welty.othello.api.ParsedEngine -> fR:
+com.welty.othello.api.ParsedEngine -> fU:
     int lastPing -> a
     com.welty.othello.api.NBoardEngine engine -> b
     com.welty.othello.protocol.ResponseParser responseParser -> c
@@ -2139,14 +2179,14 @@ com.welty.othello.api.ParsedEngine -> fR:
     java.lang.String getStatus() -> b
     boolean isReady() -> c
     void updateEngineState(com.welty.othello.api.PingPong,com.welty.othello.api.NBoardState) -> d
-com.welty.othello.api.PingPong -> fS:
+com.welty.othello.api.PingPong -> fV:
     java.util.concurrent.atomic.AtomicInteger ping -> a
-com.welty.othello.api.RequestQueue -> fT:
+com.welty.othello.api.RequestQueue -> fW:
     java.lang.Runnable request -> a
     void add(java.lang.Runnable) -> a
     java.lang.Runnable take() -> a
     boolean hasRequest() -> b
-com.welty.othello.api.StatelessEngine -> fU:
+com.welty.othello.api.StatelessEngine -> fX:
     void learn(com.welty.othello.api.PingPong,com.welty.othello.api.NBoardState) -> a
     void analyze(com.welty.othello.api.PingPong,com.welty.othello.api.NBoardState) -> b
     void requestHints(com.welty.othello.api.PingPong,com.welty.othello.api.NBoardState,int) -> a
@@ -2154,7 +2194,7 @@ com.welty.othello.api.StatelessEngine -> fU:
     java.lang.String getName() -> a
     java.lang.String getStatus() -> b
     boolean isReady() -> c
-com.welty.othello.api.SyncStatelessEngine -> fV:
+com.welty.othello.api.SyncStatelessEngine -> fY:
     com.welty.novello.selfplay.EvalSyncEngine evalSyncEngine -> a
     java.lang.String name -> e
     com.orbanova.common.feed.Handler responseHandler$4e2eec3f -> b
@@ -2169,48 +2209,48 @@ com.welty.othello.api.SyncStatelessEngine -> fV:
     void setStatus(java.lang.String) -> a
     java.lang.String getStatus() -> b
     boolean isReady() -> c
-com.welty.othello.api.SyncStatelessEngine$1 -> fW:
+com.welty.othello.api.SyncStatelessEngine$1 -> fZ:
     com.welty.othello.api.SyncStatelessEngine this$0 -> b
     boolean shouldAbort() -> a
     boolean abortNextRound() -> b
-com.welty.othello.api.SyncStatelessEngine$2 -> fX:
+com.welty.othello.api.SyncStatelessEngine$2 -> ga:
     com.welty.othello.api.NBoardState val$state -> a
     int val$pong -> b
     com.welty.othello.api.SyncStatelessEngine this$0 -> c
     void run() -> run
-com.welty.othello.api.SyncStatelessEngine$3 -> fY:
+com.welty.othello.api.SyncStatelessEngine$3 -> gb:
     com.welty.othello.api.NBoardState val$state -> a
     int val$pong -> b
     com.welty.othello.api.SyncStatelessEngine this$0 -> c
     void run() -> run
-com.welty.othello.api.SyncStatelessEngine$4 -> fZ:
+com.welty.othello.api.SyncStatelessEngine$4 -> gc:
     com.welty.othello.api.NBoardState val$state -> a
     int val$nMoves -> b
     int val$pong -> c
     com.welty.othello.api.SyncStatelessEngine this$0 -> d
     void run() -> run
-com.welty.othello.api.SyncStatelessEngine$5 -> ga:
+com.welty.othello.api.SyncStatelessEngine$5 -> gd:
     com.welty.othello.api.NBoardState val$state -> a
     int val$pong -> b
     com.welty.othello.api.SyncStatelessEngine this$0 -> c
     void run() -> run
-com.welty.othello.api.SyncStatelessEngine$EngineListener -> gb:
+com.welty.othello.api.SyncStatelessEngine$EngineListener -> ge:
     int pong -> b
     com.welty.othello.api.SyncStatelessEngine this$0 -> c
     void updateStatus(java.lang.String) -> a
     void updateNodeStats(long,long) -> a
     void hint(com.welty.novello.core.MoveScore,com.welty.othello.protocol.Depth) -> a
     void analysis(int,double) -> a
-com.welty.othello.api.SyncStatelessEngine$Runner -> gc:
+com.welty.othello.api.SyncStatelessEngine$Runner -> gf:
     com.welty.othello.api.SyncStatelessEngine this$0 -> a
     void run() -> run
-com.welty.othello.c.CBinaryReader -> gd:
+com.welty.othello.c.CBinaryReader -> gg:
     java.io.DataInputStream in -> a
     int readInt() -> a
     char readChar() -> b
     byte readByte() -> c
     int available() -> d
-com.welty.othello.c.CReader -> ge:
+com.welty.othello.c.CReader -> gh:
     java.io.PushbackInputStream in -> a
     int readInt(int) -> a
     int readInt() -> a
@@ -2228,14 +2268,14 @@ com.welty.othello.c.CReader -> ge:
     java.lang.String readLine() -> i
     boolean eof() -> k
     boolean wsEof() -> j
-com.welty.othello.c.CWriter -> gf:
+com.welty.othello.c.CWriter -> gi:
     java.io.PrintStream out -> a
-com.welty.othello.core.BobHash -> gg:
+com.welty.othello.core.BobHash -> gj:
     int a -> a
     int b -> b
     int c -> c
     int d -> d
-com.welty.othello.core.CBitBoard -> gh:
+com.welty.othello.core.CBitBoard -> gk:
     long empty -> a
     long mover -> b
     boolean equals(java.lang.Object) -> equals
@@ -2258,12 +2298,12 @@ com.welty.othello.core.CBitBoard -> gh:
     long getEmpty() -> e
     java.lang.String toString() -> toString
     int compareTo(java.lang.Object) -> compareTo
-com.welty.othello.core.CBitBoard$NDiscs -> gi:
+com.welty.othello.core.CBitBoard$NDiscs -> gl:
     int nBlack -> a
     int nWhite -> b
     int nEmpty -> c
     java.lang.String toString() -> toString
-com.welty.othello.core.CMove -> gj:
+com.welty.othello.core.CMove -> gm:
     byte square -> a
     com.welty.othello.gdk.OsMove toOsMove() -> a
     int Row() -> b
@@ -2275,17 +2315,17 @@ com.welty.othello.core.CMove -> gj:
     void requireOnBoard() -> g
     boolean equals(java.lang.Object) -> equals
     int compareTo(java.lang.Object) -> compareTo
-com.welty.othello.core.CMoves -> gk:
+com.welty.othello.core.CMoves -> gn:
     com.welty.othello.core.CMoves$MoveType moveToCheck -> a
     com.welty.othello.core.CMove bestMove -> b
     long all -> c
     boolean equals(java.lang.Object) -> equals
     java.lang.String toString() -> toString
-com.welty.othello.core.CMoves$MoveType -> gl:
+com.welty.othello.core.CMoves$MoveType -> go:
     com.welty.othello.core.CMoves$MoveType CORNER -> a
     com.welty.othello.core.CMoves$MoveType REGULAR -> b
     com.welty.othello.core.CMoves$MoveType CX -> c
-com.welty.othello.core.CQPosition -> gm:
+com.welty.othello.core.CQPosition -> gp:
     com.welty.othello.core.CBitBoard m_bb -> a
     int nEmpty -> b
     int nMover -> c
@@ -2298,14 +2338,14 @@ com.welty.othello.core.CQPosition -> gm:
     void Pass() -> a
     int CalcMovesAndPass(com.welty.othello.core.CMoves) -> b
     java.lang.String toString() -> toString
-com.welty.othello.core.OperatingSystem -> gn:
+com.welty.othello.core.OperatingSystem -> gq:
     com.welty.othello.core.OperatingSystem WINDOWS -> c
     com.welty.othello.core.OperatingSystem MACINTOSH -> a
     com.welty.othello.core.OperatingSystem LINUX -> d
     com.welty.othello.core.OperatingSystem UNKNOWN -> e
     com.welty.othello.core.OperatingSystem os -> b
     boolean isMacintosh() -> a
-com.welty.othello.core.ProcessLogger -> go:
+com.welty.othello.core.ProcessLogger -> gr:
     java.io.PrintWriter out -> a
     java.io.BufferedReader in -> b
     boolean debug -> c
@@ -2313,24 +2353,24 @@ com.welty.othello.core.ProcessLogger -> go:
     void changeState(boolean) -> a
     void println(java.lang.String) -> a
     java.lang.String readLine() -> a
-com.welty.othello.core.Utils -> gp:
+com.welty.othello.core.Utils -> gs:
     int Row(int) -> a
     int Col(int) -> b
     int Square(int,int) -> a
     boolean isSet(long,int) -> a
     char ValueToText(int) -> c
-com.welty.othello.engine.ExternalNBoardEngine -> gq:
+com.welty.othello.engine.ExternalNBoardEngine -> gt:
     com.orbanova.common.misc.Logger log -> a
     com.welty.othello.core.ProcessLogger processLogger -> b
     boolean shutdown -> c
     void sendCommand(java.lang.String) -> a
     boolean access$000(com.welty.othello.engine.ExternalNBoardEngine) -> a
     com.welty.othello.core.ProcessLogger access$100(com.welty.othello.engine.ExternalNBoardEngine) -> b
-com.welty.othello.engine.ExternalNBoardEngine$1 -> gr:
+com.welty.othello.engine.ExternalNBoardEngine$1 -> gu:
     com.welty.othello.protocol.ResponseParser val$responseParser -> a
     com.welty.othello.engine.ExternalNBoardEngine this$0 -> b
     void run() -> run
-com.welty.othello.gdk.COsBoard -> gs:
+com.welty.othello.gdk.COsBoard -> gv:
     com.welty.othello.gdk.COsBoardType bt -> a
     char[] sBoard -> c
     boolean fBlackMove -> b
@@ -2355,17 +2395,17 @@ com.welty.othello.gdk.COsBoard -> gs:
     com.welty.othello.gdk.PieceCounts getPieceCounts() -> g
     int getResult(boolean) -> a
     boolean equals(java.lang.Object) -> equals
-com.welty.othello.gdk.COsBoard$GetTextResult -> gt:
+com.welty.othello.gdk.COsBoard$GetTextResult -> gw:
     java.lang.String text -> a
     boolean blackMove -> b
-com.welty.othello.gdk.COsBoardType -> gu:
+com.welty.othello.gdk.COsBoardType -> gx:
     int n -> a
     boolean fOcto -> b
     java.lang.String toString() -> toString
     void Clear() -> a
     int NTotalSquares() -> b
     boolean equals(java.lang.Object) -> equals
-com.welty.othello.gdk.COsGame -> gv:
+com.welty.othello.gdk.COsGame -> gy:
     com.welty.othello.gdk.COsPosition posStart -> a
     com.welty.othello.gdk.COsPosition pos -> b
     java.lang.String sPlace -> c
@@ -2380,7 +2420,7 @@ com.welty.othello.gdk.COsGame -> gv:
     com.welty.othello.gdk.COsPosition getStartPosition() -> a
     com.welty.othello.gdk.COsPosition getPos() -> b
     void In(com.welty.othello.c.CReader) -> a
-    void Out(java.lang.StringBuilder) -> a
+    void out(java.lang.StringBuilder) -> a
     void Clear() -> c
     void Undo(int) -> a
     void SetResult(com.welty.othello.gdk.OsResult) -> a
@@ -2402,9 +2442,9 @@ com.welty.othello.gdk.COsGame -> gv:
     void reflect(int) -> d
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.gdk.COsMoveList -> gw:
+com.welty.othello.gdk.COsMoveList -> gz:
     java.lang.String toMoveListString() -> a
-com.welty.othello.gdk.COsPosition -> gx:
+com.welty.othello.gdk.COsPosition -> gA:
     com.welty.othello.gdk.COsBoard board -> a
     com.welty.othello.gdk.OsClock blackClock -> b
     com.welty.othello.gdk.OsClock whiteClock -> c
@@ -2413,7 +2453,7 @@ com.welty.othello.gdk.COsPosition -> gx:
     void Clear() -> a
     boolean equals(java.lang.Object) -> equals
     java.lang.String toString() -> toString
-com.welty.othello.gdk.OsClock -> gy:
+com.welty.othello.gdk.OsClock -> gB:
     com.welty.othello.gdk.OsClock DEFAULT -> a
     double tCurrent -> b
     double tIncrement -> c
@@ -2426,7 +2466,7 @@ com.welty.othello.gdk.OsClock -> gy:
     void writeTime(java.lang.StringBuilder,int) -> a
     boolean equals(java.lang.Object) -> equals
     java.lang.String toDisplayString() -> a
-com.welty.othello.gdk.OsMatchType -> gz:
+com.welty.othello.gdk.OsMatchType -> gC:
     com.welty.othello.gdk.COsBoardType bt -> c
     boolean fSynch -> d
     boolean fRand -> e
@@ -2440,7 +2480,7 @@ com.welty.othello.gdk.OsMatchType -> gz:
     void Clear() -> a
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.gdk.OsMove -> gA:
+com.welty.othello.gdk.OsMove -> gD:
     com.welty.othello.gdk.OsMove PASS -> a
     boolean fPass -> b
     int row -> c
@@ -2452,7 +2492,7 @@ com.welty.othello.gdk.OsMove -> gA:
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     com.welty.othello.gdk.OsMove reflect(int) -> a
-com.welty.othello.gdk.OsMoveListItem -> gB:
+com.welty.othello.gdk.OsMoveListItem -> gE:
     com.welty.othello.gdk.OsMoveListItem PASS -> a
     com.welty.othello.gdk.OsMove move -> b
     double eval -> c
@@ -2464,13 +2504,13 @@ com.welty.othello.gdk.OsMoveListItem -> gB:
     double getEval() -> b
     double getElapsedTime() -> c
     com.welty.othello.gdk.OsMoveListItem reflect(int) -> a
-com.welty.othello.gdk.OsPlayerInfo -> gC:
+com.welty.othello.gdk.OsPlayerInfo -> gF:
     java.lang.String sName -> a
     double dRating -> b
     void Clear() -> a
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.gdk.OsResult -> gD:
+com.welty.othello.gdk.OsResult -> gG:
     com.welty.othello.gdk.OsResult INCOMPLETE -> a
     double score -> b
     com.welty.othello.gdk.OsResult$TStatus status -> c
@@ -2478,9 +2518,9 @@ com.welty.othello.gdk.OsResult -> gD:
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.gdk.OsResult$1 -> gE:
+com.welty.othello.gdk.OsResult$1 -> gH:
     int[] $SwitchMap$com$welty$othello$gdk$OsResult$TStatus -> a
-com.welty.othello.gdk.OsResult$TStatus -> gF:
+com.welty.othello.gdk.OsResult$TStatus -> gI:
     com.welty.othello.gdk.OsResult$TStatus kUnfinished -> a
     com.welty.othello.gdk.OsResult$TStatus kNormalEnd -> b
     com.welty.othello.gdk.OsResult$TStatus kTimeout -> c
@@ -2490,92 +2530,109 @@ com.welty.othello.gdk.OsResult$TStatus -> gF:
     com.welty.othello.gdk.OsResult$TStatus kAborted -> f
     com.welty.othello.gdk.OsResult$TStatus[] $VALUES -> h
     com.welty.othello.gdk.OsResult$TStatus[] values() -> a
-com.welty.othello.gdk.PieceCounts -> gG:
+com.welty.othello.gdk.PieceCounts -> gJ:
     int nBlack -> a
     int nWhite -> b
     int nEmpty -> c
     boolean equals(java.lang.Object) -> equals
-com.welty.othello.gui.ExternalEngineManager -> gH:
-    com.welty.othello.gui.ExternalEngineManager instance -> b
-    com.welty.othello.gui.prefs.PrefSet externalEngines -> c
-    void add(java.lang.String,java.lang.String,java.lang.String) -> a
-    java.util.List getXei() -> a
-com.welty.othello.gui.ExternalEngineManager$Listener -> gI:
+com.welty.othello.gui.ExternalEngineManager -> com.welty.othello.gui.ExternalEngineManager:
+    com.welty.othello.gui.ExternalEngineManager instance -> instance
+    com.welty.othello.gui.prefs.PrefSet externalEngines -> a
+    void add(java.lang.String,java.lang.String,java.lang.String) -> add
+    java.util.List getXei() -> getXei
+    com.welty.othello.gui.ExternalEngineManager$Xei makeXei(java.lang.String,java.lang.String) -> a
+    void removeAll() -> removeAll
+    com.welty.othello.gui.ExternalEngineManager$Xei getXei(java.lang.String) -> getXei
+com.welty.othello.gui.ExternalEngineManager$Listener -> gK:
     com.welty.nboard.nboard.selector.GuiOpponentSelector this$0 -> a
     void engineAdded(java.lang.String,java.lang.String,java.lang.String) -> a
-com.welty.othello.gui.ExternalEngineManager$Xei -> gJ:
+com.welty.othello.gui.ExternalEngineManager$Xei -> gL:
     java.lang.String name -> a
     java.lang.String wd -> b
     java.lang.String cmd -> c
-com.welty.othello.gui.MenuButtonGroup -> gK:
+com.welty.othello.gui.MenuButtonGroup -> gM:
     java.lang.String key -> a
     java.lang.Class menuClass -> b
     java.lang.String[] texts -> c
     int selectedIndex -> d
-com.welty.othello.gui.MenuButtonGroup$MyAction -> gL:
+com.welty.othello.gui.MenuButtonGroup$MyAction -> gN:
     int play -> a
     com.welty.othello.gui.MenuButtonGroup this$0 -> b
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
-com.welty.othello.gui.StatelessEngineManager -> gM:
+com.welty.othello.gui.StatelessEngineManager -> gO:
     java.util.Map engines -> a
     com.welty.othello.gui.StatelessEngineManager instance -> b
     com.welty.othello.api.StatelessEngine getOrCreate$6ce1b8af(com.welty.othello.gui.selector.EngineSelector,int,com.orbanova.common.feed.Handler) -> a
     com.welty.othello.gui.StatelessEngineManager getInstance() -> a
-com.welty.othello.gui.prefs.PrefInt -> gN:
+com.welty.othello.gui.prefs.PrefInt -> gP:
     java.lang.Class c -> a
     java.lang.String key -> b
     int defaultValue -> c
-com.welty.othello.gui.prefs.PrefSet -> gO:
+com.welty.othello.gui.prefs.PrefSet -> gQ:
     java.lang.Class c -> a
     java.lang.String key -> b
-    java.util.prefs.Preferences prefs() -> a
-com.welty.othello.gui.prefs.PrefString -> gP:
+    java.util.Map getMap() -> a
+    java.util.prefs.Preferences prefs() -> b
+com.welty.othello.gui.prefs.PrefString -> gR:
     java.lang.Class c -> a
     java.lang.String key -> b
     java.lang.String defaultValue -> c
-com.welty.othello.gui.selector.EngineSelector -> gQ:
+com.welty.othello.gui.selector.EngineSelector -> gS:
     java.lang.String name -> a
     java.lang.Integer[] availableLevels -> b
     java.lang.Integer[] basicLevels -> d
     java.lang.Integer[] advancedLevels -> c
     java.lang.String toString() -> toString
     com.welty.othello.api.StatelessEngine createPingEngine$29b054bb$3fa324cc(com.orbanova.common.feed.Handler) -> a
-com.welty.othello.gui.selector.ExternalEngineSelector -> gR:
+    java.lang.String strengthEstimate(int) -> a
+com.welty.othello.gui.selector.ExternalEngineSelector -> gT:
     java.io.File workingDirectory -> d
     java.lang.String[] command -> e
     com.welty.othello.api.StatelessEngine createPingEngine$29b054bb$3fa324cc(com.orbanova.common.feed.Handler) -> a
-com.welty.othello.gui.selector.InternalEngineSelector -> gS:
+    java.lang.String strengthEstimate(int) -> a
+com.welty.othello.gui.selector.InternalEngineSelector -> gU:
     com.orbanova.common.misc.Vec eval$68ec729e -> d
     java.lang.String options -> e
+    com.orbanova.common.feed.NullableMapper strengthEstimator$2ccf4746 -> f
     com.welty.othello.api.StatelessEngine createPingEngine$29b054bb$3fa324cc(com.orbanova.common.feed.Handler) -> a
-    com.welty.othello.gui.selector.InternalEngineSelector of$444a68f0(java.lang.String,boolean,java.lang.String,com.orbanova.common.misc.Vec) -> a
-com.welty.othello.gui.selector.InternalEngineSelectorManager -> gT:
-    java.util.Collection selectors -> b
+    java.lang.String strengthEstimate(int) -> a
+    com.welty.othello.gui.selector.InternalEngineSelector of$2212301a(java.lang.String,boolean,java.lang.String,com.orbanova.common.misc.Vec,java.lang.String) -> a
+    com.welty.othello.gui.selector.InternalEngineSelector of$719171f6(java.lang.String,boolean,java.lang.String,com.orbanova.common.misc.Vec,com.orbanova.common.feed.NullableMapper) -> a
+com.welty.othello.gui.selector.InternalEngineSelector$1 -> gV:
+    java.lang.String val$strength -> a
+    java.lang.Object y(java.lang.Object) -> a
+com.welty.othello.gui.selector.InternalEngineSelectorManager -> gW:
+    java.util.Collection weakSelectors -> b
+    com.welty.othello.gui.selector.InternalEngineSelector vegtblSelector -> c
     com.welty.othello.gui.selector.InternalEngineSelector ABIGAIL -> a
-    com.welty.othello.gui.selector.InternalEngineSelectorManager instance -> c
+    com.welty.othello.gui.selector.InternalEngineSelectorManager instance -> d
     java.util.List internalOpponentSelectors(boolean) -> a
-com.welty.othello.gui.selector.InternalEngineSelectorManager$1 -> gU:
+com.welty.othello.gui.selector.InternalEngineSelectorManager$1 -> gX:
+    java.lang.Object y(java.lang.Object) -> a
+com.welty.othello.gui.selector.InternalEngineSelectorManager$2 -> gY:
     int eval(com.welty.othello.gui.selector.SimpleEval$Situation) -> a
-com.welty.othello.gui.selector.InternalEngineSelectorManager$2 -> gV:
+com.welty.othello.gui.selector.InternalEngineSelectorManager$3 -> gZ:
     int eval(com.welty.othello.gui.selector.SimpleEval$Situation) -> a
-com.welty.othello.gui.selector.InternalEngineSelectorManager$3 -> gW:
+com.welty.othello.gui.selector.InternalEngineSelectorManager$4 -> ha:
+    java.lang.Object y(java.lang.Object) -> a
+com.welty.othello.gui.selector.InternalEngineSelectorManager$5 -> hb:
     int eval(com.welty.othello.gui.selector.SimpleEval$Situation) -> a
-com.welty.othello.gui.selector.InternalEngineSelectorManager$4 -> gX:
+com.welty.othello.gui.selector.InternalEngineSelectorManager$6 -> hc:
     int eval(com.welty.othello.gui.selector.SimpleEval$Situation) -> a
-com.welty.othello.gui.selector.InternalEngineSelectorManager$5 -> gY:
+com.welty.othello.gui.selector.InternalEngineSelectorManager$7 -> hd:
     int eval(com.welty.othello.gui.selector.SimpleEval$Situation) -> a
-com.welty.othello.gui.selector.InternalEngineSelectorManager$6 -> gZ:
+com.welty.othello.gui.selector.InternalEngineSelectorManager$8 -> he:
+    java.lang.Object y(java.lang.Object) -> a
+com.welty.othello.gui.selector.InternalEngineSelectorManager$9 -> hf:
     int eval(com.welty.othello.gui.selector.SimpleEval$Situation) -> a
-com.welty.othello.gui.selector.InternalEngineSelectorManager$7 -> ha:
-    int eval(com.welty.othello.gui.selector.SimpleEval$Situation) -> a
-com.welty.othello.gui.selector.SimpleEval -> hb:
+com.welty.othello.gui.selector.SimpleEval -> hg:
     java.util.Random random -> a
     int randomness -> b
     int[] coeffs -> c
     int eval(long,long) -> a
     int eval(com.welty.othello.gui.selector.SimpleEval$Situation) -> a
     int[] access$000() -> a
-com.welty.othello.gui.selector.SimpleEval$Situation -> hc:
+com.welty.othello.gui.selector.SimpleEval$Situation -> hh:
     long mover -> a
     long enemy -> b
     long moverMoves -> c
@@ -2587,7 +2644,7 @@ com.welty.othello.gui.selector.SimpleEval$Situation -> hc:
     int netPotMobs() -> c
     long empty() -> e
     int corner2Value() -> d
-com.welty.othello.protocol.AnalysisResponse -> hd:
+com.welty.othello.protocol.AnalysisResponse -> hi:
     int pong -> a
     int moveNumber -> b
     double eval -> c
@@ -2595,24 +2652,24 @@ com.welty.othello.protocol.AnalysisResponse -> hd:
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.protocol.Depth -> he:
+com.welty.othello.protocol.Depth -> hj:
     int depth -> a
     java.lang.String suffix -> b
     boolean isWldProven() -> a
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.protocol.EngineTerminatedResponse -> hf:
+com.welty.othello.protocol.EngineTerminatedResponse -> hk:
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.protocol.ErrorResponse -> hg:
+com.welty.othello.protocol.ErrorResponse -> hl:
     java.lang.String message -> a
     java.lang.String comment -> b
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.protocol.HintResponse -> hh:
+com.welty.othello.protocol.HintResponse -> hm:
     int pong -> a
     boolean book -> b
     java.lang.String pv -> c
@@ -2625,18 +2682,18 @@ com.welty.othello.protocol.HintResponse -> hh:
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.protocol.MoveResponse -> hi:
+com.welty.othello.protocol.MoveResponse -> hn:
     int pong -> a
     com.welty.othello.gdk.OsMoveListItem mli -> b
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.protocol.NBoardResponse -> hj:
-com.welty.othello.protocol.NameChangedResponse -> hk:
+com.welty.othello.protocol.NBoardResponse -> ho:
+com.welty.othello.protocol.NameChangedResponse -> hp:
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.protocol.NodeStatsResponse -> hl:
+com.welty.othello.protocol.NodeStatsResponse -> hq:
     int pong -> a
     long nNodes -> b
     double tElapsed -> c
@@ -2644,12 +2701,12 @@ com.welty.othello.protocol.NodeStatsResponse -> hl:
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.protocol.PongResponse -> hm:
+com.welty.othello.protocol.PongResponse -> hr:
     int pong -> a
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.protocol.ResponseParser -> hn:
+com.welty.othello.protocol.ResponseParser -> hs:
     com.orbanova.common.feed.Handler responseHandler$4e2eec3f -> a
     java.lang.String status -> b
     java.lang.String name -> c
@@ -2659,12 +2716,12 @@ com.welty.othello.protocol.ResponseParser -> hn:
     java.lang.String getStatus() -> a
     java.lang.String getName() -> b
     int getPong() -> c
-com.welty.othello.protocol.StatusChangedResponse -> ho:
+com.welty.othello.protocol.StatusChangedResponse -> ht:
     java.lang.String status -> a
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.welty.othello.protocol.Value -> hp:
+com.welty.othello.protocol.Value -> hu:
     float drawSeekingValue -> a
     float drawAvoidingValue -> b
     void validate() -> a
@@ -2672,7 +2729,7 @@ com.welty.othello.protocol.Value -> hp:
     java.lang.String format(float) -> a
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-gnu.trove.impl.Constants -> hq:
+gnu.trove.impl.Constants -> hv:
     boolean VERBOSE -> b
     byte DEFAULT_BYTE_NO_ENTRY_VALUE -> c
     short DEFAULT_SHORT_NO_ENTRY_VALUE -> d
@@ -2680,15 +2737,15 @@ gnu.trove.impl.Constants -> hq:
     long DEFAULT_LONG_NO_ENTRY_VALUE -> e
     float DEFAULT_FLOAT_NO_ENTRY_VALUE -> f
     double DEFAULT_DOUBLE_NO_ENTRY_VALUE -> g
-gnu.trove.impl.HashFunctions -> hr:
+gnu.trove.impl.HashFunctions -> hw:
     boolean $assertionsDisabled -> a
     int hash(double) -> a
     int hash(int) -> a
     int fastCeil(float) -> a
-gnu.trove.impl.PrimeFinder -> hs:
+gnu.trove.impl.PrimeFinder -> hx:
     int[] primeCapacities -> a
     int nextPrime(int) -> a
-gnu.trove.impl.hash.THash -> ht:
+gnu.trove.impl.hash.THash -> hy:
     int _size -> a
     int _free -> b
     float _loadFactor -> c
@@ -2710,7 +2767,7 @@ gnu.trove.impl.hash.THash -> ht:
     void postInsertHook(boolean) -> b
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
-gnu.trove.impl.hash.THashIterator -> hu:
+gnu.trove.impl.hash.THashIterator -> hz:
     gnu.trove.impl.hash.TObjectHash _object_hash -> b
     gnu.trove.impl.hash.THash _hash -> c
     int _expectedSize -> d
@@ -2721,14 +2778,14 @@ gnu.trove.impl.hash.THashIterator -> hu:
     void moveToNextIndex() -> c_
     int nextIndex() -> b
     java.lang.Object objectAtIndex(int) -> a
-gnu.trove.impl.hash.THashPrimitiveIterator -> hv:
+gnu.trove.impl.hash.THashPrimitiveIterator -> hA:
     gnu.trove.impl.hash.TPrimitiveHash _hash -> b
     int _expectedSize -> c
     int _index -> a
     int nextIndex() -> b
     boolean hasNext() -> hasNext
     void moveToNextIndex() -> a_
-gnu.trove.impl.hash.TIntDoubleHash -> hw:
+gnu.trove.impl.hash.TIntDoubleHash -> hB:
     int[] _set -> b
     int no_entry_key -> c
     double no_entry_value -> d
@@ -2740,7 +2797,7 @@ gnu.trove.impl.hash.TIntDoubleHash -> hw:
     void insertKeyAt(int,int) -> a
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
-gnu.trove.impl.hash.TIntHash -> hx:
+gnu.trove.impl.hash.TIntHash -> hC:
     int[] _set -> b
     int no_entry_value -> d
     boolean consumeFreeSlot -> c
@@ -2750,7 +2807,7 @@ gnu.trove.impl.hash.TIntHash -> hx:
     int index(int) -> b_
     int insertKey(int) -> f
     void insertKeyAt(int,int) -> a
-gnu.trove.impl.hash.TObjectHash -> hy:
+gnu.trove.impl.hash.TObjectHash -> hD:
     java.lang.Object[] _set -> b
     java.lang.Object REMOVED -> c
     java.lang.Object FREE -> d
@@ -2759,7 +2816,7 @@ gnu.trove.impl.hash.TObjectHash -> hy:
     void removeAt(int) -> a
     int setUp(int) -> b
     boolean contains(java.lang.Object) -> a
-    int index(java.lang.Object) -> c_
+    int index(java.lang.Object) -> b_
     int insertKey(java.lang.Object) -> c
     int insertKeyRehash(java.lang.Object,int,int,java.lang.Object) -> a
     void throwObjectContractViolation(java.lang.Object,java.lang.Object) -> a
@@ -2767,25 +2824,25 @@ gnu.trove.impl.hash.TObjectHash -> hy:
     java.lang.String objectInfo(java.lang.Object) -> d
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
-gnu.trove.impl.hash.TPrimitiveHash -> hz:
+gnu.trove.impl.hash.TPrimitiveHash -> hE:
     byte[] _states -> f
     int capacity() -> c
     void removeAt(int) -> a
     int setUp(int) -> b
-gnu.trove.iterator.TAdvancingIterator -> hA:
+gnu.trove.iterator.TAdvancingIterator -> hF:
     void advance() -> a
-gnu.trove.iterator.TIntObjectIterator -> hB:
+gnu.trove.iterator.TIntObjectIterator -> hG:
     int key() -> b
     java.lang.Object value() -> c
-gnu.trove.iterator.TIterator -> hC:
+gnu.trove.iterator.TIterator -> hH:
     boolean hasNext() -> hasNext
-gnu.trove.iterator.TObjectIntIterator -> hD:
+gnu.trove.iterator.TObjectIntIterator -> hI:
     java.lang.Object key() -> b
     int value() -> c
-gnu.trove.iterator.hash.TObjectHashIterator -> hE:
+gnu.trove.iterator.hash.TObjectHashIterator -> hJ:
     gnu.trove.impl.hash.TObjectHash _objectHash -> b
     java.lang.Object objectAtIndex(int) -> a
-gnu.trove.list.array.TIntArrayList -> hF:
+gnu.trove.list.array.TIntArrayList -> hK:
     int[] _data -> a
     int _pos -> b
     int no_entry_value -> c
@@ -2802,7 +2859,7 @@ gnu.trove.list.array.TIntArrayList -> hF:
     java.lang.String toString() -> toString
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
-gnu.trove.list.array.TShortArrayList -> hG:
+gnu.trove.list.array.TShortArrayList -> hL:
     short[] _data -> a
     int _pos -> b
     short no_entry_value -> c
@@ -2813,20 +2870,20 @@ gnu.trove.list.array.TShortArrayList -> hG:
     java.lang.String toString() -> toString
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
-gnu.trove.map.TIntDoubleMap -> hH:
+gnu.trove.map.TIntDoubleMap -> hM:
     double getNoEntryValue() -> f
     double get(int) -> d
     int size() -> b
-gnu.trove.map.TIntObjectMap -> hI:
+gnu.trove.map.TIntObjectMap -> hN:
     int size() -> b
     boolean containsKey(int) -> a_
     java.lang.Object get(int) -> e
-gnu.trove.map.TObjectIntMap -> hJ:
+gnu.trove.map.TObjectIntMap -> hO:
     int getNoEntryValue() -> a
     int size() -> b
-    boolean containsKey(java.lang.Object) -> b_
+    boolean containsKey(java.lang.Object) -> a_
     int get(java.lang.Object) -> b
-gnu.trove.map.hash.TIntDoubleHashMap -> hK:
+gnu.trove.map.hash.TIntDoubleHashMap -> hP:
     double[] _values -> g
     int setUp(int) -> b
     void rehash(int) -> c
@@ -2842,7 +2899,7 @@ gnu.trove.map.hash.TIntDoubleHashMap -> hK:
     java.lang.String toString() -> toString
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
-gnu.trove.map.hash.TIntObjectHashMap -> hL:
+gnu.trove.map.hash.TIntObjectHashMap -> hQ:
     java.lang.Object[] _values -> d
     int no_entry_key -> e
     int setUp(int) -> b
@@ -2860,25 +2917,25 @@ gnu.trove.map.hash.TIntObjectHashMap -> hL:
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
     java.lang.String toString() -> toString
-gnu.trove.map.hash.TIntObjectHashMap$1 -> hM:
+gnu.trove.map.hash.TIntObjectHashMap$1 -> hR:
     gnu.trove.map.hash.TIntObjectHashMap this$0 -> a
     boolean execute(int,java.lang.Object) -> a
-gnu.trove.map.hash.TIntObjectHashMap$2 -> hN:
+gnu.trove.map.hash.TIntObjectHashMap$2 -> hS:
     boolean first -> a
     java.lang.StringBuilder val$buf -> b
     boolean execute(int,java.lang.Object) -> a
-gnu.trove.map.hash.TIntObjectHashMap$TIntObjectHashIterator -> hO:
+gnu.trove.map.hash.TIntObjectHashMap$TIntObjectHashIterator -> hT:
     gnu.trove.map.hash.TIntObjectHashMap _map -> b
     void advance() -> a
     int key() -> b
     java.lang.Object value() -> c
-gnu.trove.map.hash.TObjectIntHashMap -> hP:
+gnu.trove.map.hash.TObjectIntHashMap -> hU:
     int[] _values -> f
     int no_entry_value -> g
     int setUp(int) -> b
     void rehash(int) -> c
     int getNoEntryValue() -> a
-    boolean containsKey(java.lang.Object) -> b_
+    boolean containsKey(java.lang.Object) -> a_
     int get(java.lang.Object) -> b
     int put(java.lang.Object,int) -> a
     void removeAt(int) -> a
@@ -2889,27 +2946,27 @@ gnu.trove.map.hash.TObjectIntHashMap -> hP:
     void writeExternal(java.io.ObjectOutput) -> writeExternal
     void readExternal(java.io.ObjectInput) -> readExternal
     java.lang.String toString() -> toString
-gnu.trove.map.hash.TObjectIntHashMap$1 -> hQ:
+gnu.trove.map.hash.TObjectIntHashMap$1 -> hV:
     gnu.trove.map.hash.TObjectIntHashMap this$0 -> a
     boolean execute(java.lang.Object,int) -> a
-gnu.trove.map.hash.TObjectIntHashMap$2 -> hR:
+gnu.trove.map.hash.TObjectIntHashMap$2 -> hW:
     boolean first -> a
     java.lang.StringBuilder val$buf -> b
     boolean execute(java.lang.Object,int) -> a
-gnu.trove.map.hash.TObjectIntHashMap$TObjectIntHashIterator -> hS:
+gnu.trove.map.hash.TObjectIntHashMap$TObjectIntHashIterator -> hX:
     gnu.trove.map.hash.TObjectIntHashMap _map -> b
     void advance() -> a
     java.lang.Object key() -> b
     int value() -> c
-gnu.trove.procedure.TIntDoubleProcedure -> hT:
+gnu.trove.procedure.TIntDoubleProcedure -> hY:
     boolean first -> a
     java.lang.StringBuilder val$buf -> b
     boolean execute(int,double) -> a
-gnu.trove.procedure.TIntObjectProcedure -> hU:
+gnu.trove.procedure.TIntObjectProcedure -> hZ:
     boolean execute(int,java.lang.Object) -> a
-gnu.trove.procedure.TObjectIntProcedure -> hV:
+gnu.trove.procedure.TObjectIntProcedure -> ia:
     boolean execute(java.lang.Object,int) -> a
-gnu.trove.procedure.TObjectProcedure -> hW:
+gnu.trove.procedure.TObjectProcedure -> ib:
     com.welty.othello.gdk.COsBoard val$pos -> a
     gnu.trove.list.array.TIntArrayList val$index -> b
     boolean execute(java.lang.Object) -> a

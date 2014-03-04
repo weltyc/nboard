@@ -400,7 +400,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         JMenu helpMenu = new JMenu();
         helpMenu.add(menuItem("&About...").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                final String message = "<html><h2 align='center'>NBoard 2.0</h2>" +
+                final String message = "<html><h2 align='center'>NBoard 2.0.b2</h2>" +
                         "<p>NBoard 2.0 is copyright 2005-2014 Chris Welty, all rights reserved.</p><br/>" +
                         "<p>Questions, comments, bug reports to <a href='mailto:chris.welty.1@gmail.com'>chris.welty.1@gmail.com</a></p>";
                 JOptionPane.showMessageDialog(null, message, "About NBoard", JOptionPane.PLAIN_MESSAGE);
