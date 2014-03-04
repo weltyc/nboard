@@ -56,10 +56,10 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private final NodeCountPanel nodeCountPanel;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData reversiData;
-    private ReversiWindowEngine analysisEngine;
-    private final GuiOpponentSelector analysisSelector = new GuiOpponentSelector("Select Analysis Engine", false, "Analysis");
     private ReversiWindowEngine opposingEngine;
     private final GuiOpponentSelector opponentSelector = new GuiOpponentSelector("Select Opponent", true, "");
+    private ReversiWindowEngine analysisEngine;
+    private final GuiOpponentSelector analysisSelector = new GuiOpponentSelector("Select Analysis Engine", false, "Analysis");
 
     /**
      * Window where thor games are displayed
@@ -148,7 +148,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 new ScoreWindow(reversiData, this),
                 boardPanel = new ReversiBoard(reversiData, this, m_hints),
                 enginePanel
-                );
+        );
         addGoFasterButton(leftPanel);
         leftPanel.add(
                 hBox(

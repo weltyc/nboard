@@ -28,6 +28,7 @@ H26  X   Vegtbl returning non-integer evals from solved positions. Occurs even f
 H27  X   Click in move grid is performing the wrong move
 H28  X   Early wipeout in analysis mode leaves hints on board if you click fast enough.
 H29  X   Don't send an error message if the command is unknown - many engines print out debugging information.
+H30  X   Abigail starting with depth=16
 
 L1   X   Display hints on the initial board position when in startup mode
 L2   X   On Mac, accelerators should use command key instead of control key

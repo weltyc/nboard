@@ -72,11 +72,7 @@ public class GuiOpponentSelector extends OpponentSelector {
 
         // Opponent selection list box.
         engineSelectors = new JList<>(engineListModel);
-
-        selectUsersPreferredEngine();
-        selectUsersPreferredLevel();
         setUpList(engineSelectors);
-        setStrength();
 
         engineSelectors.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override public void valueChanged(ListSelectionEvent e) {
@@ -88,6 +84,10 @@ public class GuiOpponentSelector extends OpponentSelector {
                 }
             }
         });
+
+        selectUsersPreferredEngine();
+        selectUsersPreferredLevel();
+        setStrength();
 
         final JButton ok = button(new AbstractAction("OK") {
             @Override public void actionPerformed(ActionEvent e) {
@@ -164,6 +164,10 @@ public class GuiOpponentSelector extends OpponentSelector {
         }
     }
 
+    /**
+     * Select the User's preferred level both in the dialog box and in the
+     * persistent variables (so it will be used even if the user presses "cancel").
+     */
     private void selectUsersPreferredLevel() {
         selectedLevel = levelPref.get();
         levels.setSelectedIndex(findNearestLevel(selectedLevel, selectedEngine.availableLevels));
@@ -171,7 +175,8 @@ public class GuiOpponentSelector extends OpponentSelector {
     }
 
     /**
-     * Select the User's preferred engine both in the dialog box and in the data model.
+     * Select the User's preferred engine both in the dialog box and in the
+     * persistent variables (so it will be used even if the user presses "cancel").
      */
     private void selectUsersPreferredEngine() {
         final String preferredEngineName = enginePref.get();
