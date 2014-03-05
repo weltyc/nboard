@@ -108,11 +108,14 @@
                         <option>-dontskipnonpubliclibraryclasses</option>
                         <option>-repackageclasses ''</option>
                         <option>-adaptresourcefilenames **.txt,**.html,**.cof</option>
+                        <!-- This needs to be kept public since it's the main class -->
                         <option>-keep public class com.welty.nboard.nboard.NBoard { public *; public static *; }</option>
+                        <!-- These need to be kept in the same package since Preferences depend on their package -->
                         <option>-keep public class com.welty.nboard.nboard.ReversiWindow { public *; public static *; }</option>
                         <option>-keep public class com.welty.othello.gui.ExternalEngineManager { public *; public static *; }</option>
-                        <option>-keep public class com.welty.nboard.nboard.selector.GuiOpponentSelector { public *;
-                            public static *; }</option>
+                        <!-- This package needs to be kept unchanged since it has resources, and they can't be adapted because
+                        GuiOpponentSelector has Preferences.-->
+                        <option>-keeppackagenames "com.welty.nboard.nboard.selector"</option>
                     </options>
                     <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
                     <inFilter>!**/Luthor.luth,!**/package.html,!*.properties,!**/LICENSE.txt,!**/NOTICE.txt</inFilter>
