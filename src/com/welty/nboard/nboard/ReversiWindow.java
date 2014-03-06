@@ -7,6 +7,7 @@ import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.nboard.engine.EngineSynchronizer;
 import com.welty.nboard.nboard.engine.ReversiWindowEngine;
 import com.welty.nboard.nboard.selector.GuiOpponentSelector;
+import com.welty.nboard.nboard.setup.SetUpWindow;
 import com.welty.nboard.nboard.startpos.StartPosition;
 import com.welty.nboard.nboard.startpos.StartPositionManager;
 import com.welty.nboard.nboard.startpos.StartPositionManagerImpl;
