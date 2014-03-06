@@ -57,9 +57,9 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData reversiData;
     private ReversiWindowEngine opposingEngine;
-    private final GuiOpponentSelector opponentSelector = new GuiOpponentSelector("Select Opponent", true, "");
+    private final GuiOpponentSelector opponentSelector = new GuiOpponentSelector("Select Opponent", true, "", "Opponent");
     private ReversiWindowEngine analysisEngine;
-    private final GuiOpponentSelector analysisSelector = new GuiOpponentSelector("Select Analysis Engine", false, "Analysis");
+    private final GuiOpponentSelector analysisSelector = new GuiOpponentSelector("Select Analysis Engine", false, "Analysis", "Analyst");
 
     /**
      * Window where thor games are displayed

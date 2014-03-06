@@ -32,12 +32,12 @@ class EngineListModel extends DefaultListModel<EngineSelector> {
     }
 
     /**
-     * @param name name of element to find
-     * @return index of the first element whose name equals name, or -1 if no match found
+     * @param engineName name of engine to find
+     * @return index of the first engine whose name equals name, or -1 if no match found
      */
-    int find(String name) {
+    int find(String engineName) {
         for (int i = 0; i < size(); i++) {
-            if (get(i).name.equals(name)) {
+            if (get(i).name.equals(engineName)) {
                 return i;
             }
         }

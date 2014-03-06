@@ -7,8 +7,6 @@ import com.welty.othello.gui.ExternalEngineManager;
 import com.welty.othello.gui.prefs.PrefInt;
 import com.welty.othello.gui.prefs.PrefString;
 import com.welty.othello.gui.selector.EngineSelector;
-import com.welty.othello.gui.selector.ExternalEngineSelector;
-import com.welty.othello.gui.selector.InternalEngineSelectorManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -32,8 +30,7 @@ public class GuiOpponentSelector extends OpponentSelector {
 
     private final JDialog frame;
     private final JList<Integer> levels = new JList<>();
-    private final EngineListModel engineListModel;
-    private final JList<EngineSelector> engineSelectors;
+    private final EngineList engineList;
     private final JLabel strengthLabel = new JLabel("Strength");
 
     // these are written to when the user clicks "OK"
@@ -46,11 +43,11 @@ public class GuiOpponentSelector extends OpponentSelector {
      * @param windowTitle        title of the selection window
      * @param includeWeakEngines if true, weak engines are included in the selection list. If false, they are not
      * @param preferencePrefix   prefix for saving the user's choices.
+     * @param type               What the engine will be used for, displayed in the border of the engine selection list
      */
-    public GuiOpponentSelector(String windowTitle, boolean includeWeakEngines, String preferencePrefix) {
+    public GuiOpponentSelector(String windowTitle, boolean includeWeakEngines, String preferencePrefix, String type) {
         levelPref = new PrefInt(GuiOpponentSelector.class, preferencePrefix + "Level", includeWeakEngines ? 1 : 12);
         enginePref = new PrefString(GuiOpponentSelector.class, preferencePrefix + "Opponent", includeWeakEngines ? "Abigail" : "Vegtbl");
-        engineListModel = new EngineListModel(InternalEngineSelectorManager.internalOpponentSelectors(includeWeakEngines));
 
         // Level selection list box.
         // Need to create this before Opponent selection list box because the
@@ -58,7 +55,7 @@ public class GuiOpponentSelector extends OpponentSelector {
         final DefaultListModel<Integer> levelModel = new DefaultListModel<>();
         setLevelElements(levelModel, EngineSelector.advancedLevels);
         levels.setModel(levelModel);
-        setUpList(levels);
+        EngineList.setUpList(levels);
         levels.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         levels.setVisibleRowCount(EngineSelector.advancedLevels.length / 2);
         levels.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -71,13 +68,12 @@ public class GuiOpponentSelector extends OpponentSelector {
 
 
         // Opponent selection list box.
-        engineSelectors = new JList<>(engineListModel);
-        setUpList(engineSelectors);
+        engineList = new EngineList(includeWeakEngines);
 
-        engineSelectors.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        engineList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
-                    final EngineSelector engineSelector = engineSelectors.getSelectedValue();
+                    final EngineSelector engineSelector = engineList.getSelectedValue();
                     setLevelElements(levelModel, engineSelector.availableLevels);
                     levels.setSelectedIndex(findNearestLevel(selectedLevel, engineSelector.availableLevels));
                     setStrength();
@@ -114,16 +110,20 @@ public class GuiOpponentSelector extends OpponentSelector {
             }
         });
 
+        final JButton deleteEngine = button (engineList.getDeleteEngineAction());
+
+        strengthLabel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
         frame = new JDialog(null, windowTitle, Dialog.ModalityType.APPLICATION_MODAL);
         frame.setLayout(new JsbGridLayout(1));
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         frame.add(
                 vBox(
                         grid(2, 0, -1,
-                                wrap("Opponent", engineSelectors), wrap("Level", levels)
+                                wrap(type, engineList), wrap("Level", levels)
                         ),
                         strengthLabel,
-                        buttonBar(false, addEngine),
+                        buttonBar(false, addEngine, deleteEngine),
                         buttonBar(true, ok, cancel)
                 )
         );
@@ -131,20 +131,14 @@ public class GuiOpponentSelector extends OpponentSelector {
         frame.setVisible(false);
 
         frame.getRootPane().setDefaultButton(ok);
-
-        ExternalEngineManager.instance.addListener(new ExternalEngineManager.Listener() {
-            @Override public void engineAdded(String name, String wd, String command) {
-                engineListModel.put(new ExternalEngineSelector(name, wd, command));
-            }
-        });
     }
 
     private void setSelectedEngine() {
-        selectedEngine = engineSelectors.getSelectedValue();
+        selectedEngine = engineList.getSelectedValue();
     }
 
     private void setStrength() {
-        final EngineSelector selector = engineSelectors.getSelectedValue();
+        final EngineSelector selector = engineList.getSelectedValue();
         if (selector != null) {
             final Integer selectedLevel = levels.getSelectedValue();
             if (selectedLevel != null) {
@@ -180,8 +174,8 @@ public class GuiOpponentSelector extends OpponentSelector {
      */
     private void selectUsersPreferredEngine() {
         final String preferredEngineName = enginePref.get();
-        final int i = engineListModel.find(preferredEngineName);
-        engineSelectors.setSelectedIndex(Math.max(0, i));
+        final int i = engineList.find(preferredEngineName);
+        engineList.setSelectedIndex(Math.max(0, i));
         setSelectedEngine();
     }
 
@@ -237,14 +231,6 @@ public class GuiOpponentSelector extends OpponentSelector {
         return i;
     }
 
-    private static <T> void setUpList(JList<T> ops) {
-        ops.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-        ops.setFont(UIManager.getFont("TextField.font"));
-        ops.setAlignmentY(0.0f);
-        ops.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        ops.setSelectedIndex(0);
-    }
-
     /**
      * Display this window
      */
@@ -262,4 +248,5 @@ public class GuiOpponentSelector extends OpponentSelector {
     @NotNull @Override public OpponentSelection getOpponent() {
         return new OpponentSelection(selectedEngine, selectedLevel);
     }
+
 }

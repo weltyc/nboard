@@ -167,7 +167,7 @@
         <dependency>
             <groupId>com.welty</groupId>
             <artifactId>novello</artifactId>
-            <version>0.02</version>
+            <version>0.03</version>
         </dependency>
 
         <dependency>
