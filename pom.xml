@@ -23,8 +23,10 @@
         <sourceDirectory>src</sourceDirectory>
         <testSourceDirectory>test</testSourceDirectory>
         <resources>
+
             <resource>
                 <directory>src</directory>
+                <filtering>true</filtering>
                 <excludes>
                     <exclude>**/*.java</exclude>
                     <exclude>**/*.groovy</exclude>

@@ -1,5 +1,6 @@
 package com.welty.nboard.nboard;
 
+import com.orbanova.common.feed.Feeds;
 import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.AutoRadioGroup;
 import com.welty.nboard.gui.Grid;
@@ -40,6 +41,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import static com.orbanova.common.jsb.JSwingBuilder.*;
@@ -397,11 +399,11 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
     private JMenu createHelpMenu() {
         JMenu helpMenu = new JMenu();
+        final InputStream is = ReversiWindow.class.getResourceAsStream("about.html");
+        final String message = Feeds.ofLines(is).join("");
+
         helpMenu.add(menuItem("&About...").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                final String message = "<html><h2 align='center'>NBoard 2.0.b2</h2>" +
-                        "<p>NBoard 2.0 is copyright 2005-2014 Chris Welty, all rights reserved.</p><br/>" +
-                        "<p>Questions, comments, bug reports to <a href='mailto:chris.welty.1@gmail.com'>chris.welty.1@gmail.com</a></p>";
                 JOptionPane.showMessageDialog(null, message, "About NBoard", JOptionPane.PLAIN_MESSAGE);
             }
         }));
