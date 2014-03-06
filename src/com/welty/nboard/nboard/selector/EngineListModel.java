@@ -1,20 +1,20 @@
 package com.welty.nboard.nboard.selector;
 
 import com.welty.othello.gui.ExternalEngineManager;
-import com.welty.othello.gui.selector.EngineSelector;
-import com.welty.othello.gui.selector.ExternalEngineSelector;
+import com.welty.othello.gui.selector.EngineFactory;
+import com.welty.othello.gui.selector.ExternalEngineFactory;
 
 import javax.swing.*;
 import java.util.prefs.BackingStoreException;
 
-class EngineListModel extends DefaultListModel<EngineSelector> {
-    public EngineListModel(java.util.List<EngineSelector> engineSelectors) {
-        for (EngineSelector es : engineSelectors) {
+class EngineListModel extends DefaultListModel<EngineFactory> {
+    public EngineListModel(java.util.List<EngineFactory> engineFactories) {
+        for (EngineFactory es : engineFactories) {
             addElement(es);
         }
         try {
             for (ExternalEngineManager.Xei xei : ExternalEngineManager.instance.getXei()) {
-                final ExternalEngineSelector selector = new ExternalEngineSelector(xei.name, xei.wd, xei.cmd);
+                final ExternalEngineFactory selector = new ExternalEngineFactory(xei.name, xei.wd, xei.cmd);
                 addElement(selector);
             }
         } catch (BackingStoreException e) {
@@ -22,12 +22,12 @@ class EngineListModel extends DefaultListModel<EngineSelector> {
         }
     }
 
-    public void put(EngineSelector engineSelector) {
-        final int i = find(engineSelector.name);
+    public void put(EngineFactory engineFactory) {
+        final int i = find(engineFactory.name);
         if (i < 0) {
-            addElement(engineSelector);
+            addElement(engineFactory);
         } else {
-            set(i, engineSelector);
+            set(i, engineFactory);
         }
     }
 

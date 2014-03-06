@@ -1,9 +1,10 @@
 package com.welty.nboard.nboard.engine;
 
+import com.orbanova.common.misc.ListenerManager;
 import com.orbanova.common.misc.Require;
 import com.welty.othello.api.*;
 import com.welty.othello.core.CMove;
-import com.welty.othello.gui.selector.InternalEngineSelectorManager;
+import com.welty.othello.gui.selector.InternalEngineFactoryManager;
 import com.welty.othello.protocol.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,9 +31,10 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
     private final ReversiWindowEngine.Listener listener;
     private final ResponseHandler responseHandler;
     private final String name;
+    private final ListenerManager<EngineSynchronizer.NameListener> nameListenerManager = new ListenerManager<>();
 
     /**
-     * @param pingPong         The one global PingPong, needed because multiple EngineSynchronizers may share an engine
+     * @param pingPong The one global PingPong, needed because multiple EngineSynchronizers may share an engine
      */
     public EngineSynchronizer(String name, PingPong pingPong, OpponentSelector opponentSelector, ReversiWindowEngine.Listener listener) {
         this.pingPong = pingPong;
@@ -50,7 +52,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
         try {
             return opponentSelector.getOpponent().getOrCreateEngine(responseHandler);
         } catch (IOException e) {
-            return InternalEngineSelectorManager.ABIGAIL.createPingEngine(1, responseHandler);
+            return InternalEngineFactoryManager.ABIGAIL.createPingEngine(1, responseHandler);
         }
     }
 
@@ -86,6 +88,10 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
         verifyEdt();
         System.out.println("<< (" + name + ") go");
         multiEngine.requestMove(pingPong, state);
+    }
+
+    @Override public ListenerManager<NameListener> getNameListenerManager() {
+        return nameListenerManager;
     }
 
     @Override public void opponentChanged() {
@@ -149,7 +155,11 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
                 listener.status(multiEngine.getStatus());
 
             } else if (c == NameChangedResponse.class) {
-                listener.nameChanged(multiEngine.getName());
+                final String engineName = multiEngine.getName();
+                listener.nameChanged(engineName);
+                for (NameListener nameListener : getNameListenerManager().getListeners()) {
+                    nameListener.nameChanged(engineName);
+                }
 
             } else if (c == MoveResponse.class) {
                 final MoveResponse r = (MoveResponse) response;
@@ -192,5 +202,14 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
                 throw new IllegalArgumentException("Unknown message : " + response);
             }
         }
+    }
+
+    public interface NameListener {
+        /**
+         * The name of the engine has changed.
+         *
+         * @param engineName new engine name.
+         */
+        void nameChanged(@NotNull String engineName);
     }
 }

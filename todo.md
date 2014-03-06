@@ -107,7 +107,7 @@ F34  X   Remove JetBrains @NotNull assertions from proguard jar
 F35  X   Allow users to run "SelfPlaySet" - need to add 'clear' command to NBoard protocol handler
 F36  X   Strength estimation in OpponentSelectionWindow
 F37  X   Delete external engine
-F38      Display current engine
+F38  X   Display current engine
 F39  X   Analysis selection window engine group has "analyst" instead of "opponent"
 
 Before release:

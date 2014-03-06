@@ -1,12 +1,12 @@
 package com.welty.nboard.nboard;
 
 import com.orbanova.common.misc.Require;
+import com.welty.nboard.gui.AutoRadioGroup;
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.RadioGroup;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.nboard.engine.EngineSynchronizer;
 import com.welty.nboard.nboard.engine.ReversiWindowEngine;
-import com.welty.nboard.nboard.selector.GuiOpponentSelector;
 import com.welty.nboard.nboard.setup.SetUpWindow;
 import com.welty.nboard.nboard.startpos.StartPosition;
 import com.welty.nboard.nboard.startpos.StartPositionManager;
@@ -57,10 +57,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private final NodeCountPanel nodeCountPanel;
     // Pointer to application data. Needs to be listed early because constructors for some members make use of it.
     public final ReversiData reversiData;
-    private ReversiWindowEngine opposingEngine;
-    private final GuiOpponentSelector opponentSelector = new GuiOpponentSelector("Select Opponent", true, "", "Opponent");
-    private ReversiWindowEngine analysisEngine;
-    private final GuiOpponentSelector analysisSelector = new GuiOpponentSelector("Select Analysis Engine", false, "Analysis", "Analyst");
+    private final @NotNull EnginePack opponent;
+    private final @NotNull EnginePack analyst;
 
     /**
      * Window where thor games are displayed
@@ -93,7 +91,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private JMenuItem thorLookUpAll;
 
     private final java.util.List<Runnable> shutdownHooks = new ArrayList<>();
-    private RadioGroup mode;
+    private AutoRadioGroup mode;
     private RadioGroup drawsTo;
     private RadioGroup engineTop;
     private final GgfFileChooser chooser;
@@ -134,8 +132,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
         pingPong = new PingPong();
-        opposingEngine = new EngineSynchronizer("opponent", pingPong, opponentSelector, this);
-        analysisEngine = new EngineSynchronizer("analysis", pingPong, analysisSelector, this);
+        opponent =  new EnginePack("Select Opponent", true, "", "Opponent", pingPong, this);
+        analyst =  new EnginePack("Select Analysis Engine", false, "Analysis", "Analyst", pingPong, this);
 
         final JMenuBar menuBar = createMenus(startPositionManager);
 
@@ -145,7 +143,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         final JPanel enginePanel = createEnginePanel(nodeCountPanel);
 
         JComponent leftPanel = vBox(
-                new NavigationBar(reversiData),
+                new NavigationBar(reversiData, mode, opponent, analyst),
                 new ScoreWindow(reversiData, this),
                 boardPanel = new ReversiBoard(reversiData, this, m_hints),
                 enginePanel
@@ -447,11 +445,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
             public void actionPerformed(ActionEvent e) {
                 reversiData.StartNewGame(getStartPosition());
-                // if the engine is self-playing it is really annoying to have it self-play again when you start
-                // a new game. Reset mode to user plays in this case.
-                if (mode.getIndex() == 3) {
-                    mode.setIndex(0);
-                }
+                resetMode();
+
             }
         }));
         m_fileMenu.add(menuItem("&Open...\tCtrl+O").build(new ActionListener() {
@@ -481,6 +476,14 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             }
         }));
         return m_fileMenu;
+    }
+
+    private void resetMode() {
+        // if the engine is self-playing it is really annoying to have it self-play again when you start
+        // a new game. Reset mode to user plays in this case.
+        if (mode.getIndex() == 3) {
+            mode.setIndex(0);
+        }
     }
 
     private static void SetClipboardText(String s) {
@@ -518,30 +521,23 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         // set up the Engine menu
         JMenu menu = new JMenu();
 
-        ActionListener modeSetter = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                SetMode(mode.getIndex());
+        mode = new AutoRadioGroup(menu, "Engine/Mode", 1, shutdownHooks,
+                "&Analyze Position",
+                "User plays &Black",
+                "User plays &White",
+                "&Engine plays itself"
+        );
+        resetMode();
+        mode.addListener(new AutoRadioGroup.Listener() {
+            @Override public void selectionChanged(int index) {
+                SetMode(index);
             }
-        };
-
-        mode = new RadioGroup(menu, "Engine/Mode", 1, shutdownHooks,
-                menuItem("&Analyze Position").buildRadioButton(modeSetter),
-                menuItem("User plays &Black").buildRadioButton(modeSetter),
-                menuItem("User plays &White").buildRadioButton(modeSetter),
-                menuItem("&Engine plays itself").buildRadioButton(modeSetter)
-        ) {
-            @Override public int readIndex() {
-                // it's really annoying to have engine/engine matches on startup. Switch to user/user in this case
-                final int mode = Math.max(0, Math.min(super.readIndex(), 2));
-                SetMode(mode, false);
-                return mode;
-            }
-        };
+        });
 
         menu.addSeparator();
         menu.add(menuItem("&Select Opponent...").build(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
-                opponentSelector.show();
+                opponent.selector.show();
             }
         }));
 
@@ -578,7 +574,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         menu.addSeparator();
         menu.add(menuItem("&Select Analysis Engine...").build(new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {
-                analysisSelector.show();
+                analyst.selector.show();
             }
         }));
 
@@ -800,7 +796,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     }
 
     private String getPlayerName(boolean enginePlays) {
-        return enginePlays ? opposingEngine.getName() : System.getProperty("user.name");
+        return enginePlays ? opponent.getName() : System.getProperty("user.name");
     }
 
     /**
@@ -818,11 +814,11 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      * @return max depth, in ply
      */
     private int getMaxDepth() {
-        return opponentSelector.getOpponent().getMaxDepth();
+        return opponent.selector.getOpponent().getMaxDepth();
     }
 
     private int getMaxAnalysisDepth() {
-        return analysisSelector.getOpponent().getMaxDepth();
+        return analyst.selector.getOpponent().getMaxDepth();
     }
 
 
@@ -833,7 +829,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      * Also update the hints afterwards.
      */
     public void TellEngineToLearn() {
-        opposingEngine.learn(new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt()));
+        opponent.engine.learn(new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt()));
         // reset the stored review point. The engine will update hints as a result.
         TellEngineWhatToDo();
     }
@@ -841,7 +837,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     public void requestAnalysis() {
         // Clear the existing analysis
         analysisData.clearData();
-        analysisEngine.requestAnalysis(new NBoardState(reversiData.getGame(), getMaxAnalysisDepth(), getContempt()));
+        analyst.engine.requestAnalysis(new NBoardState(reversiData.getGame(), getMaxAnalysisDepth(), getContempt()));
 
         // reset the stored review point. The engine will update hints as a result.
         TellEngineWhatToDo();
@@ -858,7 +854,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      */
     void TellEngineWhatToDo() {
         EngineSynchronizer.verifyEdt();
-        if (opposingEngine.isReady() && needsLove) {
+        if (opponent.engine.isReady() && needsLove) {
             needsLove = false;
             boolean isHint;
 
@@ -892,11 +888,11 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             if (isHint) {
                 // hints always relate to the displayed position.
                 final NBoardState NBoardState = new NBoardState(reversiData.getGame(), reversiData.IMove(), getMaxAnalysisDepth(), getContempt());
-                analysisEngine.requestHints(NBoardState, engineTops[engineTop.getIndex()]);
+                analyst.engine.requestHints(NBoardState, engineTops[engineTop.getIndex()]);
             } else {
                 // a move request relates to the final position in the game
                 final NBoardState NBoardState = new NBoardState(reversiData.getGame(), getMaxDepth(), getContempt());
-                opposingEngine.requestMove(NBoardState);
+                opponent.engine.requestMove(NBoardState);
             }
         }
     }
@@ -975,7 +971,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     };
 
     public String getEngineName() {
-        return opposingEngine.getName();
+        return opponent.getName();
     }
 
     ///////////////////////////////////

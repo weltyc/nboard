@@ -6,7 +6,7 @@ import com.welty.othello.api.OpponentSelector;
 import com.welty.othello.gui.ExternalEngineManager;
 import com.welty.othello.gui.prefs.PrefInt;
 import com.welty.othello.gui.prefs.PrefString;
-import com.welty.othello.gui.selector.EngineSelector;
+import com.welty.othello.gui.selector.EngineFactory;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -35,7 +35,7 @@ public class GuiOpponentSelector extends OpponentSelector {
 
     // these are written to when the user clicks "OK"
     private int selectedLevel;
-    private @NotNull EngineSelector selectedEngine;
+    private @NotNull EngineFactory selectedEngine;
 
     /**
      * Create a window that allows the user to select an Opponent (=engine + depth)
@@ -53,11 +53,11 @@ public class GuiOpponentSelector extends OpponentSelector {
         // Need to create this before Opponent selection list box because the
         // Opponent selection list box modifies it.
         final DefaultListModel<Integer> levelModel = new DefaultListModel<>();
-        setLevelElements(levelModel, EngineSelector.advancedLevels);
+        setLevelElements(levelModel, EngineFactory.advancedLevels);
         levels.setModel(levelModel);
         EngineList.setUpList(levels);
         levels.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        levels.setVisibleRowCount(EngineSelector.advancedLevels.length / 2);
+        levels.setVisibleRowCount(EngineFactory.advancedLevels.length / 2);
         levels.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
@@ -73,9 +73,9 @@ public class GuiOpponentSelector extends OpponentSelector {
         engineList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
-                    final EngineSelector engineSelector = engineList.getSelectedValue();
-                    setLevelElements(levelModel, engineSelector.availableLevels);
-                    levels.setSelectedIndex(findNearestLevel(selectedLevel, engineSelector.availableLevels));
+                    final EngineFactory engineFactory = engineList.getSelectedValue();
+                    setLevelElements(levelModel, engineFactory.availableLevels);
+                    levels.setSelectedIndex(findNearestLevel(selectedLevel, engineFactory.availableLevels));
                     setStrength();
                 }
             }
@@ -138,7 +138,7 @@ public class GuiOpponentSelector extends OpponentSelector {
     }
 
     private void setStrength() {
-        final EngineSelector selector = engineList.getSelectedValue();
+        final EngineFactory selector = engineList.getSelectedValue();
         if (selector != null) {
             final Integer selectedLevel = levels.getSelectedValue();
             if (selectedLevel != null) {

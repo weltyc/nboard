@@ -8,8 +8,8 @@ import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsClock;
 import com.welty.othello.gdk.OsMoveListItem;
-import com.welty.othello.gui.selector.EngineSelector;
-import com.welty.othello.gui.selector.InternalEngineSelectorManager;
+import com.welty.othello.gui.selector.EngineFactory;
+import com.welty.othello.gui.selector.InternalEngineFactoryManager;
 import com.welty.othello.protocol.Depth;
 import com.welty.othello.protocol.Value;
 import junit.framework.TestCase;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class EngineSynchronizerTest extends TestCase {
-    private static final List<EngineSelector> selectors = InternalEngineSelectorManager.internalOpponentSelectors(true);
+    private static final List<EngineFactory> selectors = InternalEngineFactoryManager.internalOpponentSelectors(true);
 
     public void testSingleEngine() throws Throwable {
         /**

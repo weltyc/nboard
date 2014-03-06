@@ -1,5 +1,6 @@
 package com.welty.nboard.nboard.engine;
 
+import com.orbanova.common.misc.ListenerManager;
 import com.welty.othello.api.NBoardState;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.OsMoveListItem;
@@ -32,6 +33,11 @@ public interface ReversiWindowEngine {
     void requestHints(@NotNull NBoardState state, int nHints);
 
     void requestMove(@NotNull NBoardState state);
+
+    /**
+     * @return the NameListenerManager which handles name updates
+     */
+    ListenerManager<EngineSynchronizer.NameListener> getNameListenerManager();
 
     public interface Listener {
         /**

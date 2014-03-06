@@ -1,9 +1,9 @@
 package com.welty.nboard.nboard.selector;
 
 import com.welty.othello.gui.ExternalEngineManager;
-import com.welty.othello.gui.selector.EngineSelector;
-import com.welty.othello.gui.selector.ExternalEngineSelector;
-import com.welty.othello.gui.selector.InternalEngineSelectorManager;
+import com.welty.othello.gui.selector.EngineFactory;
+import com.welty.othello.gui.selector.ExternalEngineFactory;
+import com.welty.othello.gui.selector.InternalEngineFactoryManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -12,12 +12,12 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-class EngineList extends JList<EngineSelector> {
+class EngineList extends JList<EngineFactory> {
     private final EngineListModel engineListModel;
     private final EngineList.DeleteEngineAction deleteEngineAction;
 
     EngineList(boolean includeWeakEngines) {
-        this(new EngineListModel(InternalEngineSelectorManager.internalOpponentSelectors(includeWeakEngines)));
+        this(new EngineListModel(InternalEngineFactoryManager.internalOpponentSelectors(includeWeakEngines)));
     }
 
     private EngineList(final EngineListModel engineListModel) {
@@ -58,7 +58,7 @@ class EngineList extends JList<EngineSelector> {
         }
 
         private void setVisibility() {
-            final EngineSelector selectedValue = getSelectedValue();
+            final EngineFactory selectedValue = getSelectedValue();
             final boolean external = selectedValue.isExternal();
             System.out.println(selectedValue.getName() + " external? " + external);
             this.setEnabled(external);
@@ -87,7 +87,7 @@ class EngineList extends JList<EngineSelector> {
         }
 
         @Override public void engineAdded(String name, String wd, String command) {
-            engineListModel.put(new ExternalEngineSelector(name, wd, command));
+            engineListModel.put(new ExternalEngineFactory(name, wd, command));
         }
 
         @Override public void engineDeleted(String name) {
