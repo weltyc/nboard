@@ -4,7 +4,7 @@
 
     <groupId>com.welty</groupId>
     <artifactId>nboard</artifactId>
-    <version>2.0b3</version>
+    <version>2.0b4</version>
     <packaging>jar</packaging>
 
     <name>NBoard</name>
@@ -18,7 +18,7 @@
     <build>
         <directory>target</directory>
         <outputDirectory>target/classes</outputDirectory>
-        <finalName>${project.artifactId}-${project.version}</finalName>
+        <finalName>${project.artifactId}-${project.version}-lib</finalName>
         <testOutputDirectory>target/test-classes</testOutputDirectory>
         <sourceDirectory>src</sourceDirectory>
         <testSourceDirectory>test</testSourceDirectory>
@@ -37,20 +37,6 @@
             </testResource>
         </testResources>
         <plugins>
-            <plugin>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -119,7 +105,7 @@
                     </options>
                     <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
                     <inFilter>!**/Luthor.luth,!**/package.html,!*.properties,!**/LICENSE.txt,!**/NOTICE.txt</inFilter>
-                    <outjar>NBoard.jar</outjar>
+                    <outjar>NBoard-${project.version}.jar</outjar>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                     <libs>
                         <lib>${java.home}/lib/rt.jar</lib>

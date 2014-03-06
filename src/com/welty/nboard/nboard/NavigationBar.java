@@ -106,11 +106,13 @@ class NavigationBar extends JPanel {
                 }
             });
 
-            opponent.engine.getNameListenerManager().addListener(new EngineSynchronizer.NameListener() {
+            final EngineSynchronizer.NameListener listener = new EngineSynchronizer.NameListener() {
                 @Override public void nameChanged(@NotNull String engineName) {
                     setEngineField();
                 }
-            });
+            };
+            opponent.engine.getNameListenerManager().addListener(listener);
+            analyst.engine.getNameListenerManager().addListener(listener);
 
             setBorder(BorderFactory.createEmptyBorder(0,5,0,5));
             setEngineField();

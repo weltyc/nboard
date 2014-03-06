@@ -101,6 +101,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
             final StatelessEngine newEngine = opponent.getOrCreateEngine(responseHandler);
             multiEngine.setEngine(pingPong, newEngine);
             listener.status(multiEngine.getStatus());
+            fireNameChanged(multiEngine.getName());
         } catch (IOException e) {
             // keep using the existing engine.
             listener.engineError("Unable to start up " + opponent + "\n" + e, "");
@@ -157,9 +158,7 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
             } else if (c == NameChangedResponse.class) {
                 final String engineName = multiEngine.getName();
                 listener.nameChanged(engineName);
-                for (NameListener nameListener : getNameListenerManager().getListeners()) {
-                    nameListener.nameChanged(engineName);
-                }
+                fireNameChanged(engineName);
 
             } else if (c == MoveResponse.class) {
                 final MoveResponse r = (MoveResponse) response;
@@ -201,6 +200,12 @@ public class EngineSynchronizer implements ReversiWindowEngine, OpponentSelector
             } else {
                 throw new IllegalArgumentException("Unknown message : " + response);
             }
+        }
+    }
+
+    private void fireNameChanged(String engineName) {
+        for (NameListener nameListener : getNameListenerManager().getListeners()) {
+            nameListener.nameChanged(engineName);
         }
     }
 
