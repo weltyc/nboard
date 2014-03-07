@@ -60,7 +60,6 @@ class EngineList extends JList<EngineFactory> {
         private void setVisibility() {
             final EngineFactory selectedValue = getSelectedValue();
             final boolean external = selectedValue.isExternal();
-            System.out.println(selectedValue.getName() + " external? " + external);
             this.setEnabled(external);
         }
 
