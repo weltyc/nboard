@@ -121,6 +121,8 @@ public class ReversiDataTest extends TestCase {
         final ReversiData data = createRd();
         testPasteFails(data, "foo bar", "Can't interpret as a move list, board, or game: \"foo bar\"");
         testPasteFails(data, "D7", "Invalid move list: Move flips no disks: D7");
+        testPasteFails(data, "(;GM[Othello]PC[here]PB[me]PW[you]RE[?]TI[24:00:00]TY[8r]BO[8 -------- -------- ----*O-- --*OO--- --*OO--- --****-- ----*--- -------- O];)"
+                , "Random match type is missing # of random disks");
     }
 
     private static void testPasteFails(ReversiData data, String pasteText, String message) {

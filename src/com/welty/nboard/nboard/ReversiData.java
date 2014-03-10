@@ -340,7 +340,11 @@ public class ReversiData implements BoardSource {
      */
     public void paste(String s) {
         if (s.startsWith("(;GM[Othello]")) {
-            setGameText(s);
+            try {
+                setGameText(s);
+            } catch (IllegalStateException e) {
+                throw new IllegalArgumentException(e.getMessage());
+            }
         } else {
             String compressed = s.replaceAll("[ \t\r\n]", "");
             if (looksLikeMoveList(compressed)) {
