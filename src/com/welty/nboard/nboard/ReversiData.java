@@ -222,7 +222,7 @@ public class ReversiData implements BoardSource {
                 game.Undo(nMoves - iMove);
 
             // update the player name
-            game.pis[game.pos.board.fBlackMove ? 1 : 0].sName = fUserMove ? System.getProperty("user.name") : engineTalker.getEngineName();
+            game.getPlayer(game.pos.board.fBlackMove).name = fUserMove ? System.getProperty("user.name") : engineTalker.getEngineName();
 
 
             game.append(mli);
@@ -315,9 +315,9 @@ public class ReversiData implements BoardSource {
         }
     }
 
-    public void SetNames(String name0, String name1, boolean updateUsers) {
-        getGame().pis[0].sName = name0;
-        getGame().pis[1].sName = name1;
+    public void SetNames(String whiteName, String blackName, boolean updateUsers) {
+        getGame().getWhitePlayer().name = whiteName;
+        getGame().getBlackPlayer().name = blackName;
         if (updateUsers) {
             m_seBoardChanged.Raise();
         }

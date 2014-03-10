@@ -39,9 +39,9 @@ class ScoreWindow extends JPanel {
                 final COsPosition pos = ScoreWindow.this.reversiData.DisplayedPosition();
                 COsBoard board = pos.board;
                 final PieceCounts pieceCounts = board.getPieceCounts();
-                blackPanel.player.setText(ScoreWindow.this.reversiData.getGame().pis[1].sName);
+                blackPanel.player.setText(ScoreWindow.this.reversiData.getGame().getBlackPlayer().name);
                 blackPanel.score.setText(Integer.toString(pieceCounts.nBlack));
-                whitePanel.player.setText(ScoreWindow.this.reversiData.getGame().pis[0].sName);
+                whitePanel.player.setText(ScoreWindow.this.reversiData.getGame().getWhitePlayer().name);
                 whitePanel.score.setText(Integer.toString(pieceCounts.nWhite));
                 emptiesPanel.score.setText(Integer.toString(pieceCounts.nEmpty));
                 if (board.isGameOver()) {
