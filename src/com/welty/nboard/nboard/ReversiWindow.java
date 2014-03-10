@@ -16,7 +16,7 @@ import com.welty.nboard.nboard.transcript.EnterTranscriptWindow;
 import com.welty.nboard.thor.DatabaseLoader;
 import com.welty.nboard.thor.DatabaseTableModel;
 import com.welty.nboard.thor.DatabaseUiPack;
-import com.welty.novello.core.Position;
+import com.welty.novello.core.Board;
 import com.welty.othello.api.NBoardState;
 import com.welty.othello.api.PingPong;
 import com.welty.othello.c.CReader;
@@ -372,7 +372,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         }));
 
         final SetUpWindow setUpWindow = new SetUpWindow(new SetUpWindow.Listener() {
-            @Override public void setUpBoard(Position position) {
+            @Override public void setUpBoard(Board position) {
                 reversiData.StartNewGame(new StartPosition(position));
             }
         });

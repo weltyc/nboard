@@ -296,8 +296,8 @@ public class ReversiData implements BoardSource {
     void StartNewGame(@NotNull StartPosition startPosition) {
         game.Clear();
         game.Initialize("8", getGameStartClock(), getGameStartClock());
-        final String sBoardText = startPosition.initialPosition.boardString("");
-        game.SetToPosition(sBoardText, startPosition.initialPosition.blackToMove);
+        final String sBoardText = startPosition.initialBoard.boardString("");
+        game.SetToPosition(sBoardText, startPosition.initialBoard.blackToMove);
         for (OsMove move : startPosition.moves) {
             game.append(new OsMoveListItem(move));
         }

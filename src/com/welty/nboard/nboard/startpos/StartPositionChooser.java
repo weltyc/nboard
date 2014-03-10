@@ -1,7 +1,7 @@
 package com.welty.nboard.nboard.startpos;
 
 import com.orbanova.common.feed.Feeds;
-import com.welty.novello.core.Position;
+import com.welty.novello.core.Board;
 import com.welty.othello.gdk.OsMove;
 
 import java.io.InputStream;
@@ -15,16 +15,16 @@ public class StartPositionChooser {
         final StartPosition startPosition;
         switch (startPositionType) {
             case "Standard":
-                startPosition = new StartPosition(Position.START_POSITION);
+                startPosition = new StartPosition(Board.START_BOARD);
                 break;
             case "Alternate":
-                startPosition = new StartPosition(Position.ALTERNATE_START_POSITION);
+                startPosition = new StartPosition(Board.ALTERNATE_START_BOARD);
                 break;
             case "XOT":
                 startPosition = xotChooser.next();
                 break;
             case "F5":
-                startPosition = new StartPosition(Position.START_POSITION, new OsMove("F5"));
+                startPosition = new StartPosition(Board.START_BOARD, new OsMove("F5"));
                 break;
             default:
                 throw new RuntimeException("Unknown start position type : " + startPositionType);
@@ -48,7 +48,7 @@ public class StartPositionChooser {
                 lastIndex = 0;
             }
 
-            return new StartPosition(Position.START_POSITION, xots.get(lastIndex));
+            return new StartPosition(Board.START_BOARD, xots.get(lastIndex));
         }
     }
 }

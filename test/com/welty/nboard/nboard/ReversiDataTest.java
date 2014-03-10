@@ -4,7 +4,7 @@ import com.orbanova.common.clock.MockClock;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.nboard.startpos.StartPosition;
 import com.welty.nboard.thor.ThorTest;
-import com.welty.novello.core.Position;
+import com.welty.novello.core.Board;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsClock;
 import com.welty.othello.gdk.OsMove;
@@ -43,7 +43,7 @@ public class ReversiDataTest extends TestCase {
 
     private static OptionSource mockOptionSource() {
         final OptionSource optionSource = Mockito.mock(OptionSource.class);
-        Mockito.stub(optionSource.getStartPosition()).toReturn(new StartPosition(Position.START_POSITION));
+        Mockito.stub(optionSource.getStartPosition()).toReturn(new StartPosition(Board.START_BOARD));
         return optionSource;
     }
 
@@ -107,7 +107,7 @@ public class ReversiDataTest extends TestCase {
         data.paste("F5 D6");
 
 
-        final String text = Position.ALTERNATE_START_POSITION.play("F6").positionString();
+        final String text = Board.ALTERNATE_START_BOARD.play("F6").positionString();
         System.out.println(text);
         data.paste(text);
 
@@ -143,7 +143,7 @@ public class ReversiDataTest extends TestCase {
         final SignalListener<OsMoveListItem> listener = Mockito.mock(SignalListener.class);
         data.addListener(listener);
 
-        data.StartNewGame(new StartPosition(Position.START_POSITION, new OsMove("F5")));
+        data.StartNewGame(new StartPosition(Board.START_BOARD, new OsMove("F5")));
         assertEquals(1, data.IMove());
         assertEquals(59, data.DisplayedPosition().board.nEmpty());
 

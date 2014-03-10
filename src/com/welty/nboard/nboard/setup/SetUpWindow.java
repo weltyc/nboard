@@ -3,7 +3,7 @@ package com.welty.nboard.nboard.setup;
 import com.orbanova.common.jsb.Grid;
 import com.orbanova.common.jsb.JSwingBuilder;
 import com.welty.nboard.nboard.BoardSelectionPanel;
-import com.welty.novello.core.Position;
+import com.welty.novello.core.Board;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +59,7 @@ public class SetUpWindow {
     }
 
     void ok(SetUpData data) {
-        listener.setUpBoard(new Position(new String(data.pieces), moverSelector.isSelected()));
+        listener.setUpBoard(new Board(new String(data.pieces), moverSelector.isSelected()));
         window.setVisible(false);
     }
 
@@ -75,9 +75,9 @@ public class SetUpWindow {
         /**
          * Notify the listener that the user would like to set up the board
          *
-         * @param position board to set to
+         * @param board board to set to
          */
-        void setUpBoard(Position position);
+        void setUpBoard(Board board);
     }
 }
 

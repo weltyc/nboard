@@ -1,6 +1,6 @@
 package com.welty.nboard.nboard.startpos;
 
-import com.welty.novello.core.Position;
+import com.welty.novello.core.Board;
 import com.welty.othello.c.CReader;
 import com.welty.othello.gdk.OsMove;
 import lombok.EqualsAndHashCode;
@@ -18,16 +18,16 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 public class StartPosition {
-    public final Position initialPosition;
+    public final Board initialBoard;
     public final OsMove[] moves;
 
-    public StartPosition(Position initialPosition, OsMove... moves) {
-        this.initialPosition = initialPosition;
+    public StartPosition(Board initialBoard, OsMove... moves) {
+        this.initialBoard = initialBoard;
         this.moves = moves;
     }
 
-    public StartPosition(Position initialPosition, String moveList) {
-        this.initialPosition = initialPosition;
+    public StartPosition(Board initialBoard, String moveList) {
+        this.initialBoard = initialBoard;
         List<OsMove> moves = new ArrayList<>();
         final CReader in = new CReader(moveList);
         while (!in.wsEof()) {
