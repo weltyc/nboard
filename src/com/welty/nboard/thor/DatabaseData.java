@@ -148,12 +148,9 @@ class DatabaseData extends ListenerManager<DatabaseData.Listener> {
             final ThorGameInternal tg = m_tgis.get(iGame);
 
             game.setToDefaultStartPosition(OsClock.DEFAULT, OsClock.DEFAULT);
-            final OsPlayerInfo white = game.getWhitePlayer();
-            final OsPlayerInfo black = game.getBlackPlayer();
+            game.setBlackPlayer(playerFromPlayerNumber(tg.iBlackPlayer), 0);
+            game.setWhitePlayer(playerFromPlayerNumber(tg.iWhitePlayer), 0);
 
-            white.name = playerFromPlayerNumber(tg.iWhitePlayer);
-            black.name = playerFromPlayerNumber(tg.iBlackPlayer);
-            white.rating = black.rating = 0;
             game.sPlace = tournamentFromTournamentNumber(tg.iTournament);
             for (int i = 0; i < 60 && tg.moves[i] >= 0; i++) {
                 final int sq = tg.moves[i];

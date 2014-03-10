@@ -40,8 +40,8 @@ class ThorGameInternal extends ThorGame8 {
     public COsGame toOsGame(List<String> tournaments, List<String> players) {
         final COsGame game = new COsGame();
         game.Initialize("8", OsClock.DEFAULT, OsClock.DEFAULT);
-        game.getBlackPlayer().name = players.get(iBlackPlayer);
-        game.getWhitePlayer().name = players.get(iWhitePlayer);
+        game.setPlayerName(true, players.get(iBlackPlayer));
+        game.setPlayerName(false, players.get(iWhitePlayer));
         game.sPlace = tournaments.get(iTournament);
         game.SetResult(new OsResult(nBlackDiscs - (64 - nBlackDiscs)));
         game.SetTimeYear(year);
