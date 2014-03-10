@@ -268,8 +268,7 @@ public class ReversiData implements BoardSource {
      * @throws IllegalArgumentException if this can't be parsed as a game.
      */
     void setGame(CReader is, boolean fResetMove) {
-        COsGame game = new COsGame();
-        game.In(is);
+        COsGame game = new COsGame(is);
         setGame(game, fResetMove);
     }
 

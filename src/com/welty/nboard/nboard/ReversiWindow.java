@@ -697,8 +697,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     void OpenFile(final File file) {
         try {
             CReader is = new CReader(file);
-            COsGame game = new COsGame();
-            game.In(is);
+            COsGame game = new COsGame(is);
             // check if this file has multiple games
             if (is.ignoreTo('(')) {
                 gameSelectionWindow.LoadAndShow(file);

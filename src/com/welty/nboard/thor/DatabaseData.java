@@ -174,7 +174,7 @@ class DatabaseData extends ListenerManager<DatabaseData.Listener> {
                 game.SetResult(osResult);
             }
         } else {
-            game.In(new CReader(getGgfText(iGame)));
+            game = new COsGame(new CReader(getGgfText(iGame)));
         }
 
         return game;
