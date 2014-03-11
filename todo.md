@@ -109,6 +109,12 @@ F36  X   Strength estimation in OpponentSelectionWindow
 F37  X   Delete external engine
 F38  X   Display current engine
 F39  X   Analysis selection window engine group has "analyst" instead of "opponent"
+F40      Records: Fastest win, biggest win
+F41      Get coins from winning
+F42      Buy themes with coins
+F43      Unlock harder difficulties
+F44      Puzzles
+
 
 Before release:
 BR1  X   Update NBoard Protocol documentation
