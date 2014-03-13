@@ -85,11 +85,11 @@ class EngineList extends JList<EngineFactory> {
             this.engineListModel = engineListModel;
         }
 
-        @Override public void engineAdded(String name, String wd, String command) {
-            engineListModel.put(new ExternalEngineFactory(name, wd, command));
+        @Override public void engineAdded(@NotNull ExternalEngineManager.Xei xei) {
+            engineListModel.put(new ExternalEngineFactory(xei));
         }
 
-        @Override public void engineDeleted(String name) {
+        @Override public void engineDeleted(@NotNull String name) {
             final int i = engineListModel.find(name);
             if (i >= 0) {
                 final int selectedIndex = getSelectedIndex();

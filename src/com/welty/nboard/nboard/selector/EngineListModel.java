@@ -14,7 +14,7 @@ class EngineListModel extends DefaultListModel<EngineFactory> {
         }
         try {
             for (ExternalEngineManager.Xei xei : ExternalEngineManager.instance.getXei()) {
-                final ExternalEngineFactory selector = new ExternalEngineFactory(xei.name, xei.wd, xei.cmd);
+                final ExternalEngineFactory selector = new ExternalEngineFactory(xei);
                 addElement(selector);
             }
         } catch (BackingStoreException e) {
