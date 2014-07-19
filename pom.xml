@@ -37,6 +37,17 @@
         </license>
     </licenses>
 
+    <repositories>
+        <repository>
+            <id>Janino</id>
+            <url>http://repository.codehaus.org/org/codehaus</url>
+        </repository>
+        <repository>
+            <id>Orba Nova</id>
+            <url>http://www.orbanova.com/maven2</url>
+        </repository>
+    </repositories>
+
     <build>
         <directory>target</directory>
         <outputDirectory>target/classes</outputDirectory>
