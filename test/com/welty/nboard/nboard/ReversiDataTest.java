@@ -165,4 +165,40 @@ public class ReversiDataTest extends TestCase {
         Mockito.verify(listener).handleSignal(null);
         Mockito.verifyNoMoreInteractions(listener);
     }
+
+    public void testGetOthelloReplayerText() {
+        final ReversiData data = createRd();
+        data.getGame().append(new OsMoveListItem("F5/1/2"));
+
+        String or = data.getOthelloReplayerHtml("foo").split("-->")[1];
+        assertEquals(
+                "\n<head>\n" +
+                        "    <script src=\"othello-replayer.js\"></script>\n" +
+                        "</head>\n" +
+                        "<body>\n" +
+                        "<div id=\"foo\" style=\"line-height: 0;\"></div>\n" +
+                        "<br/><br/>\n" +
+                        "<input type=\"button\" value=\"reset\" id=\"foo_reset\"/>\n" +
+                        "<input type=\"button\" value=\"prev\" id=\"foo_prev\"/>\n" +
+                        "<input type=\"button\" value=\"next\" id=\"foo_next\"/>\n" +
+                        "\n" +
+                        "<font class=\"score\">Black: <span id=\"foo_black\"></span>, White: <span id=\"foo_white\"></span></font>\n" +
+                        "\n" +
+                        "<script>\n" +
+                        "    if (typeof Oth === 'undefined') {\n" +
+                        "        var err = document.createElement(\"p\");\n" +
+                        "        err.style.backgroundColor = '#FF8080';\n" +
+                        "        err.innerHTML = \"To view the embedded othello game:<br/>\" +\n" +
+                        "                \"download <a href=https://github.com/emmettnicholas/OthelloReplayer/archive/master.zip>OthelloReplayer</a>, <br/>\" +\n" +
+                        "                \"then put <code>othello-replayer.js</code> and the <code>images/</code> folder in the same folder as this web page. \";\n" +
+                        "        document.body.insertBefore(err, document.body.firstChild);\n" +
+                        "    }\n" +
+                        "    else {\n" +
+                        "        new Oth.Grid('foo', '--------|--------|--------|---wb---|---bw---|--------|--------|--------', 'b', '', 'F5');\n" +
+                        "    }\n" +
+                        "</script>\n" +
+                        "</body>\n" +
+                        "</html>"
+                , or);
+    }
 }

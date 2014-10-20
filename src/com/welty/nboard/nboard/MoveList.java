@@ -163,9 +163,6 @@ public class MoveList extends Grid {
                 return;
             }
             final double v = (Double) value;
-            if (value == 0) {
-                System.out.println("breakpoint!");
-            }
             if (Double.isNaN(v)) {
                 super.setValue("");
             } else {

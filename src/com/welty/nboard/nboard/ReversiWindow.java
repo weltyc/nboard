@@ -16,6 +16,7 @@
 package com.welty.nboard.nboard;
 
 import com.orbanova.common.feed.Feeds;
+import com.orbanova.common.jsb.JsbFileChooser;
 import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.AutoRadioGroup;
 import com.welty.nboard.gui.Grid;
@@ -53,10 +54,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 
 import static com.orbanova.common.jsb.JSwingBuilder.*;
@@ -112,6 +110,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private RadioGroup drawsTo;
     private RadioGroup engineTop;
     private final GgfFileChooser chooser;
+    private final JsbFileChooser webPageChooser;
+
     private final StartPositionManager startPositionManager;
     private final AnalysisData analysisData;
     private final PingPong pingPong;
@@ -197,6 +197,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         });
 
         chooser = new GgfFileChooser(frame);
+        webPageChooser = new JsbFileChooser(frame, ReversiWindow.class, "Web Pages", new String[]{"html"});
 
         // engine initialization - do this after we've constructed the windows for
         // the responses to be displayed in
@@ -372,6 +373,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
             }
         }));
+
         m_editMenu.add(menuItem("&Paste\tCtrl+V").build(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -480,6 +482,26 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 Save(false);
             }
         }));
+
+        m_fileMenu.add(menuItem("Save as &Web Page").build(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String name = "foo";
+                File file = webPageChooser.saveFile(frame);
+                if (file!=null) {
+                    if (!file.toString().endsWith(".html")) {
+                        file = new File(file.toString() + ".html");
+                    }
+                    try (final BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
+                        out.write(reversiData.getOthelloReplayerHtml(name));
+                        out.close();
+                        JOptionPane.showMessageDialog(frame, "Follow the instructions in the web page comments to hook up the JavaScript code.", "Web Page", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (IOException e1) {
+                        JOptionPane.showMessageDialog(frame, "Can't save: " + e1, "Error saving web page", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        }));
+
         m_fileMenu.add(menuItem("&Append...\tCtrl+A").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Save(true);

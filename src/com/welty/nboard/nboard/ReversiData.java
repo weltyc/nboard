@@ -17,6 +17,7 @@ package com.welty.nboard.nboard;
 
 import com.orbanova.common.clock.Clock;
 import com.orbanova.common.clock.SystemClock;
+import com.orbanova.common.feed.Feeds;
 import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.SignalEvent;
 import com.welty.nboard.gui.SignalListener;
@@ -104,7 +105,11 @@ public class ReversiData implements BoardSource {
     }
 
     private COsGame game = new COsGame();    // game data
-    private int m_iMove;    // currently displayed move
+
+    /**
+     * currently displayed move
+     */
+    private int m_iMove;
 
     public OsMove NextMove() {
         return isReviewing() ? game.getMli(m_iMove).move : OsMove.PASS;
@@ -361,26 +366,33 @@ public class ReversiData implements BoardSource {
                 throw new IllegalArgumentException(e.getMessage());
             }
         } else {
-            String compressed = s.replaceAll("[ \t\r\n]", "");
-            if (looksLikeMoveList(compressed)) {
-                // looks like a move list
-                COsGame game = new COsGame();
-                game.setToDefaultStartPosition(getGameStartClock(), getGameStartClock());
-                try {
-                    game.SetMoveList(s);
-                } catch (IllegalArgumentException e) {
-                    throw new IllegalArgumentException("Invalid move list: " + e.getMessage(), e);
+            try {
+
+                // first try the game as a Pgn game.
+                final COsGame game = COsGame.ofPgn(s);
+                setGame(game, true);
+            } catch (IllegalArgumentException e1) {
+                String compressed = s.replaceAll("[ \t\r\n]", "");
+                if (looksLikeMoveList(compressed)) {
+                    // looks like a move list
+                    COsGame game = new COsGame();
+                    game.setToDefaultStartPosition(getGameStartClock(), getGameStartClock());
+                    try {
+                        game.setMoveList(s);
+                    } catch (IllegalArgumentException e) {
+                        throw new IllegalArgumentException("Invalid move list: " + e.getMessage(), e);
+                    }
+                    setGame(game, true);
+                } else if (looksLikeBoard(compressed)) {
+                    // try it as a board
+                    COsGame game = new COsGame();
+                    game.Initialize("8", getGameStartClock(), getGameStartClock());
+                    game.getStartPosition().board.in(new CReader("8 " + s));
+                    game.CalcCurrentPos();
+                    setGame(game, true);
+                } else {
+                    throw new IllegalArgumentException("Can't interpret as a move list, board, or game: \"" + s + "\"");
                 }
-                setGame(game, true);
-            } else if (looksLikeBoard(compressed)) {
-                // try it as a board
-                COsGame game = new COsGame();
-                game.Initialize("8", getGameStartClock(), getGameStartClock());
-                game.getStartPosition().board.in(new CReader("8 " + s));
-                game.CalcCurrentPos();
-                setGame(game, true);
-            } else {
-                throw new IllegalArgumentException("Can't interpret as a move list, board, or game: \"" + s + "\"");
             }
         }
     }
@@ -400,5 +412,45 @@ public class ReversiData implements BoardSource {
             return c1 <= '8' && c1 >= '1';
         } else return compressed.startsWith("PA");
 
+    }
+
+
+    /**
+     * Get an interval of moves in the format preferred by OthelloReplayer.
+     * <p/>
+     * Passes are ignored. Successive moves are separated by a space.
+     *
+     * @param start first move to add
+     * @param end   last move to add + 1
+     * @return String containing the moves.
+     */
+    private String htmlMoveList(int start, int end) {
+        StringBuilder moves = new StringBuilder();
+        for (int i = start; i < end; i++) {
+            final OsMove move = getGame().getMli(i).move;
+            if (!move.isPass()) {
+                if (moves.length() != 0) {
+                    moves.append(" ");
+                }
+                moves.append(move.toString());
+            }
+        }
+        return moves.toString();
+    }
+
+    /**
+     * Get a game in a format able to be pasted into OthelloReplayer (https://github.com/emmettnicholas/OthelloReplayer)
+     *
+     * @param id game id, used in the web page.
+     * @return a String containing the html.
+     */
+    public String getOthelloReplayerHtml(String id) {
+        final String template = Feeds.ofLines(ReversiData.class, "ReplayerTemplate.html").join("\n");
+        final COsBoard.GetTextResult gtr = getGame().getStartPosition().board.getText("|");
+        final String board = gtr.getText().replace("O", "w").replace("*", "b");
+        String nextColor = gtr.isBlackMove() ? "b" : "w";
+        String moves = htmlMoveList(0, m_iMove);
+        String nextMoves = htmlMoveList(m_iMove, getGame().nMoves());
+        return template.replace("{id}", id).replace("{board}", board).replace("{nextColor}", nextColor).replace("{moves}", moves).replace("{nextMoves}", nextMoves);
     }
 }

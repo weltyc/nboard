@@ -19,7 +19,7 @@
 
     <groupId>com.welty</groupId>
     <artifactId>nboard</artifactId>
-    <version>2.0b4</version>
+    <version>2.0b5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>NBoard</name>
@@ -129,11 +129,18 @@
                         <option>-dontskipnonpubliclibraryclasses</option>
                         <option>-repackageclasses ''</option>
                         <option>-adaptresourcefilenames **.txt,**.html,**.cof</option>
+
                         <!-- This needs to be kept public since it's the main class -->
                         <option>-keep public class com.welty.nboard.nboard.NBoard { public *; public static *; }</option>
+
                         <!-- These need to be kept in the same package since Preferences depend on their package -->
-                        <option>-keep public class com.welty.nboard.nboard.ReversiWindow { public *; public static *; }</option>
+                        <option>-keep public class com.welty.nboard.nboard.ReversiWindow</option>
                         <option>-keep public class com.welty.othello.gui.ExternalEngineManager { public *; public static *; }</option>
+
+                        <!-- This class needs to be kept in the same package because some of the classes above are in the same package,
+                        and therefore its resources are not adapted. -->
+                        <option>-keep public class com.welty.nboard.nboard.ReversiData</option>
+
                         <!-- This package needs to be kept unchanged since it has resources, and they can't be adapted because
                         GuiOpponentSelector has Preferences.-->
                         <option>-keeppackagenames "com.welty.nboard.nboard.selector"</option>
@@ -182,13 +189,13 @@
         <dependency>
             <groupId>com.welty</groupId>
             <artifactId>othello</artifactId>
-            <version>1.1.01</version>
+            <version>1.1.02-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.welty</groupId>
             <artifactId>novello</artifactId>
-            <version>0.03</version>
+            <version>0.04-SNAPSHOT</version>
         </dependency>
 
         <dependency>

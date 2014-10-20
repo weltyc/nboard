@@ -1,0 +1,36 @@
+<html>
+<!--
+This code allows you to embed a game in a web page.
+
+Download OthelloReplayer from
+    https://github.com/emmettnicholas/OthelloReplayer
+
+Put othello-replayer.js and the images/ directory in the same directory as your web page.
+-->
+<head>
+    <script src="othello-replayer.js"></script>
+</head>
+<body>
+<div id="{id}" style="line-height: 0;"></div>
+<br/><br/>
+<input type="button" value="reset" id="{id}_reset"/>
+<input type="button" value="prev" id="{id}_prev"/>
+<input type="button" value="next" id="{id}_next"/>
+
+<font class="score">Black: <span id="{id}_black"></span>, White: <span id="{id}_white"></span></font>
+
+<script>
+    if (typeof Oth === 'undefined') {
+        var err = document.createElement("p");
+        err.style.backgroundColor = '#FF8080';
+        err.innerHTML = "To view the embedded othello game:<br/>" +
+                "download <a href=https://github.com/emmettnicholas/OthelloReplayer/archive/master.zip>OthelloReplayer</a>, <br/>" +
+                "then put <code>othello-replayer.js</code> and the <code>images/</code> folder in the same folder as this web page. ";
+        document.body.insertBefore(err, document.body.firstChild);
+    }
+    else {
+        new Oth.Grid('{id}', '{board}', '{nextColor}', '{moves}', '{nextMoves}');
+    }
+</script>
+</body>
+</html>
