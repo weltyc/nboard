@@ -50,7 +50,6 @@ public class ReversiData implements BoardSource {
      * don't raise this directly, raise via fireBoardChanged()
      */
     private final SignalEvent<OsMoveListItem> m_seBoardChanged = new SignalEvent<>();
-    private @NotNull OsClock gameStartClock = new OsClock(2 * 60);
 
     /**
      * Time of the last move, or if no moves have been made, time since the game started.
@@ -344,7 +343,7 @@ public class ReversiData implements BoardSource {
     }
 
     public @NotNull OsClock getGameStartClock() {
-        return gameStartClock;
+        return new OsClock(optionSource.getTimeControl()*0.001);
     }
 
     /**

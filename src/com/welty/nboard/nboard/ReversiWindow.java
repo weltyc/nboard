@@ -83,6 +83,10 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private final BoardPanel boardPanel;
 
     private final GameSelectionWindow gameSelectionWindow;    //< Used in File/Open... dialog when there are multiple games in a file
+    /**
+     * Dialog window that selects time control for future games
+     */
+    private final TimeControlDialog timeControlDialog;
     private final Hints m_hints;
     private final DatabaseTableModel databaseTableModel;
 
@@ -120,7 +124,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     ReversiWindow() {
 
         startPositionManager = new StartPositionManagerImpl();
-
+        timeControlDialog = new TimeControlDialog();
 
         reversiData = new ReversiData(this, this);
         analysisData = new AnalysisData(reversiData);
@@ -132,11 +136,11 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         reversiData.addListener(new SignalListener<OsMoveListItem>() {
 
-            public void handleSignal(OsMoveListItem data) {
-                needsLove = true;
-                TellEngineWhatToDo();
-            }
-        }
+                                    public void handleSignal(OsMoveListItem data) {
+                                        needsLove = true;
+                                        TellEngineWhatToDo();
+                                    }
+                                }
 
         );
 
@@ -149,8 +153,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         // Initialize Engine before constructing the Menus, because the Menus want to know the engine name.
         pingPong = new PingPong();
-        opponent =  new EnginePack("Select Opponent", true, "", "Opponent", pingPong, this);
-        analyst =  new EnginePack("Select Analysis Engine", false, "Analysis", "Analyst", pingPong, this);
+        opponent = new EnginePack("Select Opponent", true, "", "Opponent", pingPong, this);
+        analyst = new EnginePack("Select Analysis Engine", false, "Analysis", "Analyst", pingPong, this);
 
         final JMenuBar menuBar = createMenus(startPositionManager);
 
@@ -487,7 +491,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             public void actionPerformed(ActionEvent e) {
                 String name = "foo";
                 File file = webPageChooser.saveFile(frame);
-                if (file!=null) {
+                if (file != null) {
                     if (!file.toString().endsWith(".html")) {
                         file = new File(file.toString() + ".html");
                     }
@@ -517,9 +521,15 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         return m_fileMenu;
     }
 
+    public long getTimeControl() {
+        return timeControlDialog.getMillis();
+    }
+
+    /**
+     * if the engine is self-playing it is really annoying to have it self-play again when you start
+     * a new game. Reset mode to user plays in this case.
+     */
     private void resetMode() {
-        // if the engine is self-playing it is really annoying to have it self-play again when you start
-        // a new game. Reset mode to user plays in this case.
         if (mode.getIndex() == 3) {
             mode.setIndex(0);
         }
@@ -582,12 +592,18 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         menu.addSeparator();
         menu.add(engineLearnAll = createCheckBoxMenuItem("Learn &all completed games", "Engine/LearnAll", false));
-        menu.add(menuItem("Learn &this game").build(new ActionListener() {
+        menu.add(menuItem("&Learn this game").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 TellEngineToLearn();
             }
         }));
 
+        menu.addSeparator();
+        menu.add(menuItem("&Time Control").build(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                timeControlDialog.show();
+            }
+        }));
         return menu;
     }
 
@@ -778,8 +794,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
     /**
      * @return true if the engine's evaluations should be displayed
-     *         <p/>
-     *         Currently the are displayed only if IsStudying() || AlwaysShowEvals().
+     * <p/>
+     * Currently the are displayed only if IsStudying() || AlwaysShowEvals().
      */
     public boolean ShowEvals() {
         return IsStudying() || AlwaysShowEvals();

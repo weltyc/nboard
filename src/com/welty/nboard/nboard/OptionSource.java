@@ -54,4 +54,11 @@ public interface OptionSource {
      * @return true if the user is analyzing a game (no game is currently being played)
      */
     boolean isAnalyzing();
+
+    /**
+     * Get the amount of time available to each side in a new game.
+     *
+     * @return amount of time, in millis.
+     */
+    long getTimeControl();
 }
