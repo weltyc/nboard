@@ -39,7 +39,7 @@ public class MoveGrid extends Grid {
             new GridColumn(50, "DtB"),
             new GridColumn(50, "#Games"),
             new GridColumn(40, "Depth"),
-            new GridColumn(120, "Principal Variation", Align.LEFT),
+            new GridColumn(180, "Principal Variation", Align.LEFT),
             new GridColumn(55, "Played"),
             new GridColumn(50, "Win %")
 

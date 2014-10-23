@@ -54,7 +54,7 @@ public class Hint {
         fBook = fromBook;
         this.depth = depth;
         this.nGames = nGames;
-        this.principalVariation = principalVariation;
+        this.principalVariation = principalVariation.replace("-", " ");
         if (fBlackMove) {
             vBlack = eval.drawSeekingValue;
             vWhite = eval.drawAvoidingValue;
