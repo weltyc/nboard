@@ -1258,7 +1258,7 @@ com.welty.nboard.nboard.transcript.TranscriptData$CalcResult -> cT:
     int errorMoveNumber -> c
 com.welty.nboard.nboard.transcript.TranscriptData$Listener -> cU:
     void transcriptDataUpdated() -> f
-com.welty.nboard.thor.DatabaseData -> cV:
+DatabaseData -> cV:
     java.util.ArrayList m_tgis -> a
     java.util.ArrayList m_players -> b
     java.util.ArrayList m_tournaments -> c
@@ -1270,7 +1270,7 @@ com.welty.nboard.thor.DatabaseData -> cV:
     void setGames(java.util.ArrayList) -> a
     void addGgfGames(java.util.ArrayList) -> b
     void fireDatabaseChanged() -> a
-com.welty.nboard.thor.DatabaseData$Listener -> cW:
+DatabaseData$Listener -> cW:
     com.welty.nboard.thor.DatabaseTableModel this$0 -> a
     void databaseChanged() -> a
 com.welty.nboard.thor.DatabaseLoader -> cX:
@@ -1278,7 +1278,7 @@ com.welty.nboard.thor.DatabaseLoader -> cX:
     java.lang.String m_fnThorTournaments -> b
     java.lang.String m_fnThorPlayers -> c
     java.util.HashSet m_fnThorGames -> d
-    com.welty.nboard.thor.DatabaseData databaseData -> e
+    DatabaseData databaseData -> e
     void UnloadGames() -> a
     void LoadGames(java.util.List) -> a
     boolean LoadConfig() -> b
@@ -1291,7 +1291,7 @@ com.welty.nboard.thor.DatabaseTable -> cY:
     com.welty.nboard.nboard.ReversiWindow reversiWindow -> d
     void selectionChanged$255f295(int) -> a
 com.welty.nboard.thor.DatabaseTableModel -> cZ:
-    com.welty.nboard.thor.DatabaseData databaseData -> b
+    DatabaseData databaseData -> b
     com.welty.nboard.gui.GridColumn[] columns -> c
     com.welty.nboard.nboard.OptionSource optionSource -> d
     com.welty.nboard.nboard.BoardSource boardSource -> e

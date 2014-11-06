@@ -16,9 +16,9 @@
 package com.welty.nboard.thor;
 
 import com.orbanova.common.misc.Require;
-import com.welty.nboard.nboard.GgfGameText;
 import com.welty.nboard.nboard.NBoard;
 import com.welty.othello.c.CReader;
+import com.welty.othello.thor.*;
 
 import javax.swing.*;
 import java.io.BufferedWriter;
@@ -30,10 +30,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static com.welty.nboard.thor.Thor.ThorLoadPlayers;
-import static com.welty.nboard.thor.Thor.ThorLoadTournaments;
-import static com.welty.nboard.thor.ThorOpeningMap.NOpenings;
-import static com.welty.nboard.thor.ThorOpeningMap.OpeningName;
+import static com.welty.othello.thor.Thor.ThorLoadPlayers;
+import static com.welty.othello.thor.Thor.ThorLoadTournaments;
+import static com.welty.othello.thor.ThorOpeningMap.NOpenings;
+import static com.welty.othello.thor.ThorOpeningMap.OpeningName;
 
 /**
  * Class responsible for loading data into the DatabaseData
@@ -106,7 +106,7 @@ public class DatabaseLoader {
             UnloadGames();
             for (String it : fns) {
                 try {
-                    if (IsWtbFilename(it)) {
+                    if (DatabaseData.isThorGamesFile(it)) {
                         games.addAll(Thor.ThorLoadGames(it, tracker));
                     } else {
                         final ArrayList<GgfGameText> ggfGameTexts = GgfGameText.Load(new File(it), tracker);
@@ -117,7 +117,7 @@ public class DatabaseLoader {
                     errorDisplayer.notify("loading games file", e.getMessage());
                 }
             }
-            databaseData.setGames(games);
+            databaseData.setThorGames(games);
         }
     }
 
@@ -145,13 +145,6 @@ public class DatabaseLoader {
     }
 
     /**
-     * @return true if the file ends with ".wtb", with any capitalization accepted
-     */
-    static boolean IsWtbFilename(String fn) {
-        return fn.toUpperCase().endsWith(".WTB");
-    }
-
-    /**
      * Load database files. Filenames are stored in the Registry by SaveConfig()
      *
      * @return true if there was a saved config
@@ -163,11 +156,11 @@ public class DatabaseLoader {
         } else {
             try {
                 CReader config = new CReader(sConfig);
-                LoadPlayers(config.readLine());
-                LoadTournaments(config.readLine());
+                LoadPlayers(config.readLineNoThrow());
+                LoadTournaments(config.readLineNoThrow());
                 ArrayList<String> fns = new ArrayList<>();
                 String fn;
-                while (null != (fn = config.readLine())) {
+                while (null != (fn = config.readLineNoThrow())) {
                     fns.add(fn);
                 }
                 LoadGames(fns);

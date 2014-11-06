@@ -25,10 +25,12 @@ import com.welty.othello.gdk.COsBoard;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsPosition;
 import com.welty.othello.gdk.OsMoveListItem;
+import com.welty.othello.thor.DatabaseData;
+import com.welty.othello.thor.ThorSummary;
 import gnu.trove.list.array.TIntArrayList;
 import org.jetbrains.annotations.NotNull;
 
-import static com.welty.nboard.thor.Thor.MatchingPositions;
+import static com.welty.othello.thor.Thor.MatchingPositions;
 
 /**
  * Encapsulate all data needed by the database gui

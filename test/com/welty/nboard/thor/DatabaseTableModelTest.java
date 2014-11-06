@@ -21,6 +21,8 @@ import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsClock;
 import com.welty.othello.gdk.OsMove;
 import com.welty.othello.gdk.OsMoveListItem;
+import com.welty.othello.thor.DatabaseData;
+import com.welty.othello.thor.IndeterminateProgressTracker;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.mockito.Mockito;

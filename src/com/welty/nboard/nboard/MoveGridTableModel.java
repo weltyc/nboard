@@ -18,9 +18,9 @@ package com.welty.nboard.nboard;
 import com.orbanova.common.misc.Require;
 import com.welty.nboard.gui.GridTableModel;
 import com.welty.nboard.thor.DatabaseTableModel;
-import com.welty.nboard.thor.ThorSummaryData;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.OsMove;
+import com.welty.othello.thor.ThorSummaryData;
 import gnu.trove.list.array.TIntArrayList;
 
 import javax.swing.event.TableModelEvent;

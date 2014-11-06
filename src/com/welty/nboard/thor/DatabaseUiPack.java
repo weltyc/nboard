@@ -17,6 +17,7 @@ package com.welty.nboard.thor;
 
 import com.welty.nboard.nboard.ReversiData;
 import com.welty.nboard.nboard.ReversiWindow;
+import com.welty.othello.thor.DatabaseData;
 
 /**
  * Create all database objects needed by the UI

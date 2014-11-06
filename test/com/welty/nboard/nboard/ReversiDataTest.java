@@ -18,7 +18,6 @@ package com.welty.nboard.nboard;
 import com.orbanova.common.clock.MockClock;
 import com.welty.nboard.gui.SignalListener;
 import com.welty.nboard.nboard.startpos.StartPosition;
-import com.welty.nboard.thor.ThorTest;
 import com.welty.novello.core.Board;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsClock;
@@ -45,11 +44,16 @@ public class ReversiDataTest extends TestCase {
         testReflectGame(7, "D3");
     }
 
+
+    public static OsMoveListItem mli(String moveText) {
+        return new OsMoveListItem(new OsMove(moveText));
+    }
+
     private void testReflectGame(int iReflection, String expected) {
         final ReversiData data = createRd();
         final COsGame game = data.getGame();
         game.setToDefaultStartPosition(OsClock.DEFAULT, OsClock.DEFAULT);
-        game.append(ThorTest.mli("F5"));
+        game.append(mli("F5"));
         data.ReflectGame(iReflection);
         assertEquals(1, game.nMoves());
         assertEquals(expected, game.getMli(0).move.toString());
@@ -65,17 +69,17 @@ public class ReversiDataTest extends TestCase {
     public void testUpdate() {
         final ReversiData data = createRd();
 
-        data.update(ThorTest.mli("F5"), true);
-        data.update(ThorTest.mli("D6"), true);
+        data.update(mli("F5"), true);
+        data.update(mli("D6"), true);
 
         // move matches game; game should not be broken
         data.SetIMove(0);
-        data.update(ThorTest.mli("F5"), true);
+        data.update(mli("F5"), true);
         assertEquals(2, data.nMoves());
 
         // move does not match game; game should be broken
         data.SetIMove(0);
-        data.update(ThorTest.mli("D3"), true);
+        data.update(mli("D3"), true);
         assertEquals(1, data.nMoves());
     }
 

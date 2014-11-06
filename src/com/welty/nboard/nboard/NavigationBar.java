@@ -28,8 +28,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import static com.welty.nboard.nboard.GraphicsUtils.setPlainFont;
-import static com.welty.nboard.thor.ThorOpeningMap.OpeningCodeFromGgf;
-import static com.welty.nboard.thor.ThorOpeningMap.OpeningName;
+import static com.welty.othello.thor.ThorOpeningMap.OpeningCodeFromGgf;
+import static com.welty.othello.thor.ThorOpeningMap.OpeningName;
 
 /**
  * Panel that displays the move buttons and the opening name

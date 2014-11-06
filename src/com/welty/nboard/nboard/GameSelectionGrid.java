@@ -19,7 +19,8 @@ import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.GridColumn;
 import com.welty.nboard.gui.GridTableModel;
 import com.welty.nboard.thor.IndeterminateProgressMonitor;
-import com.welty.nboard.thor.IndeterminateProgressTracker;
+import com.welty.othello.thor.GgfGameText;
+import com.welty.othello.thor.IndeterminateProgressTracker;
 
 import javax.swing.*;
 import java.io.File;

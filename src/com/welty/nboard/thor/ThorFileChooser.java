@@ -34,6 +34,7 @@ class ThorFileChooser {
 
     public ThorFileChooser() {
         chooser = new JFileChooser();
+        chooser.setAcceptAllFileFilterUsed(false);
     }
 
     /**

@@ -63,10 +63,16 @@ L28a X   When database window is resized the games grid should also resize
 L29b X   Time graph should include 0 on the y-axis
 L30  X   Support analysis command in external engines
 L31  X   Keep preference-using classes public in proguard so preferences don't disappear on recompile
+L32  X   Thor database - only allow selection of the correct file type
+L33  X   Novello - display thinking when self-playing but, unless 'always show analysis' is set, don't show it during human/computer games.
+L34  X   Novello - probable solve should go past 79% in midgame sometimes
+L35  X   Novello - shouldn't do probable solve if it will take longer than a full-width solve
+L36      Novello - Solver move ordering should use MPC width = 1.
 
 CC       Replace CQPosition with novello.Position
 CC1      Make CMove immutable?
 CC2  X   Make HintResponse.eval into a parsed class rather than an unparsed string
+CC3  X   Vegtbl - clean up SearchDepth and SearchDepthFeed mess.
 
 F1   X   External engine window
 F1a  X   Remove depth parameter from NBoardEngine
@@ -114,6 +120,7 @@ F41      Get coins from winning
 F42      Buy themes with coins
 F43      Unlock harder difficulties
 F44      Puzzles
+F45      Set Up Board starts from currently displayed position and has a 'reset' button.
 
 
 Before release:
