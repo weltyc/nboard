@@ -88,7 +88,6 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
      */
     private final TimeControlDialog timeControlDialog;
     private final Hints m_hints;
-    private final DatabaseTableModel databaseTableModel;
 
     /**
      * If this is true, the window needs to request an update from the engine.
@@ -107,7 +106,6 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private JRadioButtonMenuItem viewHighlightBest;
     private JMenuItem viewCoordinates;
     private JMenuItem engineLearnAll;
-    private JMenuItem thorLookUpAll;
 
     private final java.util.List<Runnable> shutdownHooks = new ArrayList<>();
     private AutoRadioGroup mode;
@@ -131,7 +129,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         gameSelectionWindow = new GameSelectionWindow(this);
         final DatabaseUiPack dbPack = new DatabaseUiPack(this, reversiData);
-        databaseTableModel = dbPack.tableModel;
+        DatabaseTableModel databaseTableModel = dbPack.tableModel;
         databaseLoader = dbPack.loader;
 
         reversiData.addListener(new SignalListener<OsMoveListItem>() {
@@ -263,49 +261,9 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
     private JMenu createThorMenu() {
         // set up the Thor menu
         JMenu thorMenu = new JMenu();
-        thorMenu.add(menuItem("Load &games").build(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                databaseLoader.LoadGames();
-            }
-        }));
-        thorMenu.add(menuItem("&Unload games").build(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                databaseLoader.UnloadGames();
-            }
-        }));
-        thorMenu.add(menuItem("Load &players").build(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                databaseLoader.LoadPlayers();
-            }
-        }));
-        thorMenu.add(menuItem("Load &tournaments").build(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                databaseLoader.LoadTournaments();
-            }
-        }));
-        thorMenu.addSeparator();
-        thorMenu.add(menuItem("Load &config").build(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                databaseLoader.LoadConfig();
-            }
-        }));
-        thorMenu.add(menuItem("&Save config").build(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                databaseLoader.SaveConfig();
-            }
-        }));
-        thorMenu.addSeparator();
-        thorMenu.add(menuItem("&Look up position").build(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                databaseTableModel.lookUpPosition();
-            }
-        }));
-        thorLookUpAll = createCheckBoxMenuItem("Look up &all", "Thor/LookUpAll", true);
-        thorMenu.add(thorLookUpAll);
-        thorMenu.addSeparator();
-        thorMenu.add(menuItem("Save Opening &Frequencies").build(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                databaseLoader.SaveOpeningFrequencies();
+        thorMenu.add(menuItem("&Load database").build(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                databaseLoader.loadDirectory();
             }
         }));
         return thorMenu;
@@ -984,18 +942,6 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         return viewCoordinates.isSelected();
     }
 
-//* Return true if "Tip of the Day" should be displayed on startup
-//boolean ViewTotd() final {
-//	return m_viewMenu.ItemFromCommand(commandViewTotd).GetChecked();
-//}
-
-    /**
-     * @return true if all positions should be looked up in the Thor database
-     */
-    public boolean ThorLookUpAll() {
-        return thorLookUpAll.isSelected();
-    }
-
     /**
      * @return true if the engine should learn all completed games
      */
@@ -1078,4 +1024,7 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         frame.repaint();
     }
 
+    public JFrame getFrame() {
+        return frame;
+    }
 }

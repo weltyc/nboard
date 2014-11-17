@@ -30,7 +30,7 @@ public class DatabaseUiPack {
     public DatabaseUiPack(ReversiWindow reversiWindow, ReversiData reversiData) {
         final DatabaseData databaseData = new DatabaseData();
         tableModel = new DatabaseTableModel(reversiWindow, reversiData, databaseData);
-        loader = new DatabaseLoader(databaseData);
+        loader = new DatabaseLoader(reversiWindow.getFrame(), databaseData);
         window = new DatabaseWindow(reversiWindow, reversiData, tableModel);
     }
 }

@@ -42,8 +42,6 @@ public interface OptionSource {
 
     boolean AlwaysShowEvals();
 
-    boolean ThorLookUpAll();
-
     boolean EngineLearnAll();
 
     boolean UserPlays(boolean fBlack);

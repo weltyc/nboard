@@ -18,8 +18,8 @@ package com.welty.nboard.nboard;
 import com.welty.nboard.gui.Grid;
 import com.welty.nboard.gui.GridColumn;
 import com.welty.nboard.gui.GridTableModel;
-import com.welty.nboard.thor.IndeterminateProgressMonitor;
 import com.welty.othello.thor.GgfGameText;
+import com.welty.othello.thor.GuiProgressTracker;
 import com.welty.othello.thor.IndeterminateProgressTracker;
 
 import javax.swing.*;
@@ -58,7 +58,7 @@ class GameSelectionGrid extends Grid {
     }
 
     void Load(final File file) {
-        getTableModel().Load(file, new IndeterminateProgressMonitor(" games loaded"));
+        getTableModel().Load(file, new GuiProgressTracker(" games loaded"));
     }
 
     private static final int[] gameTextFieldFromColumn = {0, 1, 2, 4, 6};

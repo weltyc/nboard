@@ -94,12 +94,7 @@ public class DatabaseTableModel extends GridTableModel {
     }
 
     void onBoardChanged() {
-        if (optionSource.ThorLookUpAll()) {
             lookUpPosition();
-        } else {
-            summary.clear();
-            fireTableDataChanged();
-        }
     }
 
     /**

@@ -141,14 +141,13 @@ public class DatabaseTableModelTest extends TestCase {
     private static void reloadGames(DatabaseData databaseData, List<String> fns) {
         final IndeterminateProgressTracker tracker = Mockito.mock(IndeterminateProgressTracker.class);
         final ErrorDisplayer errorDisplayer = Mockito.mock(ErrorDisplayer.class);
-        new DatabaseLoader(databaseData).reloadGames(fns, errorDisplayer, tracker);
+        new DatabaseLoader(null, databaseData).reloadGames(fns, errorDisplayer, tracker);
     }
 
     public void testInitialLookup() throws IOException {
         // set up a sample database
         final OptionSource optionSource = EasyMock.createNiceMock(OptionSource.class);
         final BoardSourceStub boardSource = new BoardSourceStub();
-        EasyMock.expect(optionSource.ThorLookUpAll()).andReturn(true).times(2);
         EasyMock.replay(optionSource);
 
         final DatabaseData databaseData = new DatabaseData();
