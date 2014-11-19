@@ -248,10 +248,10 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         menuBar.add(createMenuItem("&File", createFileMenu()));
         menuBar.add(createMenuItem("&Edit", createEditMenu()));
-        menuBar.add(createMenuItem("&Game", createEngineMenu()));
+        menuBar.add(createMenuItem("E&ngine", createEngineMenu()));
         menuBar.add(createMenuItem("&View", createViewMenu()));
         menuBar.add(createMenuItem("&Analysis", createAnalysisMenu()));
-        menuBar.add(createMenuItem("&Start", createGamesMenu(startPositionManager)));
+        menuBar.add(createMenuItem("&Start", createStartMenu(startPositionManager)));
         menuBar.add(createMenuItem("&Database", createThorMenu()));
         menuBar.add(createMenuItem("&Help", createHelpMenu()));
 
@@ -269,9 +269,17 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
         return thorMenu;
     }
 
-    private JMenu createGamesMenu(StartPositionManager startPositionManager) {
+    private JMenu createStartMenu(StartPositionManager startPositionManager) {
         JMenu menu = new JMenu();
         startPositionManager.addChoicesToMenu(menu);
+
+        menu.addSeparator();
+        menu.add(menuItem("&Time Control").build(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                timeControlDialog.show();
+            }
+        }));
+
         return menu;
     }
 
@@ -548,18 +556,18 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
             }
         }));
 
+        menu.add(menuItem("&Select Analysis Engine...").build(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                analyst.selector.show();
+            }
+        }));
+
+
         menu.addSeparator();
         menu.add(engineLearnAll = createCheckBoxMenuItem("Learn &all completed games", "Engine/LearnAll", false));
         menu.add(menuItem("&Learn this game").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 TellEngineToLearn();
-            }
-        }));
-
-        menu.addSeparator();
-        menu.add(menuItem("&Time Control").build(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                timeControlDialog.show();
             }
         }));
         return menu;
@@ -583,13 +591,6 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
                 menuItem("Value >=4 moves").buildRadioButton(engineUpdater),
                 menuItem("Value all moves").buildRadioButton(engineUpdater)
         );
-
-        menu.addSeparator();
-        menu.add(menuItem("&Select Analysis Engine...").build(new ActionListener() {
-            @Override public void actionPerformed(ActionEvent e) {
-                analyst.selector.show();
-            }
-        }));
 
         menu.addSeparator();
         ActionListener contemptSetter = new ActionListener() {
