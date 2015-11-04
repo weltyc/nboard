@@ -39,6 +39,7 @@ import com.welty.othello.c.CReader;
 import com.welty.othello.c.CWriter;
 import com.welty.othello.core.CMove;
 import com.welty.othello.core.OperatingSystem;
+import com.welty.othello.gdk.COsBoard;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.COsPosition;
 import com.welty.othello.gdk.OsMoveListItem;
@@ -330,16 +331,8 @@ public class ReversiWindow implements OptionSource, EngineTalker, ReversiWindowE
 
         m_editMenu.add(menuItem("Copy &Board").build(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                StringBuilder os = new StringBuilder();
-                COsPosition displayedPosition = reversiData.DisplayedPosition();
-                for (int row = 0; row < n; row++) {
-                    for (int col = 0; col < n; col++) {
-                        os.append(displayedPosition.board.getPiece(row, col));
-                    }
-                    os.append("\n");
-                }
-                os.append(reversiData.getGame().pos.board.getMoverChar());
-                SetClipboardText(os.toString());
+                COsBoard board = reversiData.DisplayedPosition().board;
+                SetClipboardText(board.toText());
 
             }
         }));
