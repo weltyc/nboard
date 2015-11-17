@@ -121,6 +121,36 @@ public class ReversiDataTest extends TestCase {
         assertEquals("F5D6", data.getGame().getMoveList().toMoveListString());
     }
 
+    public void testPastePlayOk() {
+        // Move list in playOK format
+        String moveList = "1. f5 f4 2. e3 f6 3. c4 c5 4. g6 d2 5. d6 g5 6. e2 d3 7. f3 b4 8. e6 f1 9. g3\n" +
+                "g4 10. b6 b5 11. f2 c3 12. h3 h4 13. c6 h2 14. e1 d1 15. h6 c7 16. d7 a6 17. c2\n" +
+                "b3 18. a5 a4 19. c1 b1 20. h5 h7 21. g2 e8 22. d8 f7 23. e7 f8 24. g8 c8 25. b8\n" +
+                "b7 26. a8 a7 27. a3 b2 28. a1 a2 29. g1 h1 30. g7 h8";
+        moveList = ReversiData.compressMoveList(moveList);
+        assertTrue(ReversiData.looksLikeMoveList(moveList));
+        final ReversiData data = createRd();
+        data.paste(moveList);
+        String mls = data.getGame().getMoveList().toMoveListString();
+        assertEquals("F5F4E3", mls.substring(0, 6));
+        assertTrue(mls.endsWith("H8"));
+    }
+
+    public void testPastePlayOkWithPass() {
+        // Move list in playOK format
+        String moveList = "1. f5 f4 2. g3 e6 3. f3 g4 4. f7 c5 5. d6 f6 6. e3 e7 7. c3 d7 8. c4 d3 9. b6\n" +
+                "e2 10. d2 h3 11. g5 f8 12. h4 g6 13. h2 b4 14. e1 f2 15. h5 f1 16. c2 d1 17. c1\n" +
+                "b1 18. c8 d8 19. b5 c6 20. b3 a3 21. a4 a5 22. a6 a7 23. c7 h6 24. h7 g2 25. b7\n" +
+                "g7 26. h8 b8 27. a8 g8 28. e8 -- 29. a2 b2 30. a1 -- 31. g1";
+        moveList = ReversiData.compressMoveList(moveList);
+        assertTrue(ReversiData.looksLikeMoveList(moveList));
+        final ReversiData data = createRd();
+        data.paste(moveList);
+        String mls = data.getGame().getMoveList().toMoveListString();
+        assertEquals("F5F4G3", mls.substring(0,6));
+        assertTrue(mls.endsWith("G1"));
+    }
+
     public void testPasteBoard() {
         final ReversiData data = createRd();
         data.paste("F5 D6");
