@@ -151,6 +151,18 @@ public class ReversiDataTest extends TestCase {
         assertTrue(mls.endsWith("G1"));
     }
 
+    public void testReversiWarWithPass() {
+        // reversi wars omits passes
+        String moveList = "F5D6C3D3C4F4F6F3E3B4B5E6E7F2E2G5G6F7G3E1C5C6H4G4D2H6F8H5H7H3H2C1D1A4A6A5F1A7D7C7B6G1B3E8D8G2B7B8A8C8G8G7H8A2A3H1A1B2C2B1";
+        moveList = ReversiData.compressMoveList(moveList);
+        assertTrue(ReversiData.looksLikeMoveList(moveList));
+        final ReversiData data = createRd();
+        data.paste(moveList);
+        String mls = data.getGame().getMoveList().toMoveListString();
+        assertEquals("F5D6C3", mls.substring(0, 6));
+        assertTrue(mls.endsWith("B1"));
+    }
+
     public void testPasteBoard() {
         final ReversiData data = createRd();
         data.paste("F5 D6");
