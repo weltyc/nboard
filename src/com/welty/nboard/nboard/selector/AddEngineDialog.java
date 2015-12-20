@@ -25,6 +25,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static com.orbanova.common.jsb.JSwingBuilder.*;
 
@@ -61,6 +64,11 @@ class AddEngineDialog extends JDialog {
                     JOptionPane.showMessageDialog(AddEngineDialog.this, "Command must not be empty");
                     return;
                 }
+                final Path executable = Paths.get(wd).resolve(command.split("\\s+")[0]);
+                if (!Files.exists(executable)) {
+                    JOptionPane.showMessageDialog(AddEngineDialog.this, "Executable does not exist: " + executable);
+                    return;
+                }
                 ExternalEngineManager.instance.add(name, wd, command);
                 AddEngineDialog.this.setVisible(false);
                 AddEngineDialog.this.dispose();
@@ -74,8 +82,7 @@ class AddEngineDialog extends JDialog {
             }
         });
 
-        final String osName = (OperatingSystem.os == OperatingSystem.MACINTOSH) ? "Mac" : "Win";
-        final String helpFile = "OpponentSelectionWindow_" + osName + ".html";
+        final String helpFile = "OpponentSelectionWindow_" + OperatingSystem.os + ".html";
         final InputStream in = AddEngineDialog.class.getResourceAsStream(helpFile);
         final String helpHtml = Feeds.ofLines(in).join("\n");
 
