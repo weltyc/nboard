@@ -29,7 +29,7 @@ public class Install {
     static void install() {
         try {
             Path jarFolder = getJarFolder();
-            System.out.println("jar folder: " + jarFolder);
+            System.out.println("Install jar folder: " + jarFolder);
             installNtest(jarFolder);
             installFfo(jarFolder);
         } catch (UnsupportedEncodingException e) {
@@ -67,7 +67,7 @@ public class Install {
      * @param jarFolder path to the NBoard home directory.
      */
     private static void installNtest(Path jarFolder) {
-        final String engineName = "Ntest";
+        final String engineName = "NTest";
         final String engineDir = engineName.toLowerCase();
         final String ntestSource = "WINDOWS:ntest.exe, LINUX:ntest, MACINTOSH:mNtest";
 
