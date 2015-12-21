@@ -34,6 +34,7 @@ public class NBoard {
     private static final String sRegKey = "/Software/Welty/NBoard/";
 
     public static void main(final String[] args) {
+        Install.install();
 //        CheckThreadViolationRepaintManager.install();
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

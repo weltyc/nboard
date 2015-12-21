@@ -44,39 +44,26 @@ class AddEngineDialog extends JDialog {
                 control("Command", commandField)
         );
         final JButton ok = button(new AbstractAction("OK") {
-            @Override public void actionPerformed(ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 final String name = nameField.getText();
-                if (!name.matches("[a-zA-Z0-9]+")) {
-                    JOptionPane.showMessageDialog(AddEngineDialog.this, "Engine name must be alphanumeric (all characters must be a-z, A-Z, or 0-9)");
-                    return;
-                }
                 final String wd = wdField.getText();
-                if (wd.contains(";")) {
-                    JOptionPane.showMessageDialog(AddEngineDialog.this, "Working directory cannot contain a semicolon (;)");
-                    return;
-                }
-                if (wd.isEmpty()) {
-                    JOptionPane.showMessageDialog(AddEngineDialog.this, "Working directory must not be empty");
-                    return;
-                }
                 final String command = commandField.getText().trim();
-                if (command.isEmpty()) {
-                    JOptionPane.showMessageDialog(AddEngineDialog.this, "Command must not be empty");
-                    return;
+
+                try {
+                    ExternalEngineManager.instance.add(name, wd, command);
+                    AddEngineDialog.this.setVisible(false);
+                    AddEngineDialog.this.dispose();
+                } catch (ExternalEngineManager.AddException ex) {
+                    // The user input was invalid. Explain why and keep the window open so the user can fix it.
+                    JOptionPane.showMessageDialog(AddEngineDialog.this, ex.getMessage());
                 }
-                final Path executable = Paths.get(wd).resolve(command.split("\\s+")[0]);
-                if (!Files.exists(executable)) {
-                    JOptionPane.showMessageDialog(AddEngineDialog.this, "Executable does not exist: " + executable);
-                    return;
-                }
-                ExternalEngineManager.instance.add(name, wd, command);
-                AddEngineDialog.this.setVisible(false);
-                AddEngineDialog.this.dispose();
             }
         });
 
         final JButton cancel = button(new AbstractAction("Cancel") {
-            @Override public void actionPerformed(ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 AddEngineDialog.this.setVisible(false);
                 AddEngineDialog.this.dispose();
             }
