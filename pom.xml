@@ -183,19 +183,19 @@
         <dependency>
             <groupId>com.orbanova</groupId>
             <artifactId>common</artifactId>
-            <version>0.09.04-SNAPSHOT</version>
+            <version>0.09.04</version>
         </dependency>
 
         <dependency>
             <groupId>com.welty</groupId>
             <artifactId>othello</artifactId>
-            <version>1.1.02-SNAPSHOT</version>
+            <version>1.1.02</version>
         </dependency>
 
         <dependency>
             <groupId>com.welty</groupId>
             <artifactId>novello</artifactId>
-            <version>0.04-SNAPSHOT</version>
+            <version>0.04</version>
         </dependency>
 
         <dependency>
