@@ -69,7 +69,7 @@ public class Install {
     private static void installNtest(Path jarFolder) {
         final String engineName = "NTest";
         final String engineDir = engineName.toLowerCase();
-        final String ntestSource = "WINDOWS:ntest.exe, LINUX:ntest, MACINTOSH:mNtest";
+        final String ntestSource = "WINDOWS-x64:ntest.exe, WINDOWS-x86:ntest-x86.exe, LINUX:ntest, MACINTOSH:mNtest";
 
         ExternalEngineManager.Xei xei = ExternalEngineManager.instance.getXei(engineName);
         if (xei != null) {
@@ -78,9 +78,14 @@ public class Install {
         }
 
         Path ntestDir = jarFolder.resolve("engines").resolve(engineDir);
-        String filename = stringToMap(ntestSource).get(OperatingSystem.os.toString());
+        String key = OperatingSystem.os.toString();
+        if (OperatingSystem.os == OperatingSystem.WINDOWS) {
+            final boolean is64bit = System.getenv("ProgramFiles(x86)") != null;
+            key += is64bit ? "-x64" : "-x86";
+        }
+        String filename = stringToMap(ntestSource).get(key);
         if (filename == null) {
-            System.out.println(engineName + " not available for operating system " + System.getProperty("os.name"));
+            System.out.println(engineName + " not available for operating system " + System.getProperty("os.name") + " with key " + key);
             return;
         }
 
@@ -102,10 +107,10 @@ public class Install {
 
     private static void installFfo(Path jarFolder) {
         JsbFileChooser chooser = new JsbFileChooser(null, DatabaseLoader.class);
-        String existingDirectory = chooser.readDefaultDirectory();
+        String existingDirectory = chooser.getDefaultDirectory();
         if (existingDirectory == null) {
             Path path = jarFolder.resolve("db").resolve("ffo");
-            chooser.writeDefaultDirectory(path.toString());
+            chooser.setDefaultDirectory(path.toString());
             System.out.println("installed FFO database at " + path);
         } else {
             System.out.println("database currently installed at " + existingDirectory);
