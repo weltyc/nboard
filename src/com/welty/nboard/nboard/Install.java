@@ -107,10 +107,10 @@ public class Install {
 
     private static void installFfo(Path jarFolder) {
         JsbFileChooser chooser = new JsbFileChooser(null, DatabaseLoader.class);
-        String existingDirectory = chooser.getDefaultDirectory();
+        String existingDirectory = chooser.getDefaultSelection();
         if (existingDirectory == null) {
             Path path = jarFolder.resolve("db").resolve("ffo");
-            chooser.setDefaultDirectory(path.toString());
+            chooser.setDefaultSelection(path.toString());
             System.out.println("installed FFO database at " + path);
         } else {
             System.out.println("database currently installed at " + existingDirectory);
