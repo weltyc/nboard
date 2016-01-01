@@ -18,16 +18,13 @@ package com.welty.nboard.nboard.selector;
 import com.orbanova.common.feed.Feeds;
 import com.orbanova.common.jsb.Grid;
 import com.orbanova.common.jsb.JsbTextField;
-import com.welty.othello.core.OperatingSystem;
+import com.orbanova.common.misc.OperatingSystem;
 import com.welty.othello.gui.ExternalEngineManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static com.orbanova.common.jsb.JSwingBuilder.*;
 

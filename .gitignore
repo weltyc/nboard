@@ -4,6 +4,7 @@ log.txt
 /Othello.*.bz2
 captured.pv
 captured2.me
+/proguard_map.txt
 
 # Intellij
 .idea

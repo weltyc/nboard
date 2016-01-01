@@ -2,7 +2,7 @@ package com.welty.nboard.nboard;
 
 import com.orbanova.common.jsb.JsbFileChooser;
 import com.welty.nboard.thor.DatabaseLoader;
-import com.welty.othello.core.OperatingSystem;
+import com.orbanova.common.misc.OperatingSystem;
 import com.welty.othello.gui.ExternalEngineManager;
 
 import java.io.UnsupportedEncodingException;
