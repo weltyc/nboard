@@ -16,7 +16,7 @@
 package com.welty.nboard.nboard.engine;
 
 import com.orbanova.common.misc.ListenerManager;
-import com.welty.othello.api.NBoardState;
+import com.welty.novello.external.api.NBoardState;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.OsMoveListItem;
 import com.welty.othello.protocol.Depth;

@@ -15,18 +15,22 @@
 
 package com.welty.nboard.nboard;
 
+import com.orbanova.common.misc.Logger;
 import com.orbanova.common.misc.Require;
+import com.orbanova.common.misc.Utils;
 import com.welty.othello.gdk.COsBoard;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+import java.io.*;
+import java.nio.file.Path;
 import java.util.prefs.Preferences;
 
 /**
  * Main class for the NBoard application
  */
 public class NBoard {
+    private static final Logger log = Logger.logger(NBoard.class);
 
     public static final Color highlightColor = new Color(0x28, 0x98, 0x30);
     public static final Color boardColor = new Color(0x38, 0x78, 0x30);
@@ -34,6 +38,8 @@ public class NBoard {
     private static final String sRegKey = "/Software/Welty/NBoard/";
 
     public static void main(final String[] args) {
+        logVersion();
+        checkMaxMemory();
         Install.install();
 //        CheckThreadViolationRepaintManager.install();
         SwingUtilities.invokeLater(new Runnable() {
@@ -43,6 +49,44 @@ public class NBoard {
         });
     }
 
+    /**
+     * Print the NBoard version number in case there are issues.
+     */
+    private static void logVersion() {
+        try (InputStream stream = NBoard.class.getResourceAsStream("version.txt")) {
+            if (stream == null) {
+                log.info("No version number available");
+            } else {
+                final String version = new BufferedReader(new InputStreamReader(stream)).readLine();
+                log.info("NBoard version " + version);
+            }
+        } catch (Exception e) {
+            log.info("Exception when reading version number: " + e);
+        }
+    }
+
+    /**
+     * Log the memory usage. If there's not enough memory available,
+     * notify the user and exit.
+     */
+    private static void checkMaxMemory() {
+        long maxMegs = Runtime.getRuntime().maxMemory() / 1024 / 1024;
+        log.info("Max memory: " + maxMegs + "M");
+        if (maxMegs < 100) {
+            try {
+                Path jarPath = Utils.getJarPath(NBoard.class);
+                log.info("trying to restart with more memory at " + jarPath);
+                new ProcessBuilder()
+                        .inheritIO()
+                        .command("java", "-Xmx128M", "-jar", jarPath.toString())
+                        .start();
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Tried to restart with more RAM but couldn't. The error was:\n" + e, "Out of Memory", JOptionPane.ERROR_MESSAGE);
+                log.info("Exit due to lack of RAM");
+            }
+            System.exit(-1);
+        }
+    }
     private static void createAndShowGUI(String[] args) {
 
         // todo associate .ggf files with this executable

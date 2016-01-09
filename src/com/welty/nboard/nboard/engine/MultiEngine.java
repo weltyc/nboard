@@ -15,9 +15,9 @@
 
 package com.welty.nboard.nboard.engine;
 
-import com.welty.othello.api.NBoardState;
-import com.welty.othello.api.PingPong;
-import com.welty.othello.api.StatelessEngine;
+import com.welty.novello.external.api.NBoardState;
+import com.welty.novello.external.api.PingPong;
+import com.welty.novello.external.api.StatelessEngine;
 import org.jetbrains.annotations.NotNull;
 
 /**

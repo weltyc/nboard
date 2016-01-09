@@ -17,9 +17,9 @@ package com.welty.nboard.nboard.engine;
 
 import com.orbanova.common.misc.ListenerManager;
 import com.orbanova.common.misc.Require;
-import com.welty.othello.api.*;
+import com.welty.novello.external.api.*;
 import com.welty.othello.core.CMove;
-import com.welty.othello.gui.selector.InternalEngineFactoryManager;
+import com.welty.novello.external.gui.selector.InternalEngineFactoryManager;
 import com.welty.othello.protocol.*;
 import org.jetbrains.annotations.NotNull;
 

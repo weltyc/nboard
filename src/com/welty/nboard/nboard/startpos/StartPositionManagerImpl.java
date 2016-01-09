@@ -16,7 +16,7 @@
 package com.welty.nboard.nboard.startpos;
 
 import com.welty.nboard.nboard.ReversiWindow;
-import com.welty.othello.gui.MenuButtonGroup;
+import com.welty.novello.external.gui.MenuButtonGroup;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

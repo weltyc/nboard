@@ -15,9 +15,9 @@
 
 package com.welty.nboard.nboard.selector;
 
-import com.welty.othello.gui.ExternalEngineManager;
-import com.welty.othello.gui.selector.EngineFactory;
-import com.welty.othello.gui.selector.ExternalEngineFactory;
+import com.welty.novello.external.gui.ExternalEngineManager;
+import com.welty.novello.external.gui.selector.EngineFactory;
+import com.welty.novello.external.gui.selector.ExternalEngineFactory;
 
 import javax.swing.*;
 import java.util.prefs.BackingStoreException;

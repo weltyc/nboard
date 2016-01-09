@@ -16,12 +16,12 @@
 package com.welty.nboard.nboard.selector;
 
 import com.orbanova.common.jsb.JsbGridLayout;
-import com.welty.othello.api.OpponentSelection;
-import com.welty.othello.api.OpponentSelector;
-import com.welty.othello.gui.ExternalEngineManager;
-import com.welty.othello.gui.prefs.PrefInt;
-import com.welty.othello.gui.prefs.PrefString;
-import com.welty.othello.gui.selector.EngineFactory;
+import com.orbanova.common.prefs.PrefString;
+import com.welty.novello.external.api.OpponentSelection;
+import com.welty.novello.external.api.OpponentSelector;
+import com.orbanova.common.prefs.PrefInt;
+import com.welty.novello.external.gui.ExternalEngineManager;
+import com.welty.novello.external.gui.selector.EngineFactory;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

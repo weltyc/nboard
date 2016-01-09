@@ -3,7 +3,7 @@ package com.welty.nboard.nboard;
 import com.orbanova.common.date.Time;
 import com.orbanova.common.jsb.Grid;
 import com.orbanova.common.jsb.JSwingBuilder;
-import com.welty.othello.gui.prefs.PrefInt;
+import com.orbanova.common.prefs.PrefInt;
 
 import javax.swing.*;
 import java.awt.*;

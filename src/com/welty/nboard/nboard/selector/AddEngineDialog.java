@@ -19,7 +19,7 @@ import com.orbanova.common.feed.Feeds;
 import com.orbanova.common.jsb.Grid;
 import com.orbanova.common.jsb.JsbTextField;
 import com.orbanova.common.misc.OperatingSystem;
-import com.welty.othello.gui.ExternalEngineManager;
+import com.welty.novello.external.gui.ExternalEngineManager;
 
 import javax.swing.*;
 import java.awt.*;

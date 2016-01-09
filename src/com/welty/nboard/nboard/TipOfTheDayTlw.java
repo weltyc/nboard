@@ -15,6 +15,8 @@
 
 package com.welty.nboard.nboard;
 
+import com.orbanova.common.misc.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -34,7 +36,7 @@ import java.util.ArrayList;
  * </PRE>
  */
 class TipOfTheDayTlw extends JFrame implements ActionListener {
-
+    private static final Logger log = Logger.logger(TipOfTheDayTlw.class);
 
     private int m_id;
     private final String m_sRegKey;
@@ -86,6 +88,10 @@ class TipOfTheDayTlw extends JFrame implements ActionListener {
         ArrayList<String> tips = new ArrayList<String>();
 
         final InputStream in = TipOfTheDayTlw.class.getResourceAsStream("tips.txt");
+        if (in==null) {
+            log.info("Can't find tips");
+            return new ArrayList<>();
+        }
         final BufferedReader bin = new BufferedReader(new InputStreamReader(in));
         String tip;
         try {

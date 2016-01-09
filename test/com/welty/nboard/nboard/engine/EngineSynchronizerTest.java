@@ -15,16 +15,16 @@
 
 package com.welty.nboard.nboard.engine;
 
-import com.welty.othello.api.NBoardState;
-import com.welty.othello.api.OpponentSelection;
-import com.welty.othello.api.OpponentSelector;
-import com.welty.othello.api.PingPong;
+import com.welty.novello.external.api.NBoardState;
+import com.welty.novello.external.api.OpponentSelection;
+import com.welty.novello.external.api.OpponentSelector;
+import com.welty.novello.external.api.PingPong;
 import com.welty.othello.core.CMove;
 import com.welty.othello.gdk.COsGame;
 import com.welty.othello.gdk.OsClock;
 import com.welty.othello.gdk.OsMoveListItem;
-import com.welty.othello.gui.selector.EngineFactory;
-import com.welty.othello.gui.selector.InternalEngineFactoryManager;
+import com.welty.novello.external.gui.selector.EngineFactory;
+import com.welty.novello.external.gui.selector.InternalEngineFactoryManager;
 import com.welty.othello.protocol.Depth;
 import com.welty.othello.protocol.Value;
 import junit.framework.TestCase;

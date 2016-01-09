@@ -18,7 +18,7 @@ package com.welty.nboard.nboard;
 import com.welty.nboard.nboard.engine.EngineSynchronizer;
 import com.welty.nboard.nboard.engine.ReversiWindowEngine;
 import com.welty.nboard.nboard.selector.GuiOpponentSelector;
-import com.welty.othello.api.PingPong;
+import com.welty.novello.external.api.PingPong;
 
 public class EnginePack {
     final ReversiWindowEngine engine;

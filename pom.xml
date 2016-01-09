@@ -135,11 +135,12 @@
 
                         <!-- These need to be kept in the same package since Preferences depend on their package -->
                         <option>-keep public class com.welty.nboard.nboard.ReversiWindow</option>
-                        <option>-keep public class com.welty.othello.gui.ExternalEngineManager { public *; public static *; }</option>
+                        <option>-keep public class com.welty.novello.external.gui.ExternalEngineManager { public *; public static *; }</option>
 
-                        <!-- This class needs to be kept in the same package because some of the classes above are in the same package,
-                        and therefore its resources are not adapted. -->
+                        <!-- These classes need to be kept in the same package because some of the classes above are in the same package,
+                        and therefore their resources are not adapted. -->
                         <option>-keep public class com.welty.nboard.nboard.ReversiData</option>
+                        <option>-keep class com.welty.nboard.nboard.TipOfTheDayTlw</option>
 
                         <!-- This package needs to be kept unchanged since it has resources, and they can't be adapted because
                         GuiOpponentSelector has Preferences.-->
@@ -183,7 +184,7 @@
         <dependency>
             <groupId>com.orbanova</groupId>
             <artifactId>common</artifactId>
-            <version>0.09.05</version>
+            <version>0.09.06</version>
         </dependency>
 
         <dependency>

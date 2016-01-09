@@ -1,9 +1,11 @@
 package com.welty.nboard.nboard;
 
 import com.orbanova.common.jsb.JsbFileChooser;
+import com.orbanova.common.misc.Logger;
+import com.orbanova.common.misc.Utils;
 import com.welty.nboard.thor.DatabaseLoader;
 import com.orbanova.common.misc.OperatingSystem;
-import com.welty.othello.gui.ExternalEngineManager;
+import com.welty.novello.external.gui.ExternalEngineManager;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -19,6 +21,8 @@ import java.util.Map;
  * Installs the FFO database and ntest executable.
  */
 public class Install {
+    static final Logger log = Logger.logger(Install.class);
+
     public static void main(String[] args) {
         install();
     }
@@ -28,12 +32,17 @@ public class Install {
      */
     static void install() {
         try {
-            Path jarFolder = getJarFolder();
-            System.out.println("Install jar folder: " + jarFolder);
+            Path jarFolder = Utils.getJarPath(Install.class).getParent();
+            log.info("Install jar folder: " + jarFolder);
             installNtest(jarFolder);
             installFfo(jarFolder);
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             // error handling: don't install, but continue the rest of the program.
+            log.info("Installation failed: " + e.getMessage());
+            log.info("Stack trace:");
+            for (StackTraceElement el : e.getStackTrace()) {
+                log.info(el);
+            }
         }
 
     }
@@ -73,7 +82,7 @@ public class Install {
 
         ExternalEngineManager.Xei xei = ExternalEngineManager.instance.getXei(engineName);
         if (xei != null) {
-            System.out.println(engineName + " executable already installed at " + xei.wd + "/" + xei.cmd);
+            log.info(engineName + " executable already installed at " + xei.wd + "/" + xei.cmd);
             return;
         }
 
@@ -85,23 +94,23 @@ public class Install {
         }
         String filename = stringToMap(ntestSource).get(key);
         if (filename == null) {
-            System.out.println(engineName + " not available for operating system " + System.getProperty("os.name") + " with key " + key);
+            log.info(engineName + " not available for operating system " + System.getProperty("os.name") + " with key " + key);
             return;
         }
 
         Path filePath = ntestDir.resolve(filename);
-        System.out.println(filePath);
+        log.info(filePath);
         if (!Files.exists(filePath)) {
-            System.out.println(engineName + " executable can't be installed - does not exist at " + filePath);
+            log.info(engineName + " executable can't be installed - does not exist at " + filePath);
             return;
         }
 
         // install it then!
         try {
             ExternalEngineManager.instance.add(engineName, ntestDir.toString(), filename);
-            System.out.println("installed " + engineName + " at " + filePath);
+            log.info("installed " + engineName + " at " + filePath);
         } catch (ExternalEngineManager.AddException e) {
-            System.out.println("unable to install " + engineName + " at " + filePath + " -- " + e.getMessage());
+            log.info("unable to install " + engineName + " at " + filePath + " -- " + e.getMessage());
         }
     }
 
@@ -111,23 +120,9 @@ public class Install {
         if (existingDirectory == null) {
             Path path = jarFolder.resolve("db").resolve("ffo");
             chooser.setDefaultSelection(path.toString());
-            System.out.println("installed FFO database at " + path);
+            log.info("installed FFO database at " + path);
         } else {
-            System.out.println("database currently installed at " + existingDirectory);
+            log.info("database currently installed at " + existingDirectory);
         }
-    }
-
-    /**
-     * Get the path of the jar file that contains this class
-     * <p>
-     * Behaviour is undefined if this class doesn't come from a jar file.
-     *
-     * @return path of the jar containing this class.
-     * @throws UnsupportedEncodingException - shouldn't happen
-     */
-    private static Path getJarFolder() throws UnsupportedEncodingException {
-        final String path = Install.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        final String decodedPath = URLDecoder.decode(path, "UTF-8");
-        return Paths.get(decodedPath).getParent();
     }
 }
