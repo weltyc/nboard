@@ -62,7 +62,7 @@ public class GuiOpponentSelector extends OpponentSelector {
      */
     public GuiOpponentSelector(String windowTitle, boolean includeWeakEngines, String preferencePrefix, String type) {
         levelPref = new PrefInt(GuiOpponentSelector.class, preferencePrefix + "Level", includeWeakEngines ? 1 : 12);
-        enginePref = new PrefString(GuiOpponentSelector.class, preferencePrefix + "Opponent", includeWeakEngines ? "Abigail" : "Vegtbl");
+        enginePref = new PrefString(GuiOpponentSelector.class, preferencePrefix + "Opponent", includeWeakEngines ? "Abigail" : "Novello");
 
         // Level selection list box.
         // Need to create this before Opponent selection list box because the
