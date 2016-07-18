@@ -184,7 +184,7 @@
         <dependency>
             <groupId>com.orbanova</groupId>
             <artifactId>common</artifactId>
-            <version>0.09.06</version>
+            <version>0.09.08</version>
         </dependency>
 
         <dependency>
